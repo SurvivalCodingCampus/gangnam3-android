@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
+@Composable //UI요소들
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
