@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -39,8 +40,8 @@ fun BigButtonDisable(
 ) {
     Box(
         modifier = Modifier
-            .width(315.dp)
             .height(60.dp)
+            .fillMaxWidth()
             .background(
                 color = AppColors.gray4,
                 shape = RoundedCornerShape(10.dp),
