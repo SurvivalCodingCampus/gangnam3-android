@@ -59,7 +59,7 @@ fun MediumButton(
                 Text(
                     text = text,
                     color = AppColors.white,
-                    style = TextStyles.smallerTextBold,
+                    style = TextStyles.normalTextBold,
                 )
             }
 
