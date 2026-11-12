@@ -50,46 +50,11 @@ object AppTextStyles {
     )
     
     // Regular
-    val titleTextRegular = TextStyle(
-        fontFamily = AppFonts.Poppins,
-        fontWeight = FontWeight.Normal,
-        fontSize = 50.sp,
-        lineHeight = 75.sp,
-    )
-    val headerTextRegular = TextStyle(
-        fontFamily = AppFonts.Poppins,
-        fontWeight = FontWeight.Normal,
-        fontSize = 30.sp,
-        lineHeight = 45.sp,
-    )
-    val largeTextRegular = TextStyle(
-        fontFamily = AppFonts.Poppins,
-        fontWeight = FontWeight.Normal,
-        fontSize = 20.sp,
-        lineHeight = 30.sp,
-    )
-    val mediumTextRegular = TextStyle(
-        fontFamily = AppFonts.Poppins,
-        fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
-        lineHeight = 27.sp,
-    )
-    val normalTextRegular = TextStyle(
-        fontFamily = AppFonts.Poppins,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-    )
-    val smallTextRegular = TextStyle(
-        fontFamily = AppFonts.Poppins,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 21.sp,
-    )
-    val smallerTextRegular = TextStyle(
-        fontFamily = AppFonts.Poppins,
-        fontWeight = FontWeight.Normal,
-        fontSize = 11.sp,
-        lineHeight = 17.sp,
-    )
+    val titleTextRegular = titleTextBold.copy(fontWeight = FontWeight.Normal)
+    val headerTextRegular = headerTextBold.copy(fontWeight = FontWeight.Normal)
+    val largeTextRegular = largeTextBold.copy(fontWeight = FontWeight.Normal)
+    val mediumTextRegular = mediumTextBold.copy(fontWeight = FontWeight.Normal)
+    val normalTextRegular = normalTextBold.copy(fontWeight = FontWeight.Normal)
+    val smallTextRegular = smallTextBold.copy(fontWeight = FontWeight.Normal)
+    val smallerTextRegular = smallerTextBold.copy(fontWeight = FontWeight.Normal)
 }
