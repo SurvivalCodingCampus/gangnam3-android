@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.ui.theme
+package com.suwonsmartapp.recipeapp.ui
 
 import androidx.compose.ui.graphics.Color
 
