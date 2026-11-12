@@ -12,6 +12,14 @@ object AppFonts {
             weight = FontWeight.Normal,
         ),
         Font(
+            resId = R.font.poppins_medium,
+            weight = FontWeight.Medium,
+        ),
+        Font(
+            resId = R.font.poppins_semibold,
+            weight = FontWeight.SemiBold,
+        ),
+        Font(
             resId = R.font.poppins_bold,
             weight = FontWeight.Bold,
         ),
