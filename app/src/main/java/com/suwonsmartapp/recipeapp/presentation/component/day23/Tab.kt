@@ -37,14 +37,11 @@ fun Tab(
         modifier = Modifier
             .width(150.dp)
             .height(33.dp)
-            .clip(RoundedCornerShape(10.dp))
             .background(
                 color = if (isSelected) AppColors.primary100 else AppColors.white,
                 shape = RoundedCornerShape(10.dp),
             )
             .clickable(
-                interactionSource = null,
-                indication = null, // 눌렀을 때 회색 효과 끄기
                 onClick = onClick,
             ),
         contentAlignment = Alignment.Center
