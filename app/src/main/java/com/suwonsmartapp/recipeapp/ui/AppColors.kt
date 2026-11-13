@@ -3,8 +3,9 @@ package com.suwonsmartapp.recipeapp.ui
 import androidx.compose.ui.graphics.Color
 
 object AppColors {
-    // Grayscale
-    val black = Color(0xFF000000)
+    // Neutral Color
+    val black1 = Color(0xFF000000)
+    val black2 = Color(0xFF121212)
     val gray1 = Color(0xFF484848)
     val gray2 = Color(0xFF797979)
     val gray3 = Color(0xFFA9A9A9)
@@ -29,8 +30,8 @@ object AppColors {
     val rating = Color(0xFFFFAD30)
 
     // Warning
-    val warning = Color(0xFFE94A59)
-    val warningLight = Color(0xFFFFE1E7)
+    val warning1 = Color(0xFFE94A59)
+    val warning2 = Color(0xFFFFE1E7)
 
     // Success
     val success = Color(0xFF31B057)

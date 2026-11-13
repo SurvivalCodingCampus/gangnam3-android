@@ -5,29 +5,63 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 object TextStyles {
-
-    private fun poppins(size: Int, lineHeight: Int, weight: FontWeight) = TextStyle(
+    // Bold
+    val titleTextBold = TextStyle(
         fontFamily = AppFonts.Poppins,
-        fontWeight = weight,
-        fontSize = size.sp,
-        lineHeight = lineHeight.sp,
+        fontWeight = FontWeight.Bold,
+        fontSize = 50.sp,
+        lineHeight = 75.sp,
+    )
+    val headerTextBold = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp,
+        lineHeight = 45.sp,
+    )
+    val largeTextBold = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 30.sp,
+    )
+    val mediumTextBold = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp,
+        lineHeight = 27.sp,
+    )
+    val normalTextBold = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+    )
+    val smallTextBold = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp,
+        lineHeight = 21.sp,
+    )
+    val smallerTextBold = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.Bold,
+        fontSize = 11.sp,
+        lineHeight = 17.sp,
     )
 
-    // Poppins - Bold
-    val titleTextBold = poppins(size = 50, lineHeight = 75, weight = FontWeight.Bold)
-    val headerTextBold = poppins(size = 30, lineHeight = 45, weight = FontWeight.Bold)
-    val largeTextBold = poppins(size = 20, lineHeight = 30, weight = FontWeight.Bold)
-    val mediumTextBold = poppins(size = 18, lineHeight = 27, weight = FontWeight.Bold)
-    val normalTextBold = poppins(size = 16, lineHeight = 24, weight = FontWeight.Bold)
-    val smallTextBold = poppins(size = 14, lineHeight = 21, weight = FontWeight.Bold)
-    val smallerTextBold = poppins(size = 11, lineHeight = 17, weight = FontWeight.Bold)
+    val smallerTextSemiBold = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 11.sp,
+        lineHeight = 11.sp,
+    )
 
-    // Poppins - Regular
-    val titleTextRegular = poppins(size = 50, lineHeight = 75, weight = FontWeight.Normal)
-    val headerTextRegular = poppins(size = 30, lineHeight = 45, weight = FontWeight.Normal)
-    val largeTextRegular = poppins(size = 20, lineHeight = 30, weight = FontWeight.Normal)
-    val mediumTextRegular = poppins(size = 18, lineHeight = 27, weight = FontWeight.Normal)
-    val normalTextRegular = poppins(size = 16, lineHeight = 24, weight = FontWeight.Normal)
-    val smallTextRegular = poppins(size = 14, lineHeight = 21, weight = FontWeight.Normal)
-    val smallerTextRegular = poppins(size = 11, lineHeight = 17, weight = FontWeight.Normal)
+    // Regular
+    val titleTextRegular = titleTextBold.copy(fontWeight = FontWeight.Normal)
+    val headerTextRegular = headerTextBold.copy(fontWeight = FontWeight.Normal)
+    val largeTextRegular = largeTextBold.copy(fontWeight = FontWeight.Normal)
+    val mediumTextRegular = mediumTextBold.copy(fontWeight = FontWeight.Normal)
+    val normalTextRegular = normalTextBold.copy(fontWeight = FontWeight.Normal)
+    val smallTextRegular = smallTextBold.copy(fontWeight = FontWeight.Normal)
+    val smallerTextRegular = smallerTextBold.copy(fontWeight = FontWeight.Normal)
 }
