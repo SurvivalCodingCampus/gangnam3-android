@@ -21,15 +21,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.TextStyles
+import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-enum class IngredientImage(@param:DrawableRes val resId: Int) {
+// TODO: enum말고 다른 거 교체 예정
+enum class IngredientImageId(@param:DrawableRes val resId: Int) {
     TOMATOS(R.drawable.ingredient_tomatos),
 }
 
 data class Ingredient(
     val name: String,
-    val imageId: IngredientImage,
+    val imageId: IngredientImageId,
     val requiredGrams: Int,
     val description: String,
 )
@@ -39,7 +40,7 @@ data class Ingredient(
 private fun IngredientItemPreview() {
     IngredientItem(Ingredient(
         name = "Tomatos",
-        imageId = IngredientImage.TOMATOS,
+        imageId = IngredientImageId.TOMATOS,
         requiredGrams = 500,
         description = "토마토입니다",
     )) {
@@ -98,7 +99,7 @@ fun IngredientItem(
                     ),
                 text = ingredient.name,
                 color = AppColors.black2,
-                style = TextStyles.normalTextBold,
+                style = AppTextStyles.normalTextBold,
             )
         }
         Text(
@@ -107,7 +108,7 @@ fun IngredientItem(
                 .padding(end = 15.dp, bottom = 27.dp),
             text = "${ingredient.requiredGrams}g",
             color = AppColors.gray3,
-            style = TextStyles.smallTextRegular,
+            style = AppTextStyles.smallTextRegular,
         )
     }
 }

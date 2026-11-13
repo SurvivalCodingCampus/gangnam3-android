@@ -20,7 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.TextStyles
+import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
@@ -83,7 +83,7 @@ fun Tabs(
             ) {
                 Text(
                     text = label,
-                    style = TextStyles.smallerTextSemiBold,
+                    style = AppTextStyles.smallerTextSemiBold,
                     color = textColor,
                 )
             }

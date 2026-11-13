@@ -14,7 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.TextStyles
+import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
@@ -47,7 +47,7 @@ fun SmallButton(
             Text(
                 text = text,
                 color = AppColors.white,
-                style = TextStyles.smallerTextBold,
+                style = AppTextStyles.smallerTextBold,
                 textAlign = TextAlign.Center,
             )
         }

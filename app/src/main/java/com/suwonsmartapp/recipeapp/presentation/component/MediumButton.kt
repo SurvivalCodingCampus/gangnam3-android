@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.TextStyles
+import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
@@ -59,7 +59,7 @@ fun MediumButton(
                 Text(
                     text = text,
                     color = AppColors.white,
-                    style = TextStyles.smallerTextBold,
+                    style = AppTextStyles.smallerTextBold,
                 )
             }
 

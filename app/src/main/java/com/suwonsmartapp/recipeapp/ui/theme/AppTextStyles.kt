@@ -12,7 +12,7 @@ private fun poppins(size: TextUnit, lineHeight: TextUnit, weight: FontWeight) = 
     lineHeight = lineHeight,
 )
 
-object TextStyles {
+object AppTextStyles {
     // Bold (Figma: Poppins SemiBold, Smaller는 Medium)
     val titleTextBold = poppins(size = 50.sp, lineHeight = 75.sp, weight = FontWeight.SemiBold)
     val headerTextBold = poppins(size = 30.sp, lineHeight = 45.sp, weight = FontWeight.SemiBold)

@@ -91,9 +91,6 @@ fun MyComposable() {
         }
     }
 }
-
-data class Recipe(val name: String)
-
 @Composable
 fun RecipeCard(recipe: Recipe) {
 
