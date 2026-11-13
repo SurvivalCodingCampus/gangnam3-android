@@ -81,6 +81,8 @@ fun SavedRecipe(
     isBookmarked: Boolean,
     onBookmarkClick: () -> Unit,
 ) {
+    val icon = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -183,7 +185,7 @@ fun SavedRecipe(
             ) {
                 Icon(
                     modifier = Modifier.size(16.dp),
-                    imageVector = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
+                    imageVector = icon,
                     contentDescription = "북마크",
                     tint = AppColors.primary80,
                 )
