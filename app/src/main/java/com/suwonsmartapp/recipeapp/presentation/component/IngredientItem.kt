@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -38,14 +39,15 @@ data class Ingredient(
 @Preview(showBackground = true)
 @Composable
 private fun IngredientItemPreview() {
-    IngredientItem(Ingredient(
+
+    val testIngredient = Ingredient(
         name = "Tomatos",
         imageId = IngredientImageId.TOMATOS,
         requiredGrams = 500,
         description = "토마토입니다",
-    )) {
+    )
 
-    }
+    IngredientItem(testIngredient) {}
 }
 
 @Composable
@@ -56,7 +58,6 @@ fun IngredientItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(76.dp)
             .background(
                 color = AppColors.gray4,
                 shape = RoundedCornerShape(12.dp),
@@ -64,17 +65,16 @@ fun IngredientItem(
             .clickable(
                 onClick = onClick
             ),
-        contentAlignment = Alignment.CenterStart
     ) {
         Row(
             modifier = Modifier
-                .padding(start = 15.dp),
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .width(52.dp)
-                    .height(52.dp)
+                    .size(52.dp)
                     .background(
                         color = AppColors.white,
                         shape = RoundedCornerShape(12.dp),
@@ -83,9 +83,7 @@ fun IngredientItem(
             ) {
                 Image(
                     modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp),
-
+                        .size(40.dp),
                     painter = painterResource(id = ingredient.imageId.resId),
                     contentDescription = ingredient.description,
                 )
@@ -101,14 +99,16 @@ fun IngredientItem(
                 color = AppColors.black2,
                 style = AppTextStyles.normalTextBold,
             )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Bottom)
+                    .padding(bottom = 27.dp),
+                text = "${ingredient.requiredGrams}g",
+                color = AppColors.gray3,
+                style = AppTextStyles.smallTextRegular,
+            )
         }
-        Text(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 15.dp, bottom = 27.dp),
-            text = "${ingredient.requiredGrams}g",
-            color = AppColors.gray3,
-            style = AppTextStyles.smallTextRegular,
-        )
+
     }
 }
