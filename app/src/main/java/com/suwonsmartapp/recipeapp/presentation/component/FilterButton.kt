@@ -3,6 +3,8 @@ package com.suwonsmartapp.recipeapp.presentation.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -29,17 +31,38 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
-private fun RatingButtonPreview() {
-    var index by rememberSaveable { mutableIntStateOf(0) }
+private fun RatingButtonsPreview() {
+    var selectedRating by rememberSaveable { mutableIntStateOf(4) }
 
     Scaffold { innerPadding ->
-        Row(
-            // 상태바·내비게이션바만큼 띄우기
+        // 상태바·내비게이션바만큼 띄우기
+        Box(
             modifier = Modifier.padding(innerPadding)
         ) {
-            RatingButton(text = "5", isSelected = false) { }
-            Spacer(Modifier.width(10.dp))
-            RatingButton(text = "5", isSelected = true) { }
+            RatingButtons(
+                selectedRating = selectedRating,
+                onRatingClick = { rating ->
+                    selectedRating = rating
+                },
+            )
+        }
+    }
+}
+
+@Composable
+fun RatingButtons(
+    selectedRating: Int,
+    onRatingClick: (Int) -> Unit,
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(15.dp),
+    ) {
+        for (rating in 5 downTo 1) {
+            RatingButton(
+                text = "$rating",
+                isSelected = rating == selectedRating,
+                onClick = { onRatingClick(rating) },
+            )
         }
     }
 }
