@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -24,7 +23,7 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.TextStyles
 
-enum class IngredientImage(@DrawableRes val resId: Int) {
+enum class IngredientImage(@param:DrawableRes val resId: Int) {
     TOMATOS(R.drawable.ingredient_tomatos),
 }
 
