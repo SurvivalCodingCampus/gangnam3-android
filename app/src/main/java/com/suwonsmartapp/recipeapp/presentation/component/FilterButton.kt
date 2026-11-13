@@ -31,7 +31,7 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
-private fun RatingButtonsPreview() {
+private fun RatingButtonPreview() {
     var selectedRating by rememberSaveable { mutableIntStateOf(4) }
 
     Scaffold { innerPadding ->
