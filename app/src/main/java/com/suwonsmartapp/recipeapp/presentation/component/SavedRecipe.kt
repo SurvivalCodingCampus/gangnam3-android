@@ -30,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,7 +57,6 @@ data class Recipe(
 @Preview(showBackground = true)
 @Composable
 private fun SavedRecipePreview() {
-
     var isBookmarked by rememberSaveable { mutableStateOf(false) }
 
     val previewRecipe = Recipe(
@@ -97,6 +98,19 @@ fun SavedRecipe(
             painter = painterResource(id = recipe.imageId.resId),
             contentDescription = recipe.imageDescription,
             contentScale = ContentScale.Crop,
+        )
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 1f),
+                        ),
+                        startY = 100f,
+                    ),
+                ),
         )
         Row(
             modifier = Modifier
