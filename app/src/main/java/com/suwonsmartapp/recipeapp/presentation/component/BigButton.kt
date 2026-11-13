@@ -41,12 +41,13 @@ fun BigButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+    val buttonColor = if (isPressed) AppColors.gray4 else AppColors.primary100
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = if (isPressed) AppColors.gray4 else AppColors.primary100,
+                color = buttonColor,
                 shape = RoundedCornerShape(10.dp)
             )
             .clickable(
