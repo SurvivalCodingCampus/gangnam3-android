@@ -6,14 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,15 +25,14 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
-private fun RatingButtonPreview() {
+private fun FilterButtonsPreview() {
     var selectedRating by rememberSaveable { mutableIntStateOf(4) }
 
     Scaffold { innerPadding ->
-        // 상태바·내비게이션바만큼 띄우기
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
-            RatingButtons(
+            FilterButtons(
                 selectedRating = selectedRating,
                 onRatingClick = { rating ->
                     selectedRating = rating
@@ -49,31 +42,33 @@ private fun RatingButtonPreview() {
     }
 }
 
+// TODO: 레이팅이랑 합치기?
 @Composable
-fun RatingButtons(
+fun FilterButtons(
     selectedRating: Int,
     onRatingClick: (Int) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(15.dp),
     ) {
-        for (rating in 5 downTo 1) {
-            RatingButton(
-                text = "$rating",
-                isSelected = rating == selectedRating,
-                onClick = { onRatingClick(rating) },
+        val category = listOf("a", "b", "c")
+
+        category.forEachIndexed { index, category ->
+            FilterButton(
+                text = category,
+                isSelected = index == selectedRating,
+                onClick = { onRatingClick(index) },
             )
         }
     }
 }
 
 @Composable
-fun RatingButton(
+fun FilterButton(
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    // 선택 여부에 따라 색 바꾸기
     val backgroundColor = if (isSelected) AppColors.primary100 else AppColors.white
     val contentColor = if (isSelected) AppColors.white else AppColors.primary80
     val borderRadius = 10.dp
@@ -100,13 +95,6 @@ fun RatingButton(
             text = text,
             color = contentColor,
             style = AppTextStyles.smallerTextSemiBold,
-        )
-        Spacer(modifier = Modifier.width(5.dp))
-        Icon(
-            modifier = Modifier.size(18.dp),
-            imageVector = Icons.Filled.Star,
-            contentDescription = "별점 ${text}점",
-            tint = contentColor,
         )
     }
 }
