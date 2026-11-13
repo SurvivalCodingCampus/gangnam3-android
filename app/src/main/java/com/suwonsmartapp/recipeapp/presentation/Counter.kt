@@ -16,9 +16,21 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Preview(showBackground = true)
 @Composable
-private fun Counter() {
-    var counter by rememberSaveable { mutableIntStateOf(0) }
+private fun CounterPreview() {
+    var count by rememberSaveable { mutableIntStateOf(0) }
     
+    Counter(
+        count = count
+    ) {
+        count++
+    }
+}
+
+@Composable
+private fun Counter(
+    count: Int,
+    onIncrement: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -26,13 +38,11 @@ private fun Counter() {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Count: $counter"
+            text = "Count: $count"
         )
         
         Button(
-            onClick = {
-                counter++
-            }
+            onClick = onIncrement,
         ) {
             Text(">> 증가 <<")
         }
