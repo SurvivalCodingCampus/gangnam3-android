@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,10 +35,14 @@ private fun TabsPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun TabsPreview2() {
+    var index by remember { mutableIntStateOf(0) }
+
     Tabs(
         labels = listOf("Label", "Label"),
-        selectedIndex = 1,
-        onValueChange = {},
+        selectedIndex = index,
+        onValueChange = {
+            index = it
+        },
     )
 }
 
