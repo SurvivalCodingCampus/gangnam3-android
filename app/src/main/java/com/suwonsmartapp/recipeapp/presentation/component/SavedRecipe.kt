@@ -37,22 +37,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
+import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
-
-// TODO: enum말고 다른 거 교체 예정
-enum class RecipeImageId(@param:DrawableRes val resId: Int) {
-    SPARE_RIBS_BAKED(R.drawable.recipe_spare_ribs_baked),
-}
-
-data class Recipe(
-    val title: String,
-    val imageId: RecipeImageId,
-    val imageDescription: String,
-    val userName: String,
-    val requiredTime: Int,
-    val rating: Float,
-)
 
 @Preview(showBackground = true)
 @Composable
@@ -61,8 +48,8 @@ private fun SavedRecipePreview() {
 
     val previewRecipe = Recipe(
         title = "Traditional spare ribs baked 오이시",
-        imageId = RecipeImageId.SPARE_RIBS_BAKED,
-        imageDescription = "Traditional spare ribs baked image",
+        imageResId = R.drawable.recipe_spare_ribs_baked,
+        imageDescription = "오븐에 구운 전통 돼지갈비 이미지",
         userName = "junsik",
         requiredTime = 20,
         rating = 4.0f,
@@ -95,7 +82,7 @@ fun SavedRecipe(
     ) {
         Image(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = recipe.imageId.resId),
+            painter = painterResource(id = recipe.imageResId),
             contentDescription = recipe.imageDescription,
             contentScale = ContentScale.Crop,
         )
