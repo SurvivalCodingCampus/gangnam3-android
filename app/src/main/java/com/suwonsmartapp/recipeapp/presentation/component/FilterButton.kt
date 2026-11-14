@@ -4,11 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,20 +24,20 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 @Preview(showBackground = true)
 @Composable
 private fun FilterButtonsPreview() {
-    var selectedRating by rememberSaveable { mutableIntStateOf(4) }
+    var selectedFilter by rememberSaveable { mutableIntStateOf(4) }
 
     FilterButtons(
-        selectedRating = selectedRating,
-        onRatingClick = { rating ->
-            selectedRating = rating
+        selectedFilter = selectedFilter,
+        onFilterClick = { rating ->
+            selectedFilter = rating
         },
     )
 }
 
 @Composable
 fun FilterButtons(
-    selectedRating: Int,
-    onRatingClick: (Int) -> Unit,
+    selectedFilter: Int,
+    onFilterClick: (Int) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(15.dp),
@@ -49,8 +47,8 @@ fun FilterButtons(
         category.forEachIndexed { index, category ->
             FilterButton(
                 text = category,
-                isSelected = index == selectedRating,
-                onClick = { onRatingClick(index) },
+                isSelected = index == selectedFilter,
+                onClick = { onFilterClick(index) },
             )
         }
     }
