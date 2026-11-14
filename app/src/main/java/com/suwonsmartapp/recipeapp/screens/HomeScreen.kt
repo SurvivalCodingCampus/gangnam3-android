@@ -1,0 +1,300 @@
+package com.suwonsmartapp.recipeapp.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import com.suwonsmartapp.recipeapp.R
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.suwonsmartapp.recipeapp.data.FilterState
+import com.suwonsmartapp.recipeapp.data.Recipe
+import com.suwonsmartapp.recipeapp.data.RecipeCategory
+import com.suwonsmartapp.recipeapp.data.formatRating
+import com.suwonsmartapp.recipeapp.data.matches
+import com.suwonsmartapp.recipeapp.data.sampleFeatured
+import com.suwonsmartapp.recipeapp.data.sampleNew
+import com.suwonsmartapp.recipeapp.data.SampleRecipeRepository
+import com.suwonsmartapp.recipeapp.ui.theme.RecipeAppTheme
+import com.suwonsmartapp.recipeapp.ui.theme.RecipeBorder
+import com.suwonsmartapp.recipeapp.ui.theme.RecipeStar
+import com.suwonsmartapp.recipeapp.ui.theme.RecipeSurfaceVariant
+
+/**
+ * 명세 §3.2 메인 홈 — 인사말/프로필, 검색바, 카테고리 칩, Featured(행 카드),
+ * New Recipes(2열 그리드 상당), 하단 탭은 AppRoot 담당.
+ */
+@Composable
+fun HomeScreen(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    filter: FilterState,
+    onFilterChange: (FilterState) -> Unit,
+    onOpenFilter: () -> Unit,
+    bookmarks: List<String>,
+    onToggleBookmark: (String) -> Unit,
+    onOpenRecipe: (String) -> Unit,
+    onOpenProfile: () -> Unit
+) {
+    val recipes = SampleRecipeRepository.recipes()
+    val filtering = query.isNotBlank() || filter != FilterState()
+    val results = remember(query, filter) {
+        recipes.filter { it.matches(query, filter) }
+    }
+
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column {
+                    Text(stringResource(R.string.home_hello, "Alex"), fontSize = 18.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                    Text(
+                        stringResource(R.string.home_prompt),
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Spacer(Modifier.width(12.dp)) // 기존 weight(1f): 현행 Compose에서 internal — 고정 갭으로 대체(기존 WIP 수정, 계획 문서 기록)
+                Box(
+                    modifier = Modifier
+                        .size(48.dp) // 터치 타깃 48dp — 시각 원은 내부 40dp 유지
+                        .clickable(onClickLabel = "프로필 열기", onClick = onOpenProfile),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                    ) {
+                        Text("A", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
+        }
+        item { HomeSearchBar(query = query, onQueryChange = onQueryChange, onFilter = onOpenFilter) }
+        item { HomeCategoryChips(filter = filter, onSelect = { category -> onFilterChange(filter.withCategory(category)) }) }
+
+        if (filtering) {
+            item {
+                Text(
+                    stringResource(R.string.home_results),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            items(results, key = { it.id }) { recipe ->
+                RecipeRow(recipe = recipe, bookmarks = bookmarks, onToggleBookmark = onToggleBookmark, onOpen = { onOpenRecipe(recipe.id) })
+            }
+        } else {
+            item {
+                Text(
+                    stringResource(R.string.home_featured),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            items(sampleFeatured, key = { it.id }) { recipe ->
+                RecipeRow(recipe = recipe, bookmarks = bookmarks, onToggleBookmark = onToggleBookmark, onOpen = { onOpenRecipe(recipe.id) })
+            }
+            item {
+                Text(
+                    stringResource(R.string.home_new),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    for (recipe in sampleNew) {
+                        RecipeGridCard(
+                            recipe = recipe,
+                            modifier = Modifier.width(150.dp) // 기존 weight(1f) 대체(고정 폭 — 기존 WIP 수정, 계획 문서 기록)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun FilterState.withCategory(category: RecipeCategory) = copy(
+    categories = when (category) {
+        RecipeCategory.All -> emptySet()
+        else -> setOf(category)
+    }
+)
+
+@Composable
+private fun HomeSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onFilter: () -> Unit
+) {
+    TextField(
+        value = query,
+        onValueChange = onQueryChange,
+        placeholder = { Text(stringResource(R.string.home_search_hint), color = MaterialTheme.colorScheme.onSurfaceVariant) },
+        leadingIcon = { Text("🔍", fontSize = 18.sp) },
+        trailingIcon = {
+            Text(
+                "⚙️",
+                fontSize = 18.sp,
+                modifier = Modifier.clickable(onClickLabel = "필터 열기", onClick = onFilter).padding(horizontal = 4.dp)
+            )
+        },
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(500.dp),
+        singleLine = true
+    )
+}
+
+@Composable
+private fun HomeCategoryChips(
+    filter: FilterState,
+    onSelect: (RecipeCategory) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        RecipeCategory.entries.forEach { category ->
+            val selected = if (category == RecipeCategory.All) {
+                filter.categories.isEmpty()
+            } else {
+                filter.categories.contains(category)
+            }
+            FilterChip(
+                selected = selected,
+                onClick = { onSelect(category) },
+                label = { Text(category.label, fontSize = 13.sp) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun RecipeRow(
+    recipe: Recipe,
+    bookmarks: List<String>,
+    onToggleBookmark: (String) -> Unit,
+    onOpen: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClickLabel = "레시피 상세 열기: ${recipe.title}", onClick = onOpen)
+            .padding(vertical = 6.dp)
+    ) {
+        Box(modifier = Modifier.fillMaxWidth()) {
+            RecipeMedia(
+                emoji = recipe.emoji,
+                imageUrl = recipe.thumbnailUrl,
+                modifier = Modifier.fillMaxWidth().height(110.dp),
+                rounded = 14.dp
+            )
+            HeartToggle(
+                saved = recipe.id in bookmarks,
+                onClick = { onToggleBookmark(recipe.id) },
+                modifier = Modifier.align(Alignment.TopEnd).padding(6.dp)
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                Modifier.padding(end = 12.dp) // 기존 weight(1f) 대체(가변 갭 → 고정 갭 — 기존 WIP 수정, 계획 문서 기록)
+            ) {
+                Text(recipe.title, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
+                Text(recipe.chef, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Text("⭐️", fontSize = 14.sp, color = RecipeStar)
+            Text(
+                " ${formatRating(recipe.rating)} (${recipe.cookingMinutes} mins)",
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun RecipeGridCard(recipe: Recipe, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        RecipeMedia(
+            emoji = recipe.emoji,
+            imageUrl = recipe.thumbnailUrl,
+            modifier = Modifier.fillMaxWidth().height(120.dp),
+            rounded = 16.dp
+        )
+        Spacer(Modifier.height(8.dp))
+        Text(
+            recipe.title,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground,
+            maxLines = 2
+        )
+    }
+}
+
+@Preview(name = "Home", showBackground = true)
+@Composable
+private fun HomePreview() {
+    RecipeAppTheme {
+        HomeScreen(
+            query = "",
+            onQueryChange = {},
+            filter = FilterState(),
+            onFilterChange = {},
+            onOpenFilter = {},
+            bookmarks = emptyList(),
+            onToggleBookmark = {},
+            onOpenRecipe = {},
+            onOpenProfile = {}
+        )
+    }
+}

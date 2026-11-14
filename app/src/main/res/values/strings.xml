@@ -1,3 +1,58 @@
 <resources>
     <string name="app_name">RecipeApp</string>
+
+    <!-- 온보딩 (명세 §3.1) -->
+    <string name="onboarding_title">Get Cooking</string>
+    <string name="onboarding_subtitle">Simple &amp; Delicious Recipes</string>
+    <string name="onboarding_cta">Start Cooking</string>
+
+    <!-- 홈 (명세 §3.2) -->
+    <string name="home_hello">Hello, %1$s 👋</string>
+    <string name="home_prompt">What are you cooking today?</string>
+    <string name="home_search_hint">Search recipe...</string>
+    <string name="home_results">검색 결과</string>
+    <string name="home_featured">Featured Recipes</string>
+    <string name="home_new">New Recipes</string>
+
+    <!-- 상세 (명세 §3.3) -->
+    <string name="detail_back">← Back</string>
+    <string name="detail_share">📤 Share</string>
+    <string name="detail_tab_ingredients">Ingredients (%1$d)</string>
+    <string name="detail_tab_instructions">Instructions</string>
+    <string name="detail_follow">Follow</string>
+    <string name="detail_following">Following</string>
+    <string name="detail_cta">Start Cooking</string>
+    <string name="detail_no_ingredients">재료 정보가 없습니다.</string>
+    <string name="detail_no_steps">조리 단계 정보가 없습니다.</string>
+
+    <!-- 저장 (명세 §3.4) -->
+    <string name="saved_title">Saved Recipes</string>
+    <string name="saved_clear">🗑️ Clear all</string>
+    <string name="saved_empty">저장한 레시피가 없습니다.</string>
+    <string name="saved_empty_hint">홈에서 하트를 눌러 저장해 보세요.</string>
+
+    <!-- 검색 필터 (명세 §3.5) -->
+    <string name="filter_title">Filter Search</string>
+    <string name="filter_close">Close</string>
+    <string name="filter_time">Time</string>
+    <string name="filter_rate">Rate</string>
+    <string name="filter_category">Category</string>
+    <string name="filter_apply">Apply Filter</string>
+
+    <!-- 조리 모드 (P0 신규 화면) -->
+    <string name="cooking_close">← 닫기</string>
+    <string name="cooking_steps_label">조리 단계</string>
+    <string name="cooking_step_counter">단계 %1$d / %2$d</string>
+    <string name="cooking_step_label">STEP %1$d</string>
+    <string name="cooking_no_steps">조리 단계 정보가 없습니다.</string>
+    <string name="cooking_image_pending">단계 이미지 준비 중</string>
+    <string name="cooking_image_placeholder">단계 이미지</string>
+    <string name="cooking_prev">이전</string>
+    <string name="cooking_next">다음</string>
+    <string name="cooking_done">완료</string>
+
+    <!-- 기타 -->
+    <string name="app_placeholder_note">데이터 연결 시 표시됩니다</string>
+    <string name="app_placeholder_notifications">Notifications</string>
+    <string name="app_placeholder_profile">Profile</string>
 </resources>
