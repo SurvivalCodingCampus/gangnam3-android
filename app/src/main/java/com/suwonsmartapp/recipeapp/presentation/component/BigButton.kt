@@ -30,8 +30,14 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
-fun BigButtonPreview() {
-    BigButton("Button ButtonButton 3333") {}
+fun BigButtonDefaultPreview() {
+    BigButtonContent(text = "Button", isPressed = false) {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BigButtonPressedPreview() {
+    BigButtonContent(text = "Button", isPressed = true) {}
 }
 
 @Composable
@@ -41,6 +47,22 @@ fun BigButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+
+    BigButtonContent(
+        text = text,
+        isPressed = isPressed,
+        interactionSource = interactionSource,
+        onClick = onClick,
+    )
+}
+
+@Composable
+private fun BigButtonContent(
+    text: String,
+    isPressed: Boolean,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    onClick: () -> Unit,
+) {
     val buttonColor = if (isPressed) AppColors.gray4 else AppColors.primary100
 
     Box(

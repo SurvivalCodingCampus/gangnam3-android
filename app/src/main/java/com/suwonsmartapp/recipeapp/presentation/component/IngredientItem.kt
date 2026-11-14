@@ -46,7 +46,7 @@ fun IngredientItem(
             .clip(RoundedCornerShape(12.dp))
             .background(AppColors.gray4)
             .clickable(onClick = onClick)
-            .padding(start = 15.dp, end = 15.dp),
+            .padding(horizontal = 15.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // 재료 이미지 (52dp 흰 배경 + 안쪽 6dp 여백 = 이미지 40dp)

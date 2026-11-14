@@ -29,8 +29,21 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
-private fun RatingButtonPreview() {
+private fun Rating4ButtonPreview() {
     var selectedRating by rememberSaveable { mutableIntStateOf(4) }
+
+    RatingButtons(
+        selectedRating = selectedRating,
+        onRatingClick = { rating ->
+            selectedRating = rating
+        },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Rating1ButtonPreview() {
+    var selectedRating by rememberSaveable { mutableIntStateOf(1) }
 
     RatingButtons(
         selectedRating = selectedRating,

@@ -43,6 +43,29 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
+private fun SavedRecipeBookmarkedPreview() {
+    var isBookmarked by rememberSaveable { mutableStateOf(true) }
+
+    val previewRecipe = Recipe(
+        title = "Traditional spare ribs baked 오이시" +
+                " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
+        imageResId = R.drawable.recipe_spare_ribs_baked,
+        imageDescription = "오븐에 구운 전통 돼지갈비 이미지",
+        userName = "junsik",
+        requiredTime = 20,
+        rating = 4.0f,
+    )
+
+    SavedRecipe(
+        recipe = previewRecipe,
+        isBookmarked = isBookmarked
+    ) {
+        isBookmarked = !isBookmarked
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 private fun SavedRecipePreview() {
     var isBookmarked by rememberSaveable { mutableStateOf(false) }
 
@@ -74,8 +97,8 @@ fun SavedRecipe(
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-//            .width(315.dp)
+//            .fillMaxWidth()
+            .width(315.dp)
             .height(150.dp)
             .clip(
                 shape = RoundedCornerShape(10.dp)
