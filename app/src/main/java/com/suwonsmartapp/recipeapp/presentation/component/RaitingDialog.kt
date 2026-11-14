@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -60,6 +59,7 @@ fun RatingDialog(
     onDismissRequest: () -> Unit,
 ) {
     val isEnabled = rating > 0
+    val sendButtonColor = if (isEnabled) AppColors.rating else AppColors.gray4
 
     // 바깥 영역 클릭이나 뒤로가기 시 onDismissRequest 호출
     Dialog(onDismissRequest = onDismissRequest) {
@@ -74,7 +74,7 @@ fun RatingDialog(
             // Rate recipe 글씨
             Text(
                 text = title,
-                color = AppColors.black1,
+                color = AppColors.black2,
                 style = AppTextStyles.smallTextRegular,
             )
 
@@ -83,11 +83,17 @@ fun RatingDialog(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 for (star in 1..5) {
+                    val starIcon = if (star <= rating)  {
+                        Icons.Filled.Star
+                    } else {
+                        Icons.Outlined.StarOutline
+                    }
+
                     Icon(
                         modifier = Modifier
                             .size(18.dp)
                             .clickable { onRatingChange(star) },
-                        imageVector = if (star <= rating) Icons.Filled.Star else Icons.Outlined.StarOutline,
+                        imageVector = starIcon,
                         contentDescription = "별점 ${star}점",
                         tint = AppColors.rating,
                     )
@@ -100,7 +106,7 @@ fun RatingDialog(
                     .width(61.dp)
                     .height(20.dp)
                     .clip(RoundedCornerShape(6.dp))
-                    .background(if (isEnabled) AppColors.rating else AppColors.gray4)
+                    .background(sendButtonColor)
                     .clickable(enabled = isEnabled) { onSendClick(rating) },
                 contentAlignment = Alignment.Center,
             ) {
