@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,32 +20,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
+import com.suwonsmartapp.recipeapp.core.data.model.Ingredient
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
-
-// TODO: enum말고 다른 거 교체 예정
-enum class IngredientImageId(@param:DrawableRes val resId: Int) {
-    TOMATOS(R.drawable.ingredient_tomatos),
-}
-
-data class Ingredient(
-    val name: String,
-    val imageId: IngredientImageId,
-    val requiredGrams: Int,
-    val description: String,
-)
 
 @Preview(showBackground = true)
 @Composable
 private fun IngredientItemPreview() {
-
     val testIngredient = Ingredient(
         name = "Tomatos",
-        imageId = IngredientImageId.TOMATOS,
+        imageResId = R.drawable.ingredient_tomatos,
         requiredGrams = 500,
-        description = "토마토입니다",
+        description = "토마토 사진입니다",
     )
-
     IngredientItem(testIngredient) {}
 }
 
@@ -84,7 +70,7 @@ fun IngredientItem(
                 Image(
                     modifier = Modifier
                         .size(40.dp),
-                    painter = painterResource(id = ingredient.imageId.resId),
+                    painter = painterResource(id = ingredient.imageResId),
                     contentDescription = ingredient.description,
                 )
             }
@@ -109,6 +95,5 @@ fun IngredientItem(
                 style = AppTextStyles.smallTextRegular,
             )
         }
-
     }
 }
