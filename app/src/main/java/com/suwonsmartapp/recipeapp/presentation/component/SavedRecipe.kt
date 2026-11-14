@@ -80,12 +80,15 @@ fun SavedRecipe(
                 shape = RoundedCornerShape(10.dp)
             ),
     ) {
+        // 배경 이미지
         Image(
             modifier = Modifier.fillMaxWidth(),
             painter = painterResource(id = recipe.imageResId),
             contentDescription = recipe.imageDescription,
             contentScale = ContentScale.Crop,
         )
+
+        // 그라데이션
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -99,6 +102,8 @@ fun SavedRecipe(
                     ),
                 ),
         )
+
+        // 우측상단 벌점
         Row(
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -116,6 +121,7 @@ fun SavedRecipe(
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // 별점
             Icon(
                 modifier = Modifier.size(12.dp),
                 imageVector = Icons.Filled.Star,
@@ -123,12 +129,16 @@ fun SavedRecipe(
                 tint = AppColors.rating,
             )
             Spacer(modifier = Modifier.width(3.dp))
+
+            // 점수
             Text(
                 text = "${recipe.rating}",
                 color = AppColors.black1,
                 style = AppTextStyles.smallerTextRegular
             )
         }
+
+        // 좌측하단 제목, 유저
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -137,6 +147,7 @@ fun SavedRecipe(
                     bottom = 10.dp,
                 ),
         ) {
+            // 제목
             Text(
                 modifier = Modifier
                     .width(200.dp),
@@ -144,6 +155,8 @@ fun SavedRecipe(
                 color = AppColors.white,
                 style = AppTextStyles.smallTextBold
             )
+
+            // 유저
             Text(
                 text = "By ${recipe.userName}",
                 color = AppColors.gray4,
@@ -151,6 +164,7 @@ fun SavedRecipe(
             )
         }
 
+        // 우측하단 시간, 북마크 여부
         Row(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -160,18 +174,23 @@ fun SavedRecipe(
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // 타이머 아이콘
             Icon(
                 imageVector = Icons.Outlined.Timer,
                 contentDescription = "조리 시간",
                 tint = AppColors.gray4,
             )
             Spacer(modifier = Modifier.width(5.dp))
+
+            // 시간
             Text(
                 text = "${recipe.requiredTime} min",
                 color = AppColors.gray4,
                 style = AppTextStyles.smallerTextRegular
             )
             Spacer(modifier = Modifier.width(10.dp))
+
+            // 북마크 아이콘
             Box(
                 modifier = Modifier
                     .size(24.dp)

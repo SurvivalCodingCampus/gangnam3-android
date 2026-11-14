@@ -86,12 +86,15 @@ fun RatingButton(
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        // 점수
         Text(
             text = text,
             color = contentColor,
             style = AppTextStyles.smallerTextSemiBold,
         )
         Spacer(modifier = Modifier.width(5.dp))
+
+        // 별점
         Icon(
             modifier = Modifier.size(18.dp),
             imageVector = Icons.Filled.Star,

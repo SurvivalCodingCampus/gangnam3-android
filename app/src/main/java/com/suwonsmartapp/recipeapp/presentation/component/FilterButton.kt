@@ -28,21 +28,14 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 private fun FilterButtonsPreview() {
     var selectedRating by rememberSaveable { mutableIntStateOf(4) }
 
-    Scaffold { innerPadding ->
-        Box(
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            FilterButtons(
-                selectedRating = selectedRating,
-                onRatingClick = { rating ->
-                    selectedRating = rating
-                },
-            )
-        }
-    }
+    FilterButtons(
+        selectedRating = selectedRating,
+        onRatingClick = { rating ->
+            selectedRating = rating
+        },
+    )
 }
 
-// TODO: 레이팅이랑 합치기?
 @Composable
 fun FilterButtons(
     selectedRating: Int,
