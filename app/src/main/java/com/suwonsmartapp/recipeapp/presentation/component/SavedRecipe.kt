@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
@@ -47,7 +48,8 @@ private fun SavedRecipePreview() {
     var isBookmarked by rememberSaveable { mutableStateOf(false) }
 
     val previewRecipe = Recipe(
-        title = "Traditional spare ribs baked 오이시",
+        title = "Traditional spare ribs baked 오이시" +
+                " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
         imageResId = R.drawable.recipe_spare_ribs_baked,
         imageDescription = "오븐에 구운 전통 돼지갈비 이미지",
         userName = "junsik",
@@ -153,7 +155,9 @@ fun SavedRecipe(
                     .width(200.dp),
                 text = recipe.title,
                 color = AppColors.white,
-                style = AppTextStyles.smallTextBold
+                style = AppTextStyles.smallTextBold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
 
             // 유저
@@ -191,7 +195,7 @@ fun SavedRecipe(
             Spacer(modifier = Modifier.width(10.dp))
 
             // 북마크 아이콘
-            Box(
+            Icon(
                 modifier = Modifier
                     .size(24.dp)
                     .background(
@@ -200,16 +204,12 @@ fun SavedRecipe(
                     )
                     .clickable(
                         onClick = onBookmarkClick
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    imageVector = icon,
-                    contentDescription = "북마크",
-                    tint = AppColors.primary80,
-                )
-            }
+                    )
+                    .padding(4.dp),
+                imageVector = icon,
+                contentDescription = "북마크",
+                tint = AppColors.primary80,
+            )
         }
     }
 }
