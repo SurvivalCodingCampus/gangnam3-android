@@ -23,8 +23,14 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
-fun SmallButtonPreview() {
-    SmallButton("Button") { }
+fun SmallButtonDefaultPreview() {
+    SmallButtonContent(text = "Button", isPressed = false) {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SmallButtonPressedPreview() {
+    SmallButtonContent(text = "Button", isPressed = true) {}
 }
 
 @Composable
@@ -34,6 +40,22 @@ fun SmallButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
+
+    SmallButtonContent(
+        text = text,
+        isPressed = isPressed,
+        interactionSource = interactionSource,
+        onClick = onClick,
+    )
+}
+
+@Composable
+private fun SmallButtonContent(
+    text: String,
+    isPressed: Boolean,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    onClick: () -> Unit,
+) {
     val buttonColor = if (isPressed) AppColors.gray4 else AppColors.primary100
 
     Box(
