@@ -23,13 +23,26 @@ import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
-private fun FilterButtonsPreview() {
-    var selectedFilter by rememberSaveable { mutableIntStateOf(4) }
+private fun Filter0ButtonPreview() {
+    var selectedFilter by rememberSaveable { mutableIntStateOf(0) }
 
     FilterButtons(
         selectedFilter = selectedFilter,
-        onFilterClick = { rating ->
-            selectedFilter = rating
+        onFilterClick = { index ->
+            selectedFilter = index
+        },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Filter2ButtonPreview() {
+    var selectedFilter by rememberSaveable { mutableIntStateOf(2) }
+
+    FilterButtons(
+        selectedFilter = selectedFilter,
+        onFilterClick = { index ->
+            selectedFilter = index
         },
     )
 }
