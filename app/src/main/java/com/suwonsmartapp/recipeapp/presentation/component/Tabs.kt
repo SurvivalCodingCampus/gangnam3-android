@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.tab
+package com.suwonsmartapp.recipeapp.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,23 +24,14 @@ import com.suwonsmartapp.recipeapp.ui.TextStyles
 
 @Preview(showBackground = true)
 @Composable
-fun TabsLeftPreview() {
-    Tabs(
-        labels = listOf("Video", "Ingrident"),
-        selectedIndex = 0,
-    ) {
-        println("선택된 탭: $it")
-    }
-}
+fun TabsPreview() {
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
-@Preview(showBackground = true)
-@Composable
-fun TabsRightPreview() {
     Tabs(
         labels = listOf("Video", "Ingrident"),
-        selectedIndex = 1,
+        selectedIndex = selectedIndex,
     ) {
-        println("선택된 탭: $it")
+        selectedIndex = it
     }
 }
 
@@ -53,7 +48,6 @@ fun Tabs(
 ) {
     Row(
         modifier = Modifier
-            .width(315.dp)
             .height(33.dp),
         horizontalArrangement = Arrangement.spacedBy(15.dp),
     ) {

@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.button
+package com.suwonsmartapp.recipeapp.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

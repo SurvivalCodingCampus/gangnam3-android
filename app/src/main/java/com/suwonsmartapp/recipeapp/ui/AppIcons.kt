@@ -1,4 +1,4 @@
-package drawable
+package com.suwonsmartapp.recipeapp.ui
 
 import androidx.annotation.DrawableRes
 import androidx.compose.material.icons.Icons
