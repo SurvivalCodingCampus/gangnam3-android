@@ -73,33 +73,38 @@ package "domain.model" {
     + location : String?
   }
 
-  class Recipe {
+  class Recipe <<목록/카드용>> {
     + id : String
     + title : String
     + imageUrl : String
-    + videoUrl : String?
+    + videoUrl : String?  // 프로필 Videos 탭 구분용
     + chef : UserSummary
     + category : Category
     + rating : Double  // 평균 별점 (서버 집계)
     + reviewCount : Int  // "13k Reviews"
-    + savedCount : Int  // "155 Saved"
     + cookingTimeMinutes : Int
+    + createdAt : Long
+  }
+
+  class RecipeDetail <<상세 화면용>> {
+    + recipe : Recipe
+    + savedCount : Int  // "155 Saved"
     + servings : Int  // "1 serve"
     + ingredients : List<Ingredient>
     + procedures : List<Procedure>
     + shareUrl : String  // "app.Recipe.co/jollof_rice"
-    + createdAt : Long
   }
 
   class Ingredient {
     + name : String
     + imageUrl : String
-    + amountGram : Int  // "500g"
+    + amount : String  // "500g", "2 tbsp", "1 cup", "약간" - 표시 전용
   }
 
   class Procedure {
     + step : Int
     + description : String
+    + imageUrl : String?  // 단계별 이미지 (선택)
   }
 
   class Category {
@@ -127,7 +132,14 @@ package "domain.model" {
     + content : String
     + likeCount : Int
     + dislikeCount : Int
+    + myReaction : ReviewReaction  // 내가 누른 반응 (서버 응답이 유일한 출처)
     + createdAt : Long
+  }
+
+  enum ReviewReaction {
+    NONE
+    LIKE
+    DISLIKE
   }
 
   class RecipeRating {
@@ -149,6 +161,7 @@ package "domain.model" {
   enum NotificationType {
     NEW_RECIPE
     SAVED_RECIPE
+    UNKNOWN  // 서버가 새 타입을 추가해도 앱이 깨지지 않도록
   }
 
   enum SocialProvider {
@@ -156,8 +169,10 @@ package "domain.model" {
     FACEBOOK
   }
 
-  Recipe "1" *-- "1..*" Ingredient
-  Recipe "1" *-- "1..*" Procedure
+  RecipeDetail "1" *-- "1" Recipe
+  RecipeDetail "1" *-- "1..*" Ingredient
+  RecipeDetail "1" *-- "1..*" Procedure
+  Review --> ReviewReaction
   Recipe "*" --> "1" Category
   Recipe "*" --> "1" UserSummary : chef
   Review "*" --> "1" UserSummary : author
@@ -177,52 +192,50 @@ package "domain.repository" {
 
   interface AuthRepository <<로그인/가입 · 세션>> {
     + signIn(email : String, password : String) : Result<User, DataError.Network>
-    + signInWithSocial(provider : SocialProvider) : Result<User, DataError.Network>
+    + signInWithSocial(provider : SocialProvider, oauthToken : String) : Result<User, DataError.Network>  // 토큰은 Google/Facebook SDK에서 획득
     + signUp(name : String, email : String, password : String) : Result<User, DataError.Network>
     + signOut() : Result<Unit, DataError.Network>
-    + getCurrentUser() : User?
+    + observeCurrentUser() : Flow<User?>  // 세션 만료(401) 시 null 방출 → 로그인 화면으로
   }
 
-  interface UserRepository <<프로필>> {
+  interface UserRepository <<프로필 · 팔로우 관계>> {
     + getUser(userId : String) : Result<User, DataError.Network>
+    + observeFollowingIds() : Flow<Set<String>>  // 상세/프로필의 Follow 버튼 상태
+    + refreshFollowingIds() : Result<Unit, DataError.Network>  // 서버 → 캐시 동기화
+    + follow(userId : String) : Result<Unit, DataError.Network>  // 멱등
+    + unfollow(userId : String) : Result<Unit, DataError.Network>  // 멱등
   }
 
-  interface RecipeRepository <<레시피 원본 데이터>> {
-    + getRecipes() : Result<List<Recipe>, DataError.Network>
-    + getRecipe(recipeId : String) : Result<Recipe, DataError.Network>
+  interface RecipeRepository <<레시피 · 카테고리>> {
+    + searchRecipes(query : String, filter : SearchFilter) : Result<List<Recipe>, DataError.Network>  // 조건을 서버/Room 쿼리로 전달만
+    + getRecipesByIds(recipeIds : List<String>) : Result<List<Recipe>, DataError.Network>  // 최근 검색 복원용
+    + getRecipeDetail(recipeId : String) : Result<RecipeDetail, DataError.Network>
     + getRecipesByChef(chefId : String) : Result<List<Recipe>, DataError.Network>
-  }
-
-  interface CategoryRepository <<카테고리 탭/필터 칩>> {
     + getCategories() : Result<List<Category>, DataError.Network>
   }
 
-  interface RecentSearchRepository <<최근 검색 (로컬)>> {
-    + getRecentRecipes() : Result<List<Recipe>, DataError.Local>
-    + saveRecentRecipes(recipes : List<Recipe>) : Result<Unit, DataError.Local>
+  interface RecentSearchRepository <<최근 검색 (로컬, id만 저장)>> {
+    + getRecentRecipeIds() : Result<List<String>, DataError.Local>
+    + saveRecentRecipeIds(recipeIds : List<String>) : Result<Unit, DataError.Local>
   }
 
-  interface BookmarkRepository <<저장한 레시피>> {
-    + getSavedRecipes() : Result<List<Recipe>, DataError.Network>
-    + getSavedRecipeIds() : Result<Set<String>, DataError.Network>
-    + saveRecipe(recipeId : String) : Result<Unit, DataError.Network>
-    + unsaveRecipe(recipeId : String) : Result<Unit, DataError.Network>
+  interface BookmarkRepository <<저장한 레시피 (로컬 캐시가 단일 출처)>> {
+    + observeSavedRecipes() : Flow<List<Recipe>>  // Saved 화면
+    + observeSavedRecipeIds() : Flow<Set<String>>  // 홈/검색 카드의 북마크 아이콘
+    + refreshSavedRecipes() : Result<Unit, DataError.Network>  // 서버 → 캐시 동기화
+    + saveRecipe(recipeId : String) : Result<Unit, DataError.Network>  // 멱등
+    + unsaveRecipe(recipeId : String) : Result<Unit, DataError.Network>  // 멱등
   }
 
   interface ReviewRepository <<리뷰(댓글)>> {
     + getReviews(recipeId : String) : Result<List<Review>, DataError.Network>
     + addReview(recipeId : String, content : String) : Result<Review, DataError.Network>
+    + setReaction(reviewId : String, reaction : ReviewReaction) : Result<Review, DataError.Network>  // 목표 상태를 그대로 저장(멱등)
   }
 
   interface RatingRepository <<별점>> {
     + getMyRating(recipeId : String) : Result<RecipeRating?, DataError.Network>
-    + submitRating(recipeId : String, score : Int) : Result<RecipeRating, DataError.Network>
-  }
-
-  interface FollowRepository <<팔로우>> {
-    + isFollowing(userId : String) : Result<Boolean, DataError.Network>
-    + follow(userId : String) : Result<Unit, DataError.Network>
-    + unfollow(userId : String) : Result<Unit, DataError.Network>
+    + submitRating(recipeId : String, score : Int) : Result<RecipeRating, DataError.Network>  // 생성/수정 겸용(upsert)
   }
 
   interface NotificationRepository <<알림>> {
@@ -237,8 +250,9 @@ package "domain.repository" {
 AuthRepository ..> User
 UserRepository ..> User
 RecipeRepository ..> Recipe
-CategoryRepository ..> Category
-RecentSearchRepository ..> Recipe
+RecipeRepository ..> RecipeDetail
+RecipeRepository ..> Category
+RecipeRepository ..> SearchFilter : 검색 조건 입력
 BookmarkRepository ..> Recipe
 ReviewRepository ..> Review
 RatingRepository ..> RecipeRating
