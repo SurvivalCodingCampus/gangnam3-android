@@ -21,7 +21,7 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.AppColors
 
 @Composable
-private fun RoundedImage(
+fun RoundedImage(
     imageId: Int,
     contentDescription: String,
 ) {
