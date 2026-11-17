@@ -46,7 +46,7 @@ sealed interface DataError : RootError {
 |---|---|---|---|
 | Sign In | 이메일/소셜 로그인 | UI → Repo | `AuthRepository` |
 | Sign up | **회원가입** | UI → **규칙 함수** → Repo | `AuthRepository` |
-| Home | 카테고리 탭, 레시피 카드, New Recipes | UI → Repo (`searchRecipes("", SearchFilter(category=…, sort=NEWEST))` 직접 호출) | `RecipeRepository`, `BookmarkRepository` |
+| Home | 카테고리 탭, 레시피 카드, New Recipes | UI → Repo (`searchRecipes("", SearchFilter(category=…, sort=NEWEST))` 직접 호출). 탭 목록은 UI 상수(`RecipeCategory` 중 홈에 보일 항목), "All" 탭은 `category = null` | `RecipeRepository`, `BookmarkRepository` |
 | Search / Search Result / Filter | **레시피 검색** | UI → **규칙 함수** → Repo | `RecipeRepository`, `RecentSearchRepository` |
 | Search (Recent Search) | 최근 검색 표시 | UI → Repo (저장된 id → `getRecipesByIds`) | `RecentSearchRepository`, `RecipeRepository` |
 | Saved Recipe | 저장 목록 (Flow 관찰) | UI → Repo | `BookmarkRepository` |
@@ -89,7 +89,7 @@ sealed interface DataError : RootError {
 
 **함수를 두지 않는 이유**: 서버가 준 순서 그대로 표시하면 된다. 헤더의 "200 Comments / 155 Saved"는 `Recipe.reviewCount` / `RecipeDetail.savedCount`를 표시만 한다.
 
-> 같은 이유로 **카테고리 목록, 저장 목록, 알림 목록, 프로필, 셰프의 레시피 목록, 팔로우 상태 조회**도 UI → Repository 직통이다.
+> 같은 이유로 **저장 목록, 알림 목록, 프로필, 셰프의 레시피 목록, 팔로우 상태 조회**도 UI → Repository 직통이다.
 
 ---
 
@@ -169,7 +169,7 @@ enum class SignUpError : RootError {
 | R3 | 검색어가 비었고 필터도 기본값이면 검색하지 않는다 (UI는 Recent Search를 보여준다) | `EMPTY_CONDITION` |
 | R4 | `filter.rate`는 `null` 또는 **1~5** | `INVALID_RATE` |
 | R5 | *(검색 계약)* 매칭: `title` 또는 `chef.name`에 검색어 포함 (대소문자 무시). 검색어가 비었으면 전부 매칭 | — |
-| R6 | *(검색 계약)* Category: `recipe.category.id == filter.category.id` (null이면 전체) | — |
+| R6 | *(검색 계약)* Category: `recipe.category == filter.category` (null이면 전체) | — |
 | R7 | *(검색 계약)* Rate: **해당 점수대만** 포함 — `filter.rate <= recipe.rating < filter.rate + 1` (예: 4★ = 4.0~4.9). 5★는 만점이므로 `rating == 5.0`. 표시용 반올림 값이 아니라 원본 `rating`으로 판정한다 (4.96은 화면에 "5.0"으로 보여도 4★에 속함). null이면 전체 ※ 5장 Q1 확정 | — |
 | R8 | *(검색 계약)* 정렬 — `ALL`: 원본 순서 / `NEWEST`: `createdAt` 내림차순 / `OLDEST`: 오름차순 / `POPULARITY`: `reviewCount` 내림차순, 같으면 `rating` 내림차순 | — |
 | R9 | **결과 0건은 성공** (`Success(emptyList())`) | — |
@@ -250,7 +250,8 @@ enum class RateRecipeError : RootError {
 | `ShareRecipeUseCase` + `RecipeLink` 모델 + `ShareRepository` | 링크는 서버가 주는 값, 복사는 플랫폼(클립보드) 기능 | **제거** → `Recipe.shareUrl` 필드 하나 |
 | `Ingredient`(마스터) + `RecipeIngredient`(수량) 분리 | 재료만 따로 조회하는 화면이 없음 | **통합** → `Ingredient(name, imageUrl, amount: String)` |
 | `amount`를 `(quantity: Double, unit: String)`으로 구조화 | 인분 조절 같은 수량 계산 기능이 디자인에 없음. "약간", "2개" 같은 표현도 표시만 하면 됨 | **문자열 하나** (`"500g"`, `"2 tbsp"`). 수량 계산 기능이 생기면 그때 구조화 |
-| `CategoryRepository`(1개 메서드), `FollowRepository`(3개 메서드) 별도 정의 | 카테고리는 레시피 메타데이터, 팔로우는 `User.followerCount`를 바꾸는 사용자 관계라 응집도가 같음 | **통합** → `RecipeRepository.getCategories()`, `UserRepository.follow/unfollow` |
+| `CategoryRepository`(1개 메서드), `FollowRepository`(3개 메서드) 별도 정의 | 카테고리는 디자인에 고정된 값이라 서버에서 받아올 필요가 없음. 팔로우는 `User.followerCount`를 바꾸는 사용자 관계라 응집도가 같음 | **카테고리는 enum `RecipeCategory`로 전환**(조회 메서드 없음), 팔로우는 `UserRepository.follow/unfollow`로 **통합** |
+| `RecipeCategory`에 `ALL` 포함 | "전체"는 카테고리가 아니라 필터 없음 상태. 넣으면 `Recipe.category = ALL` 같은 불가능한 상태가 생기고, `null`과 `ALL`이 둘 다 "전체"를 뜻하게 됨 | **제외** → `SearchFilter.category = null`이 전체. 서버가 모르는 값을 보내면 `UNKNOWN`으로 변환 |
 | `Chef` 엔티티 별도 정의 | 카드의 셰프, 리뷰 작성자 모두 id·이름·사진만 씀 | **통합** → `UserSummary` 공용 |
 | `SearchResult(recipes, totalCount)` | `totalCount == recipes.size` 중복 | **제거** → `List<Recipe>` |
 | 알림 All/Read/Unread 필터, Today/Yesterday 그룹핑 함수 | 표시 방식이지 정책이 아님 | **UI(Presentation) 로직**으로 이동 |
@@ -301,7 +302,7 @@ enum class RateRecipeError : RootError {
 | 최근 검색에 레시피 스냅샷 저장 → 옛날 데이터가 남음 | **수용** | id만 저장, `getRecipesByIds`로 복원 |
 | 상태 변화 데이터를 Flow로 | **부분 수용** | 현재 사용자·팔로우 id를 Flow로 추가(북마크는 이전 수정에서 반영). **알림은 `Result` 유지**: 읽음 상태가 알림 화면 안에서만 바뀌고, 다른 화면에 미읽음 배지가 없다. 하단 탭에 배지가 생기면 Flow로 바꾼다 |
 | `getRecipes()` 전수 조회 위험 | **수용** | `searchRecipes(query, filter)`로 교체, R5~R8은 검색 계약으로 전환 |
-| Repository 파편화 | **부분 수용** | Category → `RecipeRepository`, Follow → `UserRepository`. **Rating은 분리 유지**: 별점과 리뷰는 디자인상 별도 흐름(팝업 vs 댓글 화면)이고, `rateRecipe` 규칙 함수가 리뷰 메서드까지 의존하게 되면 인터페이스 분리 원칙(ISP)에 어긋난다. 상세 화면 ViewModel은 Rating을 규칙 함수로만 쓰므로 직접 주입받는 Repository는 3개(Recipe, Bookmark, User)다 |
+| Repository 파편화 | **부분 수용** | Category → enum `RecipeCategory`(Repository 불필요), Follow → `UserRepository`. **Rating은 분리 유지**: 별점과 리뷰는 디자인상 별도 흐름(팝업 vs 댓글 화면)이고, `rateRecipe` 규칙 함수가 리뷰 메서드까지 의존하게 되면 인터페이스 분리 원칙(ISP)에 어긋난다. 상세 화면 ViewModel은 Rating을 규칙 함수로만 쓰므로 직접 주입받는 Repository는 3개(Recipe, Bookmark, User)다 |
 | `amountGram: Int` 경직성 | **수용** | `amount: String` |
 | `getCurrentUser()` 동기 함수 | **수용** | `observeCurrentUser(): Flow<User?>`. 401로 세션이 만료되면 데이터 계층이 세션을 지우고 null을 방출 → 앱 전역에서 로그인 화면으로 이동 |
 | `SearchFilter`에 query 없음 | **반론**: query는 시그니처로 해결 | `searchRecipes(query, filter)`. 검색어(입력창)와 필터(바텀시트)는 바뀌는 시점이 달라서 별도 값으로 둔다 |
@@ -324,3 +325,4 @@ enum class RateRecipeError : RootError {
 | Q6 | 프로필의 Videos / Tag 탭은 어떤 데이터인가? | Videos = `videoUrl != null`인 레시피 (UI 필터), Tag는 미정 |
 | Q7 | Forgot Password 흐름이 있는가? | 범위 밖. 필요하면 `AuthRepository.requestPasswordReset(email)` 추가 |
 | Q8 | 홈 하단 `+` 버튼(레시피 작성) 화면이 있는가? | 디자인에 없음 → 이번 설계에서 제외 |
+| Q9 | 카테고리를 서버에서 관리하는가, 앱에 고정하는가? | ✅ **확정: 앱에 고정(enum `RecipeCategory`)**. 카테고리를 추가하려면 앱을 업데이트해야 하고, 업데이트 전 앱은 새 카테고리를 `UNKNOWN`으로 본다. 홈 탭과 필터 칩에 보일 목록, 화면 표시 이름(`LOCAL_DISH` → "Local Dish")은 UI가 정한다 |

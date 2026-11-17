@@ -79,7 +79,7 @@ package "domain.model" {
     + imageUrl : String
     + videoUrl : String?  // 프로필 Videos 탭 구분용
     + chef : UserSummary
-    + category : Category
+    + category : RecipeCategory
     + rating : Double  // 평균 별점 (서버 집계)
     + reviewCount : Int  // "13k Reviews"
     + cookingTimeMinutes : Int
@@ -107,15 +107,27 @@ package "domain.model" {
     + imageUrl : String?  // 단계별 이미지 (선택)
   }
 
-  class Category {
-    + id : String
-    + name : String  // Indian, Italian, Asian, Breakfast ...
+  enum RecipeCategory {
+    INDIAN
+    ITALIAN
+    ASIAN
+    CHINESE
+    FRUIT
+    VEGETABLES
+    PROTEIN
+    CEREAL
+    LOCAL_DISH
+    BREAKFAST
+    LUNCH
+    DINNER
+    SPANISH
+    UNKNOWN  // 서버가 새 카테고리를 보내도 앱이 깨지지 않도록
   }
 
   class SearchFilter <<검색 조건 값 객체>> {
     + sort : SortOption = ALL
     + rate : Int? = null  // 1..5, null = 전체
-    + category : Category? = null
+    + category : RecipeCategory? = null  // null = 전체
   }
 
   enum SortOption {
@@ -173,7 +185,7 @@ package "domain.model" {
   RecipeDetail "1" *-- "1..*" Ingredient
   RecipeDetail "1" *-- "1..*" Procedure
   Review --> ReviewReaction
-  Recipe "*" --> "1" Category
+  Recipe "*" --> "1" RecipeCategory
   Recipe "*" --> "1" UserSummary : chef
   Review "*" --> "1" UserSummary : author
   Review "*" ..> "1" Recipe : recipeId
@@ -181,7 +193,7 @@ package "domain.model" {
   Notification --> NotificationType
   Notification ..> Recipe : recipeId?
   SearchFilter --> SortOption
-  SearchFilter --> "0..1" Category
+  SearchFilter --> "0..1" RecipeCategory
   User ..> UserSummary : 요약
 }
 
@@ -206,12 +218,11 @@ package "domain.repository" {
     + unfollow(userId : String) : Result<Unit, DataError.Network>  // 멱등
   }
 
-  interface RecipeRepository <<레시피 · 카테고리>> {
+  interface RecipeRepository <<레시피>> {
     + searchRecipes(query : String, filter : SearchFilter) : Result<List<Recipe>, DataError.Network>  // 조건을 서버/Room 쿼리로 전달만
     + getRecipesByIds(recipeIds : List<String>) : Result<List<Recipe>, DataError.Network>  // 최근 검색 복원용
     + getRecipeDetail(recipeId : String) : Result<RecipeDetail, DataError.Network>
     + getRecipesByChef(chefId : String) : Result<List<Recipe>, DataError.Network>
-    + getCategories() : Result<List<Category>, DataError.Network>
   }
 
   interface RecentSearchRepository <<최근 검색 (로컬, id만 저장)>> {
@@ -251,7 +262,6 @@ AuthRepository ..> User
 UserRepository ..> User
 RecipeRepository ..> Recipe
 RecipeRepository ..> RecipeDetail
-RecipeRepository ..> Category
 RecipeRepository ..> SearchFilter : 검색 조건 입력
 BookmarkRepository ..> Recipe
 ReviewRepository ..> Review
