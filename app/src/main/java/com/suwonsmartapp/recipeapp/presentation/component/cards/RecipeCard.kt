@@ -35,7 +35,7 @@ import com.suwonsmartapp.recipeapp.domain.model.recipe.RecipeCategory
 import com.suwonsmartapp.recipeapp.domain.model.user.UserSummary
 import com.suwonsmartapp.recipeapp.presentation.component.buttons.CircleBookmarkButton
 import com.suwonsmartapp.recipeapp.presentation.component.labels.CookingTimeLabel
-import com.suwonsmartapp.recipeapp.presentation.component.rating.RatingBadge
+import com.suwonsmartapp.recipeapp.presentation.component.labels.RatingBadge
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 

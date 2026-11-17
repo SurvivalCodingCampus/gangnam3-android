@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.rating
+package com.suwonsmartapp.recipeapp.presentation.component.labels
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
