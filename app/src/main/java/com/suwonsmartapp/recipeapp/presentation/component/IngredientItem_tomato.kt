@@ -58,7 +58,12 @@ fun IngredientItem(
             .clip(RoundedCornerShape(12.dp))
             .background(AppColors.gray4)
             .clickable(onClick = onClick)
-            .padding(horizontal = 15.dp, vertical = 12.dp),
+            .padding(
+                start = 15.dp,
+                top = 12.dp,
+                end = 15.dp,
+                bottom = 12.dp,
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
