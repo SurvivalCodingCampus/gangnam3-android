@@ -24,7 +24,7 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Composable
 fun CookingTimeLabel(
-    cookingTimeMinute: Int,
+    cookingTimeMinutes: Int,
 ) {
     Row(
         modifier = Modifier
@@ -47,7 +47,7 @@ fun CookingTimeLabel(
             Spacer(Modifier.size(5.dp))
             
             Text(
-                text = "$cookingTimeMinute",
+                text = "$cookingTimeMinutes",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
