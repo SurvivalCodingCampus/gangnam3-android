@@ -2,7 +2,7 @@
 
 > 기준 디자인: Figma *Food Recipe App ([Community](https://www.figma.com/design/gSeg6yi2QMN0GajM3diTb2/Food-Recipe-App--Community-?node-id=1-3&p=f&t=WGMtHBQPKKnawQeJ-0))* — Design 페이지  
 > 모델/Repository 정의: `architecture.puml`  
-> 이 문서는 **"무엇을 판정/가공하는가"** 만 다룬다. 비즈니스 규칙은 다이어그램에 그리지 않는다. ㅊ
+> 이 문서는 **"무엇을 판정/가공하는가"** 만 다룬다. 비즈니스 규칙은 다이어그램에 그리지 않는다.  
 
 ---
 
