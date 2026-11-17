@@ -49,6 +49,13 @@ object TextStyles {
         lineHeight = 17.sp,
     )
 
+    // Semi Bold
+    val normalTextSemiBold = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+    )
     val smallerTextSemiBold = TextStyle(
         fontFamily = AppFonts.Poppins,
         fontWeight = FontWeight.SemiBold,
