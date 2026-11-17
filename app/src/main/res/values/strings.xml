@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">RecipeApp</string>
     <string name="ingredient_gram">%1$dg</string>
+    <string name="recipe_chef">By %1$s</string>
+    <string name="recipe_cooking_time">%1$d min</string>
+    <string name="recipe_bookmark">Bookmark</string>
 </resources>
