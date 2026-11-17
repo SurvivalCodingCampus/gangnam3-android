@@ -2,6 +2,7 @@ package com.suwonsmartapp.recipeapp.presentation.component.cards
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,7 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.domain.model.recipe.Recipe
 import com.suwonsmartapp.recipeapp.domain.model.recipe.RecipeCategory
 import com.suwonsmartapp.recipeapp.domain.model.user.UserSummary
+import com.suwonsmartapp.recipeapp.presentation.component.buttons.CircleBookmarkButton
 import com.suwonsmartapp.recipeapp.presentation.component.labels.CookingTimeLabel
 import com.suwonsmartapp.recipeapp.presentation.component.rating.RatingBadge
 import com.suwonsmartapp.recipeapp.ui.AppColors
@@ -85,7 +87,10 @@ fun RecipeCard(
             
             Spacer(modifier = Modifier.size(60.dp))
             
-            Row {
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
@@ -119,6 +124,10 @@ fun RecipeCard(
                 CookingTimeLabel(recipe.cookingTimeMinutes)
                 
                 // 북마크
+                CircleBookmarkButton(
+                    isBookmarked = isBookmarked,
+                    onBookmarkClick = onBookmarkClick
+                )
             }
         }
     }
