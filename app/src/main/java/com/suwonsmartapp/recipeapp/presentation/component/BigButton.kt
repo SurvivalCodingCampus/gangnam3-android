@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -27,6 +26,9 @@ import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.TextStyles
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+
 
 @Preview(showBackground = true)
 @Composable
@@ -61,6 +63,7 @@ fun BigButton(
                 onClick = onClick,
             )
             .padding (
+                horizontal = 85.dp,
                 vertical = 18.dp,
             ),
         contentAlignment = Alignment.Center,
@@ -74,7 +77,7 @@ fun BigButton(
                 style = TextStyles.normalTextBold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .width(114.dp)
+                    .weight(1f)
                     .height(24.dp),
             )
 

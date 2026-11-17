@@ -3,7 +3,10 @@ package com.suwonsmartapp.recipeapp.presentation.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -46,17 +49,18 @@ fun SmallButton(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .width(114.dp)
-                .height(17.dp),
-            contentAlignment = Alignment.Center,
+                .fillMaxSize()
+                .padding(horizontal = 30.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = text,
                 color = AppColors.white,
                 style = TextStyles.smallerTextBold,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1f),
             )
         }
     }
