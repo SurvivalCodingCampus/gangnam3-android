@@ -10,24 +10,28 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.suwonsmartapp.recipeapp.ui.TextStyles
 
 @Preview(showBackground = true)
 @Composable
 private fun InputFieldPreview() {
     Column {
         Spacer(modifier = Modifier.size(30.dp))
+        var text by remember { mutableStateOf("") }
         InputField(
             label = "Label",
             placeholder = "Placeholder",
-            value = "",
+            value = "Placeholder",
         ) {
-            println("입력: $it")
+            text = it
         }
     }
 }
@@ -48,7 +52,7 @@ fun InputField(
     ) {
         Text(
             text = label,
-            fontSize = 14.sp,
+            style = TextStyles.smallTextRegular,
             color = AppColors.black1
         )
         Spacer(Modifier.height(5.dp))
@@ -58,13 +62,12 @@ fun InputField(
             placeholder = {
                 Text(
                     placeholder,
-                    fontSize = 11.sp,
+                    style = TextStyles.smallerTextRegular,
                     color = AppColors.gray4,
                 )
             },
-            textStyle = TextStyle(
-                fontSize = 11.sp,
-                color = AppColors.black1
+            textStyle = TextStyles.smallerTextRegular.copy(
+                color = AppColors.black1,
             ),
             singleLine = true,
             shape = RoundedCornerShape(10.dp),
