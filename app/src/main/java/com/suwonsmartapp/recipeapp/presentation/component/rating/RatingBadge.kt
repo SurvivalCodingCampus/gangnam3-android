@@ -24,9 +24,10 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 @Composable
 fun RatingBadge(
     rating: Double,
+    modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .width(37.dp)
             .height(16.dp)
             .clip(shape = RoundedCornerShape(20.dp))
