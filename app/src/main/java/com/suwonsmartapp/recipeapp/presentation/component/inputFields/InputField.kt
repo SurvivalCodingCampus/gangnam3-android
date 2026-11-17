@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.inputField
+package com.suwonsmartapp.recipeapp.presentation.component.inputFields
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

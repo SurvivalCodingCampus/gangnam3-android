@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.core.util.capitalizeWords
 import com.suwonsmartapp.recipeapp.domain.model.recipe.Ingredient
-import com.suwonsmartapp.recipeapp.presentation.component.image.RoundedImage
+import com.suwonsmartapp.recipeapp.presentation.component.images.RoundedImage
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 

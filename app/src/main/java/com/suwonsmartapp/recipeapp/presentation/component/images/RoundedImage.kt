@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.image
+package com.suwonsmartapp.recipeapp.presentation.component.images
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
