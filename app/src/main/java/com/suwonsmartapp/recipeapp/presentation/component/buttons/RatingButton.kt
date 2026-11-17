@@ -2,6 +2,7 @@ package com.suwonsmartapp.recipeapp.presentation.component.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -86,7 +87,9 @@ fun RatingButton(
     RatingStarIcon(
         text = text,
         isSelected = isSelected,
-        modifier = modifier,
+        modifier = modifier.clickable(
+            onClick = onClick,
+        ),
     )
 }
 
@@ -94,12 +97,24 @@ fun RatingButton(
 @Composable
 private fun RatingButtonPreview() {
     val text = "5"
-    var isSelected by remember { mutableStateOf(false) }
+    var isSelected1 by remember { mutableStateOf(false) }
+    var isSelected2 by remember { mutableStateOf(true) }
     
-    RatingButton(
-        text = text,
-        isSelected = isSelected,
-    ) {
-        isSelected = !isSelected
+    Row {
+        RatingButton(
+            text = text,
+            isSelected = isSelected1,
+        ) {
+            isSelected1 = !isSelected1
+        }
+        
+        Spacer(Modifier.size(5.dp))
+        
+        RatingButton(
+            text = text,
+            isSelected = isSelected2,
+        ) {
+            isSelected2 = !isSelected2
+        }
     }
 }
