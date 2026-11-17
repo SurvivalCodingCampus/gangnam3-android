@@ -1,6 +1,7 @@
 package com.suwonsmartapp.recipeapp.presentation.component.buttons
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -12,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -21,9 +23,9 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.AppColors
 
 @Composable
-fun BookmarkButton(
+fun BookmarkIcon(
     isBookmarked: Boolean,
-    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val bookmarkImage = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder
     val bookmarkColor = if (isBookmarked) AppColors.primary80 else AppColors.gray4
@@ -32,18 +34,15 @@ fun BookmarkButton(
         imageVector = bookmarkImage,
         contentDescription = "Bookmark",
         tint = bookmarkColor,
-        modifier = Modifier
+        modifier = modifier
             .size(24.dp)
-            .clickable(
-                onClick = onClick
-            )
     )
 }
 
 @Composable
-fun BookmarkButtonImg(
+fun BookmarkImg(
     isBookmarked: Boolean,
-    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val bookmarkImage = if (isBookmarked) R.drawable.ic_bookmark_active else R.drawable.ic_bookmark_inactive
     
@@ -51,12 +50,28 @@ fun BookmarkButtonImg(
         painter = painterResource(id = bookmarkImage),
         contentDescription = "Bookmark",
         tint = Color.Unspecified,
-        modifier = Modifier
+        modifier = modifier
             .size(24.dp)
-            .clickable(
-                onClick = onClick
-            )
     )
+}
+
+@Composable
+fun BookmarkButton(
+    isBookmarked: Boolean,
+    modifier: Modifier = Modifier,
+    onBookmarkClick: () -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .clickable(
+                onClick = onBookmarkClick
+            ),
+        contentAlignment = Alignment.Center,
+    ) {
+        BookmarkIcon(
+            isBookmarked = isBookmarked
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -82,21 +97,17 @@ private fun BookmarkButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun BookmarkButtonImgPreview() {
+private fun BookmarkImgPreview() {
     var isBookmarked1 by remember { mutableStateOf(false) }
     var isBookmarked2 by remember { mutableStateOf(true) }
     
     Column {
-        BookmarkButtonImg(
+        BookmarkImg(
             isBookmarked = isBookmarked1,
-        ) {
-            isBookmarked1 = !isBookmarked1
-        }
+        )
         
-        BookmarkButtonImg(
+        BookmarkImg(
             isBookmarked = isBookmarked2,
-        ) {
-            isBookmarked2 = !isBookmarked2
-        }
+        )
     }
 }
