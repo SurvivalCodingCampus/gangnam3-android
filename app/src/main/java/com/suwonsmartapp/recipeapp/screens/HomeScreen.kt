@@ -14,13 +14,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+<<<<<<< HEAD
+=======
+import androidx.compose.foundation.layout.width
+>>>>>>> recipe/student/01_박강원
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+<<<<<<< HEAD
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.IconButton
+=======
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.FilterChip
+>>>>>>> recipe/student/01_박강원
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -32,11 +41,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+<<<<<<< HEAD
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
+=======
+import androidx.compose.ui.res.stringResource
+>>>>>>> recipe/student/01_박강원
 import androidx.compose.ui.text.font.FontWeight
 import com.suwonsmartapp.recipeapp.R
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,10 +60,20 @@ import com.suwonsmartapp.recipeapp.data.Recipe
 import com.suwonsmartapp.recipeapp.data.RecipeCategory
 import com.suwonsmartapp.recipeapp.data.formatRating
 import com.suwonsmartapp.recipeapp.data.matches
+<<<<<<< HEAD
 import com.suwonsmartapp.recipeapp.data.featuredRecipeIds
 import com.suwonsmartapp.recipeapp.data.sampleRecipes
 import com.suwonsmartapp.recipeapp.ui.theme.RecipeAppTheme
 import com.suwonsmartapp.recipeapp.ui.theme.RecipeStar
+=======
+import com.suwonsmartapp.recipeapp.data.sampleFeatured
+import com.suwonsmartapp.recipeapp.data.sampleNew
+import com.suwonsmartapp.recipeapp.data.SampleRecipeRepository
+import com.suwonsmartapp.recipeapp.ui.theme.RecipeAppTheme
+import com.suwonsmartapp.recipeapp.ui.theme.RecipeBorder
+import com.suwonsmartapp.recipeapp.ui.theme.RecipeStar
+import com.suwonsmartapp.recipeapp.ui.theme.RecipeSurfaceVariant
+>>>>>>> recipe/student/01_박강원
 
 /**
  * 명세 §3.2 메인 홈 — 인사말/프로필, 검색바, 카테고리 칩, Featured(행 카드),
@@ -58,7 +81,10 @@ import com.suwonsmartapp.recipeapp.ui.theme.RecipeStar
  */
 @Composable
 fun HomeScreen(
+<<<<<<< HEAD
     recipes: List<Recipe>,
+=======
+>>>>>>> recipe/student/01_박강원
     query: String,
     onQueryChange: (String) -> Unit,
     filter: FilterState,
@@ -69,6 +95,7 @@ fun HomeScreen(
     onOpenRecipe: (String) -> Unit,
     onOpenProfile: () -> Unit
 ) {
+<<<<<<< HEAD
     val filtering = query.isNotBlank() || filter != FilterState()
     val results = remember(recipes, query, filter) {
         recipes.filter { it.matches(query, filter) }
@@ -79,12 +106,20 @@ fun HomeScreen(
             .ifEmpty { recipes.sortedByDescending { it.rating }.take(2) }
     }
     val newRecipes = remember(recipes) { recipes.filter { it.isNew } }
+=======
+    val recipes = SampleRecipeRepository.recipes()
+    val filtering = query.isNotBlank() || filter != FilterState()
+    val results = remember(query, filter) {
+        recipes.filter { it.matches(query, filter) }
+    }
+>>>>>>> recipe/student/01_박강원
 
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
+<<<<<<< HEAD
             val profileLabel = stringResource(R.string.open_profile)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
@@ -100,22 +135,36 @@ fun HomeScreen(
                         // 인사 이모지는 장식 — TalkBack 낭독 제외.
                         Text("👋", modifier = Modifier.clearAndSetSemantics { }, fontSize = 22.sp)
                     }
+=======
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column {
+                    Text(stringResource(R.string.home_hello, "Alex"), fontSize = 18.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+>>>>>>> recipe/student/01_박강원
                     Text(
                         stringResource(R.string.home_prompt),
                         fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+<<<<<<< HEAD
                 Box(
                     modifier = Modifier
                         .size(48.dp) // 터치 타깃 48dp — 시각 원은 내부 40dp 유지
                         .clickable(onClickLabel = profileLabel, onClick = onOpenProfile)
                         .semantics { contentDescription = profileLabel },
+=======
+                Spacer(Modifier.width(12.dp)) // 기존 weight(1f): 현행 Compose에서 internal — 고정 갭으로 대체(기존 WIP 수정, 계획 문서 기록)
+                Box(
+                    modifier = Modifier
+                        .size(48.dp) // 터치 타깃 48dp — 시각 원은 내부 40dp 유지
+                        .clickable(onClickLabel = "프로필 열기", onClick = onOpenProfile),
+>>>>>>> recipe/student/01_박강원
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
                         modifier = Modifier
                             .size(40.dp)
+<<<<<<< HEAD
                             .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
@@ -125,6 +174,11 @@ fun HomeScreen(
                             fontSize = 16.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+=======
+                            .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                    ) {
+                        Text("A", fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+>>>>>>> recipe/student/01_박강원
                     }
                 }
             }
@@ -136,7 +190,10 @@ fun HomeScreen(
             item {
                 Text(
                     stringResource(R.string.home_results),
+<<<<<<< HEAD
                     modifier = Modifier.semantics { heading() },
+=======
+>>>>>>> recipe/student/01_박강원
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -145,6 +202,7 @@ fun HomeScreen(
             items(results, key = { it.id }) { recipe ->
                 RecipeRow(recipe = recipe, bookmarks = bookmarks, onToggleBookmark = onToggleBookmark, onOpen = { onOpenRecipe(recipe.id) })
             }
+<<<<<<< HEAD
             if (results.isEmpty()) {
                 item {
                     Column(Modifier.fillMaxWidth().padding(vertical = 32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -153,17 +211,24 @@ fun HomeScreen(
                     }
                 }
             }
+=======
+>>>>>>> recipe/student/01_박강원
         } else {
             item {
                 Text(
                     stringResource(R.string.home_featured),
+<<<<<<< HEAD
                     modifier = Modifier.semantics { heading() },
                     fontSize = 18.sp,
                     lineHeight = 24.sp,
+=======
+                    fontSize = 16.sp,
+>>>>>>> recipe/student/01_박강원
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
+<<<<<<< HEAD
             items(featured, key = { it.id }) { recipe ->
                 RecipeRow(recipe = recipe, bookmarks = bookmarks, onToggleBookmark = onToggleBookmark, onOpen = { onOpenRecipe(recipe.id) })
             }
@@ -191,6 +256,29 @@ fun HomeScreen(
                             )
                         }
                         if (pair.size == 1) Spacer(Modifier.weight(1f))
+=======
+            items(sampleFeatured, key = { it.id }) { recipe ->
+                RecipeRow(recipe = recipe, bookmarks = bookmarks, onToggleBookmark = onToggleBookmark, onOpen = { onOpenRecipe(recipe.id) })
+            }
+            item {
+                Text(
+                    stringResource(R.string.home_new),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    for (recipe in sampleNew) {
+                        RecipeGridCard(
+                            recipe = recipe,
+                            modifier = Modifier.width(150.dp) // 기존 weight(1f) 대체(고정 폭 — 기존 WIP 수정, 계획 문서 기록)
+                        )
+>>>>>>> recipe/student/01_박강원
                     }
                 }
             }
@@ -211,11 +299,15 @@ private fun HomeSearchBar(
     onQueryChange: (String) -> Unit,
     onFilter: () -> Unit
 ) {
+<<<<<<< HEAD
     val filterLabel = stringResource(R.string.open_filter)
+=======
+>>>>>>> recipe/student/01_박강원
     TextField(
         value = query,
         onValueChange = onQueryChange,
         placeholder = { Text(stringResource(R.string.home_search_hint), color = MaterialTheme.colorScheme.onSurfaceVariant) },
+<<<<<<< HEAD
         leadingIcon = { Text("🔍", modifier = Modifier.clearAndSetSemantics { }, fontSize = 18.sp) },
         trailingIcon = {
             IconButton(onClick = onFilter, modifier = Modifier.size(48.dp).semantics { contentDescription = filterLabel }) {
@@ -230,6 +322,18 @@ private fun HomeSearchBar(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
         ),
+=======
+        leadingIcon = { Text("🔍", fontSize = 18.sp) },
+        trailingIcon = {
+            Text(
+                "⚙️",
+                fontSize = 18.sp,
+                modifier = Modifier.clickable(onClickLabel = "필터 열기", onClick = onFilter).padding(horizontal = 4.dp)
+            )
+        },
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(500.dp),
+>>>>>>> recipe/student/01_박강원
         singleLine = true
     )
 }
@@ -268,11 +372,18 @@ private fun RecipeRow(
     onToggleBookmark: (String) -> Unit,
     onOpen: () -> Unit
 ) {
+<<<<<<< HEAD
     val openLabel = stringResource(R.string.open_recipe, recipe.title)
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClickLabel = openLabel, onClick = onOpen)
+=======
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClickLabel = "레시피 상세 열기: ${recipe.title}", onClick = onOpen)
+>>>>>>> recipe/student/01_박강원
             .padding(vertical = 6.dp)
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
@@ -293,12 +404,21 @@ private fun RecipeRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
+<<<<<<< HEAD
                 Modifier.weight(1f).padding(end = 12.dp)
             ) {
                 Text(recipe.title, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 Text(recipe.chef, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Text("⭐️", modifier = Modifier.clearAndSetSemantics { }, fontSize = 14.sp, color = RecipeStar)
+=======
+                Modifier.padding(end = 12.dp) // 기존 weight(1f) 대체(가변 갭 → 고정 갭 — 기존 WIP 수정, 계획 문서 기록)
+            ) {
+                Text(recipe.title, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
+                Text(recipe.chef, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Text("⭐️", fontSize = 14.sp, color = RecipeStar)
+>>>>>>> recipe/student/01_박강원
             Text(
                 " ${formatRating(recipe.rating)} (${recipe.cookingMinutes} mins)",
                 fontSize = 13.sp,
@@ -309,9 +429,14 @@ private fun RecipeRow(
 }
 
 @Composable
+<<<<<<< HEAD
 private fun RecipeGridCard(recipe: Recipe, modifier: Modifier = Modifier, onOpen: () -> Unit) {
     val openLabel = stringResource(R.string.open_recipe, recipe.title)
     Column(modifier = modifier.clickable(onClickLabel = openLabel, onClick = onOpen)) {
+=======
+private fun RecipeGridCard(recipe: Recipe, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+>>>>>>> recipe/student/01_박강원
         RecipeMedia(
             emoji = recipe.emoji,
             imageUrl = recipe.thumbnailUrl,
@@ -334,7 +459,10 @@ private fun RecipeGridCard(recipe: Recipe, modifier: Modifier = Modifier, onOpen
 private fun HomePreview() {
     RecipeAppTheme {
         HomeScreen(
+<<<<<<< HEAD
             recipes = sampleRecipes,
+=======
+>>>>>>> recipe/student/01_박강원
             query = "",
             onQueryChange = {},
             filter = FilterState(),

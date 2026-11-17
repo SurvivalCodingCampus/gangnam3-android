@@ -139,8 +139,12 @@ val sampleRecipes: List<Recipe> = listOf(
     )
 )
 
+<<<<<<< HEAD
 /** 데모 큐레이션 — Featured로 노출할 레시피 id(저장소 무관 계층). */
 val featuredRecipeIds: Set<String> = setOf("r1", "r2")
 
 val sampleFeatured: List<Recipe> = sampleRecipes.filter { it.id in featuredRecipeIds }
+=======
+val sampleFeatured: List<Recipe> = sampleRecipes.filter { it.id in setOf("r1", "r2") }
+>>>>>>> recipe/student/01_박강원
 val sampleNew: List<Recipe> = sampleRecipes.filter { it.isNew }

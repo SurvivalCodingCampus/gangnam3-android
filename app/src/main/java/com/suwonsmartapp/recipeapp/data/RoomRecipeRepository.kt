@@ -4,11 +4,14 @@ import android.content.Context
 import androidx.room.Room
 import org.json.JSONArray
 import org.json.JSONObject
+<<<<<<< HEAD
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+=======
+>>>>>>> recipe/student/01_박강원
 
 /**
  * 로컬(Room) 저장소 구현 — 저장소 인터페이스(RecipeRepository) 뒤 격리.
@@ -18,6 +21,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * Context 필요 → 순수 JVM 유닛테스트 불가(로컬 환경에 Robolectric 없음, 부록 B) —
  * instrumented 테스트/추상 팩토리 경로는 화면 테스트 경로 결정(사용자 항목 ①)과 함께.
  */
+<<<<<<< HEAD
 class RoomRecipeRepository(private val db: RecipeDatabase) : RecipeRepository {
     constructor(context: Context) : this(database(context))
 
@@ -32,6 +36,14 @@ class RoomRecipeRepository(private val db: RecipeDatabase) : RecipeRepository {
     suspend fun toggleBookmark(id: String) = withContext(Dispatchers.IO) { db.recipeDao().toggleBookmark(id) }
     suspend fun clearBookmarks() = withContext(Dispatchers.IO) { db.recipeDao().clearBookmarks() }
 
+=======
+class RoomRecipeRepository(private val context: Context) : RecipeRepository {
+
+    private val db by lazy {
+        Room.databaseBuilder(context.applicationContext, RecipeDatabase::class.java, "recipeapp.db").build()
+    }
+
+>>>>>>> recipe/student/01_박강원
     override fun recipes(): List<Recipe> = db.recipeDao().getAll().map(Companion::toDomain)
 
     /** 시딩/동기화용(미사용 골격) — 정책 확정 시 호출. */
@@ -40,6 +52,7 @@ class RoomRecipeRepository(private val db: RecipeDatabase) : RecipeRepository {
     }
 
     companion object {
+<<<<<<< HEAD
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("CREATE TABLE IF NOT EXISTS `saved_recipes` (`recipeId` TEXT NOT NULL, PRIMARY KEY(`recipeId`), FOREIGN KEY(`recipeId`) REFERENCES `recipes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)")
@@ -53,6 +66,8 @@ class RoomRecipeRepository(private val db: RecipeDatabase) : RecipeRepository {
                 .addMigrations(MIGRATION_1_2).build().also { instance = it }
         }
 
+=======
+>>>>>>> recipe/student/01_박강원
         fun toDomain(entity: RecipeEntity): Recipe = Recipe(
             id = entity.id,
             title = entity.title,

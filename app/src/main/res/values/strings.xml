@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">RecipeApp</string>
+<<<<<<< HEAD
     <string name="bookmark_save">북마크 저장</string>
     <string name="bookmark_remove">북마크 해제</string>
     <string name="open_filter">필터 열기</string>
@@ -7,10 +8,13 @@
     <string name="open_recipe">레시피 상세 열기: %1$s</string>
     <string name="search_empty">검색 결과가 없습니다.</string>
     <string name="search_empty_hint">다른 검색어나 필터를 선택해 보세요.</string>
+=======
+>>>>>>> recipe/student/01_박강원
 
     <!-- 온보딩 (명세 §3.1) -->
     <string name="onboarding_title">Get Cooking</string>
     <string name="onboarding_subtitle">Simple &amp; Delicious Recipes</string>
+<<<<<<< HEAD
     <string name="onboarding_quote">10만 개 이상의 검증된 레시피로 오늘의 요리를 시작해보세요.</string>
     <string name="onboarding_cta">Start Cooking</string>
 
@@ -18,13 +22,27 @@
     <string name="home_hello">Hello, %1$s</string>
     <string name="home_prompt">What are you cooking today?</string>
     <string name="home_search_hint">Search recipe…</string>
+=======
+    <string name="onboarding_cta">Start Cooking</string>
+
+    <!-- 홈 (명세 §3.2) -->
+    <string name="home_hello">Hello, %1$s 👋</string>
+    <string name="home_prompt">What are you cooking today?</string>
+    <string name="home_search_hint">Search recipe...</string>
+>>>>>>> recipe/student/01_박강원
     <string name="home_results">검색 결과</string>
     <string name="home_featured">Featured Recipes</string>
     <string name="home_new">New Recipes</string>
 
+<<<<<<< HEAD
     <!-- 상세 (명세 §3.3) — 화살표/이모지는 장식이라 코드에서 그리고, 라벨만 리소스로 둔다(RTL 미러링). -->
     <string name="detail_back">Back</string>
     <string name="detail_share">Share</string>
+=======
+    <!-- 상세 (명세 §3.3) -->
+    <string name="detail_back">← Back</string>
+    <string name="detail_share">📤 Share</string>
+>>>>>>> recipe/student/01_박강원
     <string name="detail_tab_ingredients">Ingredients (%1$d)</string>
     <string name="detail_tab_instructions">Instructions</string>
     <string name="detail_follow">Follow</string>
@@ -35,7 +53,11 @@
 
     <!-- 저장 (명세 §3.4) -->
     <string name="saved_title">Saved Recipes</string>
+<<<<<<< HEAD
     <string name="saved_clear">Clear all</string>
+=======
+    <string name="saved_clear">🗑️ Clear all</string>
+>>>>>>> recipe/student/01_박강원
     <string name="saved_empty">저장한 레시피가 없습니다.</string>
     <string name="saved_empty_hint">홈에서 하트를 눌러 저장해 보세요.</string>
 
@@ -48,7 +70,11 @@
     <string name="filter_apply">Apply Filter</string>
 
     <!-- 조리 모드 (P0 신규 화면) -->
+<<<<<<< HEAD
     <string name="cooking_close">닫기</string>
+=======
+    <string name="cooking_close">← 닫기</string>
+>>>>>>> recipe/student/01_박강원
     <string name="cooking_steps_label">조리 단계</string>
     <string name="cooking_step_counter">단계 %1$d / %2$d</string>
     <string name="cooking_step_label">STEP %1$d</string>
@@ -60,10 +86,13 @@
     <string name="cooking_done">완료</string>
 
     <!-- 기타 -->
+<<<<<<< HEAD
     <string name="tab_home">Home</string>
     <string name="tab_saved">Saved</string>
     <string name="tab_notification">Notification</string>
     <string name="tab_profile">Profile</string>
+=======
+>>>>>>> recipe/student/01_박강원
     <string name="app_placeholder_note">데이터 연결 시 표시됩니다</string>
     <string name="app_placeholder_notifications">Notifications</string>
     <string name="app_placeholder_profile">Profile</string>
