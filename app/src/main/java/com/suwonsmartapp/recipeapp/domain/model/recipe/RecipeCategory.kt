@@ -7,6 +7,7 @@ enum class RecipeCategory() {
     CHINESE,
     FRUIT,
     VEGETABLES,
+    PROTEIN,
     CEREAL,
     LOCAL_DISH,
     BREAKFAST,
