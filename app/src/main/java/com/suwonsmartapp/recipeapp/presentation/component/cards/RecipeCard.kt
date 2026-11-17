@@ -1,23 +1,31 @@
 package com.suwonsmartapp.recipeapp.presentation.component.cards
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
@@ -25,6 +33,8 @@ import com.suwonsmartapp.recipeapp.domain.model.recipe.Recipe
 import com.suwonsmartapp.recipeapp.domain.model.recipe.RecipeCategory
 import com.suwonsmartapp.recipeapp.domain.model.user.UserSummary
 import com.suwonsmartapp.recipeapp.presentation.component.rating.RatingBadge
+import com.suwonsmartapp.recipeapp.ui.AppColors
+import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Composable
 fun RecipeCard(
@@ -38,6 +48,7 @@ fun RecipeCard(
             .height(150.dp)
             .clip(shape = RoundedCornerShape(10.dp))
     ) {
+        // 배경 이미지
         Image(
             painter = painterResource(recipe.imageUrl),
             contentDescription = recipe.title,
@@ -46,19 +57,62 @@ fun RecipeCard(
             contentScale = ContentScale.Crop,
         )
         
+        // 이미지 위 선형 그라데이션 오버레이
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            AppColors.black1.copy(alpha = 0f),
+                            AppColors.black1
+                        )
+                    )
+                )
+        )
+        
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(10.dp)
         ) {
             // 별점
-            RatingBadge(recipe.rating)
+            RatingBadge(
+                rating = recipe.rating,
+                modifier = Modifier.align(Alignment.End)
+            )
             
-            // 제목
+            Spacer(modifier = Modifier.size(60.dp))
             
-            Row(
-            
-            ) {
-                // Chef 정보
+            Row {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    // 제목
+                    Text(
+                        text = recipe.title,
+                        color = AppColors.white,
+                        style = AppTextStyles.smallTextBold.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,  // ... 으로 생략
+                        modifier = Modifier
+                            .height(42.dp)
+                    )
+                    
+                    // Chef 정보
+                    Text(
+                        text = "By Chef ${recipe.chef.name}",
+                        color = AppColors.gray4,
+                        style = AppTextStyles.smallLabelRegular,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .height(12.dp)
+                    )
+                }
                 
                 // 조리 시간
                 
@@ -80,9 +134,10 @@ private fun RecipeCardPreview() {
     
     val recipe = Recipe(
         id = "001",
-        title = "Traditional spare ribs baked",
+//        title = "Traditional spare ribs baked",
+        title = "Traditional spare ribs baked Traditional spare ribs baked Traditional spare ribs baked Traditional spare ribs baked ",
         imageUrl = R.drawable.test_img_food01,
-//        imageUrl = R.drawable.jeju,
+//        imageUrl = R.drawable.test_img_food02,
         videoUrl = null,
         chef = chef,
         category = RecipeCategory.UNKNOWN,
