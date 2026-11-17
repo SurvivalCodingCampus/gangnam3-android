@@ -32,6 +32,7 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.domain.model.recipe.Recipe
 import com.suwonsmartapp.recipeapp.domain.model.recipe.RecipeCategory
 import com.suwonsmartapp.recipeapp.domain.model.user.UserSummary
+import com.suwonsmartapp.recipeapp.presentation.component.labels.CookingTimeLabel
 import com.suwonsmartapp.recipeapp.presentation.component.rating.RatingBadge
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
@@ -115,6 +116,7 @@ fun RecipeCard(
                 }
                 
                 // 조리 시간
+                CookingTimeLabel(recipe.cookingTimeMinutes)
                 
                 // 북마크
             }
