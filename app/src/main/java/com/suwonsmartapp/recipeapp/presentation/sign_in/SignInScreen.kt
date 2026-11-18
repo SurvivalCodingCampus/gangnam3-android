@@ -58,6 +58,7 @@ fun SignInScreen(
 ) {
     Column(
         modifier = modifier
+            .fillMaxSize()
             .background(AppColors.white)
             .safeDrawingPadding()
             .padding(
