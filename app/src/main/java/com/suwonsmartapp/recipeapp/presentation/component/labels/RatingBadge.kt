@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StarRate
@@ -28,7 +28,7 @@ fun RatingBadge(
 ) {
     Row(
         modifier = modifier
-            .width(37.dp)
+            .widthIn(min = 37.dp)
             .height(16.dp)
             .clip(shape = RoundedCornerShape(20.dp))
             .background(color = AppColors.secondary20)
