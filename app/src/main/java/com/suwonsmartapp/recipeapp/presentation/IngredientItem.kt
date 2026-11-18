@@ -53,14 +53,14 @@ fun IngredientItem(
                 color = AppColors.gray4,
                 shape = RoundedCornerShape(size = 12.dp),
             )
-            .padding(
-                horizontal = 15.dp,
-                vertical = 12.dp,
-            )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-            ) { onClick() },
+            ) { onClick() }
+            .padding(
+                horizontal = 15.dp,
+                vertical = 12.dp,
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
