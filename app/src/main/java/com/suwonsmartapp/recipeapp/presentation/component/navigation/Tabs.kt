@@ -35,7 +35,7 @@ private fun TabsPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun TabsPreview2() {
-    var index by remember { mutableIntStateOf(0) }
+    var index by remember { mutableIntStateOf(1) }
 
     Tabs(
         labels = listOf("Label", "Label"),
