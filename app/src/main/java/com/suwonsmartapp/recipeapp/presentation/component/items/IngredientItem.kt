@@ -4,11 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
@@ -60,8 +64,8 @@ fun IngredientItem(
                 style = AppTextStyles.normalTextBold.copy(
                     fontWeight = FontWeight.SemiBold
                 ),
-//                maxLines = 2,
-//                overflow = TextOverflow.Ellipsis,  // ...으로 생략하기
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,  // ...으로 생략하기
                 modifier = Modifier
                     .weight(1f)
                     .offset(y = 3.dp)
@@ -87,7 +91,15 @@ private fun IngredientItemPreview() {
         amount = "500g"
     )
     
-    IngredientItem(
-        ingredient = tomato,
-    )
+    Column {
+        IngredientItem(
+            ingredient = tomato,
+        )
+        Spacer(Modifier.size(5.dp))
+        IngredientItem(
+            ingredient = tomato.copy(
+                name = "멋쟁이 토마토 나는야 주스될거야 나는야 케찹될거야 나는야 춤을 출거야 뽐내는 토마토 토마토"
+            ),
+        )
+    }
 }
