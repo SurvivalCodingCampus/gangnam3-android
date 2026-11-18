@@ -1,0 +1,274 @@
+@startuml architecture
+' ============================================================
+'  Food Recipe App (Community) - Domain Model & Repository
+'  - 비즈니스 규칙(판정/가공)은 이 다이어그램에 그리지 않는다 → business_rules.md
+'  - Repository 반환 타입 = "이 저장소가 주는 데이터"
+' ============================================================
+left to right direction
+
+set separator none
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam shadowing false
+hide empty members
+
+' ------------------------------------------------------------
+' 0. 공통 결과 타입 (Repository 시그니처에 쓰이므로 함께 정의)
+' ------------------------------------------------------------
+package "core" {
+  interface RootError <<marker>>
+
+  interface "Result<out D, out E : RootError>" as Result <<sealed>>
+  class "Success<D>" as Success {
+    + data : D
+  }
+  class "Error<E>" as Failure {
+    + error : E
+  }
+  Result <|.. Success
+  Result <|.. Failure
+
+  interface DataError <<sealed>>
+  enum "DataError.Network" as NetworkError {
+    NO_INTERNET
+    TIMEOUT
+    UNAUTHORIZED
+    NOT_FOUND
+    CONFLICT
+    SERVER_ERROR
+    UNKNOWN
+  }
+  enum "DataError.Local" as LocalError {
+    DISK_FULL
+    UNKNOWN
+  }
+  RootError <|-- DataError
+  DataError <|.. NetworkError
+  DataError <|.. LocalError
+}
+
+' ------------------------------------------------------------
+' 1. 도메인 모델
+' ------------------------------------------------------------
+package "domain.model" {
+
+  class User <<Profile 화면>> {
+    + id : String
+    + email : String
+    + name : String
+    + profileImageUrl : String?
+    + job : String  // "Chef", "Private Chef"
+    + bio : String
+    + location : String?  // "Lagos, Nigeria"
+    + recipeCount : Int
+    + followerCount : Int
+    + followingCount : Int
+  }
+
+  class UserSummary <<카드/리뷰용 요약>> {
+    + id : String
+    + name : String
+    + profileImageUrl : String?
+    + location : String?
+  }
+
+  class Recipe <<목록/카드용>> {
+    + id : String
+    + title : String
+    + imageUrl : String
+    + videoUrl : String?  // 프로필 Videos 탭 구분용
+    + chef : UserSummary
+    + category : RecipeCategory
+    + rating : Double  // 평균 별점 (서버 집계)
+    + reviewCount : Int  // "13k Reviews"
+    + cookingTimeMinutes : Int
+    + createdAt : Long
+  }
+
+  class RecipeDetail <<상세 화면용>> {
+    + recipe : Recipe
+    + savedCount : Int  // "155 Saved"
+    + servings : Int  // "1 serve"
+    + ingredients : List<Ingredient>
+    + procedures : List<Procedure>
+    + shareUrl : String  // "app.Recipe.co/jollof_rice"
+  }
+
+  class Ingredient {
+    + name : String
+    + imageUrl : String
+    + amount : String  // "500g", "2 tbsp", "1 cup", "약간" - 표시 전용
+  }
+
+  class Procedure {
+    + step : Int
+    + description : String
+    + imageUrl : String?  // 단계별 이미지 (선택)
+  }
+
+  enum RecipeCategory {
+    INDIAN
+    ITALIAN
+    ASIAN
+    CHINESE
+    FRUIT
+    VEGETABLES
+    PROTEIN
+    CEREAL
+    LOCAL_DISH
+    BREAKFAST
+    LUNCH
+    DINNER
+    SPANISH
+    UNKNOWN  // 서버가 새 카테고리를 보내도 앱이 깨지지 않도록
+  }
+
+  class SearchFilter <<검색 조건 값 객체>> {
+    + sort : SortOption = ALL
+    + rate : Int? = null  // 1..5, null = 전체
+    + category : RecipeCategory? = null  // null = 전체
+  }
+
+  enum SortOption {
+    ALL
+    NEWEST
+    OLDEST
+    POPULARITY
+  }
+
+  class Review {
+    + id : String
+    + recipeId : String
+    + author : UserSummary
+    + content : String
+    + likeCount : Int
+    + dislikeCount : Int
+    + myReaction : ReviewReaction  // 사용자별 상태지만 예외: 한 화면 전용 + 좋아요/싫어요 수와 함께 갱신 (business_rules.md 0-2 원칙 6)
+    + createdAt : Long
+  }
+
+  enum ReviewReaction {
+    NONE
+    LIKE
+    DISLIKE
+  }
+
+  class RecipeRating {
+    + recipeId : String
+    + userId : String
+    + score : Int  // 1..5
+  }
+
+  class Notification {
+    + id : String
+    + type : NotificationType
+    + title : String  // "New Recipe Alert!"
+    + message : String
+    + recipeId : String?
+    + isRead : Boolean
+    + createdAt : Long
+  }
+
+  enum NotificationType {
+    NEW_RECIPE
+    SAVED_RECIPE
+    UNKNOWN  // 서버가 새 타입을 추가해도 앱이 깨지지 않도록
+  }
+
+  enum SocialProvider {
+    GOOGLE
+    FACEBOOK
+  }
+
+  RecipeDetail "1" *-- "1" Recipe
+  RecipeDetail "1" *-- "1..*" Ingredient
+  RecipeDetail "1" *-- "1..*" Procedure
+  Review --> ReviewReaction
+  Recipe "*" --> "1" RecipeCategory
+  Recipe "*" --> "1" UserSummary : chef
+  Review "*" --> "1" UserSummary : author
+  Review "*" ..> "1" Recipe : recipeId
+  RecipeRating "*" ..> "1" Recipe : recipeId
+  Notification --> NotificationType
+  Notification ..> Recipe : recipeId?
+  SearchFilter --> SortOption
+  SearchFilter --> "0..1" RecipeCategory
+  User ..> UserSummary : 요약
+}
+
+' ------------------------------------------------------------
+' 2. Repository 인터페이스 (데이터 접근만, 판정 로직 없음)
+' ------------------------------------------------------------
+package "domain.repository" {
+
+  interface AuthRepository <<로그인/가입 · 세션>> {
+    + signIn(email : String, password : String) : Result<User, DataError.Network>
+    + signInWithSocial(provider : SocialProvider, oauthToken : String) : Result<User, DataError.Network>  // 토큰은 Google/Facebook SDK에서 획득
+    + signUp(name : String, email : String, password : String) : Result<User, DataError.Network>
+    + signOut() : Result<Unit, DataError.Network>
+    + observeCurrentUser() : Flow<User?>  // 세션 만료(401) 시 null 방출 → 로그인 화면으로
+  }
+
+  interface UserRepository <<프로필 · 팔로우 관계>> {
+    + getUser(userId : String) : Result<User, DataError.Network>
+    + observeFollowingIds() : Flow<Set<String>>  // 상세/프로필의 Follow 버튼 상태
+    + refreshFollowingIds() : Result<Unit, DataError.Network>  // 서버 → 캐시 동기화
+    + follow(userId : String) : Result<Unit, DataError.Network>  // 멱등
+    + unfollow(userId : String) : Result<Unit, DataError.Network>  // 멱등
+  }
+
+  interface RecipeRepository <<레시피>> {
+    + searchRecipes(query : String, filter : SearchFilter) : Result<List<Recipe>, DataError.Network>  // 조건을 서버/Room 쿼리로 전달만
+    + getRecipesByIds(recipeIds : List<String>) : Result<List<Recipe>, DataError.Network>  // 최근 검색 복원용
+    + getRecipeDetail(recipeId : String) : Result<RecipeDetail, DataError.Network>
+    + getRecipesByChef(chefId : String) : Result<List<Recipe>, DataError.Network>
+  }
+
+  interface RecentSearchRepository <<최근 검색 (로컬, id만 저장)>> {
+    + getRecentRecipeIds() : Result<List<String>, DataError.Local>
+    + saveRecentRecipeIds(recipeIds : List<String>) : Result<Unit, DataError.Local>
+  }
+
+  interface BookmarkRepository <<저장한 레시피 (로컬 캐시가 단일 출처)>> {
+    + observeSavedRecipes() : Flow<List<Recipe>>  // Saved 화면
+    + observeSavedRecipeIds() : Flow<Set<String>>  // 홈/검색 카드의 북마크 아이콘
+    + refreshSavedRecipes() : Result<Unit, DataError.Network>  // 서버 → 캐시 동기화
+    + saveRecipe(recipeId : String) : Result<Unit, DataError.Network>  // 멱등
+    + unsaveRecipe(recipeId : String) : Result<Unit, DataError.Network>  // 멱등
+  }
+
+  interface ReviewRepository <<리뷰(댓글)>> {
+    + getReviews(recipeId : String) : Result<List<Review>, DataError.Network>
+    + addReview(recipeId : String, content : String) : Result<Review, DataError.Network>
+    + setReaction(reviewId : String, reaction : ReviewReaction) : Result<Review, DataError.Network>  // 목표 상태를 그대로 저장(멱등)
+  }
+
+  interface RatingRepository <<별점>> {
+    + getMyRating(recipeId : String) : Result<RecipeRating?, DataError.Network>
+    + submitRating(recipeId : String, score : Int) : Result<RecipeRating, DataError.Network>  // 생성/수정 겸용(upsert)
+  }
+
+  interface NotificationRepository <<알림>> {
+    + getNotifications() : Result<List<Notification>, DataError.Network>
+    + markAsRead(notificationId : String) : Result<Unit, DataError.Network>
+  }
+}
+
+' ------------------------------------------------------------
+' 3. Repository → 제공 데이터 (점선: "이 데이터를 준다")
+' ------------------------------------------------------------
+AuthRepository ..> User
+UserRepository ..> User
+RecipeRepository ..> Recipe
+RecipeRepository ..> RecipeDetail
+RecipeRepository ..> SearchFilter : 검색 조건 입력
+BookmarkRepository ..> Recipe
+ReviewRepository ..> Review
+RatingRepository ..> RecipeRating
+NotificationRepository ..> Notification
+
+"domain.repository" ..> Result : returns
+"domain.repository" ..> DataError : fails with
+
+@enduml
