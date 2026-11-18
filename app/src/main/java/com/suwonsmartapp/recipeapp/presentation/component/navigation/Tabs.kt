@@ -22,30 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-private fun TabsPreview() {
-    Tabs(
-        labels = listOf("Label", "Label"),
-        selectedIndex = 0,
-        onValueChange = {},
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TabsPreview2() {
-    var index by remember { mutableIntStateOf(1) }
-
-    Tabs(
-        labels = listOf("Label", "Label"),
-        selectedIndex = index,
-        onValueChange = {
-            index = it
-        },
-    )
-}
-
 @Composable
 fun Tabs(
     labels: List<String>,
@@ -89,4 +65,28 @@ fun Tabs(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TabsPreview() {
+    Tabs(
+        labels = listOf("Label", "Label"),
+        selectedIndex = 0,
+        onValueChange = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TabsPreview2() {
+    var index by remember { mutableIntStateOf(1) }
+
+    Tabs(
+        labels = listOf("Label", "Label"),
+        selectedIndex = index,
+        onValueChange = {
+            index = it
+        },
+    )
 }

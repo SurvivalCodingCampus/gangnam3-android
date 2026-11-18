@@ -28,11 +28,34 @@ import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Composable
-fun FilterIcon(
+fun FilterButton(
+    text: String,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    val shape = RoundedCornerShape(10.dp)
+
+    FilterIcon(
+        text = text,
+        isSelected = isSelected,
+        shape = shape,
+        modifier = modifier
+            .clip(shape = shape)  // 클릭 시 물결 효과가 둥근 모서리 밖으로 빠져나가지 않게
+            .selectable(
+                selected = isSelected,
+                role = Role.Tab,
+                onClick = onClick,
+            ),
+    )
+}
+
+@Composable
+private fun FilterIcon(
     text: String,
     isSelected: Boolean,
     shape: RoundedCornerShape,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val textColor = if (isSelected) AppColors.white else AppColors.primary80
     val borderColor = if (isSelected) AppColors.primary100 else AppColors.primary80
@@ -63,28 +86,6 @@ fun FilterIcon(
     }
 }
 
-@Composable
-fun FilterButton(
-    text: String,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    val shape = RoundedCornerShape(10.dp)
-
-    FilterIcon(
-        text = text,
-        isSelected = isSelected,
-        shape = shape,
-        modifier = modifier
-            .clip(shape = shape)  // 클릭 시 물결 효과가 둥근 모서리 밖으로 빠져나가지 않게
-            .selectable(
-                selected = isSelected,
-                role = Role.Tab,
-                onClick = onClick,
-            ),
-    )
-}
 
 @Preview(showBackground = true)
 @Composable

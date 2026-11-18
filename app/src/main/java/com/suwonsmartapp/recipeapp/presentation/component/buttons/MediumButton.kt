@@ -32,10 +32,11 @@ fun MediumButtonPreview() {
 @Composable
 fun MediumButton(
     text: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .width(243.dp)
             .height(54.dp)
             .background(

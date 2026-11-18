@@ -17,6 +17,36 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.suwonsmartapp.recipeapp.ui.AppColors
 
+@Composable
+fun InputField(
+    label: String,
+    placeholder: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    onValueChange: (String) -> Unit,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(text = label, fontSize = 14.sp, color = AppColors.black1) // 추정값
+        Spacer(Modifier.height(5.dp))                                  // 추정값
+        OutlinedTextField(
+            value = value,                 // 값은 바깥에서 받은 것만 보여줌
+            onValueChange = onValueChange, // 바뀐 값은 바깥으로 전달
+            placeholder = {
+                Text(placeholder, fontSize = 11.sp, color = AppColors.gray4) // 추정값
+            },
+            textStyle = TextStyle(fontSize = 11.sp, color = AppColors.black1),     // Filled 글자
+            singleLine = true,
+            shape = RoundedCornerShape(10.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedBorderColor = AppColors.gray4, // Default 테두리 (추정)
+                focusedBorderColor = AppColors.primary80,             // Focus 테두리
+            ),
+            modifier = Modifier.fillMaxWidth(),            // 추정값
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -61,34 +91,4 @@ fun InputFieldFilledPreview() {
         placeholder = "Placeholder",
         value = "Placeholder"
     ) {}
-}
-
-@Composable
-fun InputField(
-    label: String,
-    placeholder: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(text = label, fontSize = 14.sp, color = AppColors.black1) // 추정값
-        Spacer(Modifier.height(5.dp))                                  // 추정값
-        OutlinedTextField(
-            value = value,                 // 값은 바깥에서 받은 것만 보여줌
-            onValueChange = onValueChange, // 바뀐 값은 바깥으로 전달
-            placeholder = {
-                Text(placeholder, fontSize = 11.sp, color = AppColors.gray4) // 추정값
-            },
-            textStyle = TextStyle(fontSize = 11.sp, color = AppColors.black1),     // Filled 글자
-            singleLine = true,
-            shape = RoundedCornerShape(10.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = AppColors.gray4, // Default 테두리 (추정)
-                focusedBorderColor = AppColors.primary80,             // Focus 테두리
-            ),
-            modifier = Modifier.fillMaxWidth(),            // 추정값
-        )
-    }
 }

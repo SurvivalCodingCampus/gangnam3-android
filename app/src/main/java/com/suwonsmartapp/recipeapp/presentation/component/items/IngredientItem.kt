@@ -25,25 +25,14 @@ import com.suwonsmartapp.recipeapp.data.model.Ingredient
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-private fun IngredientItemPreview() {
-    val testIngredient = Ingredient(
-        name = "TomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatos",
-        imageUrl = "",
-        grams = 500,
-        description = "토마토 사진입니다",
-    )
-    IngredientItem(testIngredient) {}
-}
-
 @Composable
 fun IngredientItem(
     ingredient: Ingredient,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(AppColors.gray4)
@@ -87,4 +76,16 @@ fun IngredientItem(
             style = AppTextStyles.smallTextRegular,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun IngredientItemPreview() {
+    val testIngredient = Ingredient(
+        name = "TomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatos",
+        imageUrl = "",
+        grams = 500,
+        description = "토마토 사진입니다",
+    )
+    IngredientItem(testIngredient) {}
 }
