@@ -159,11 +159,21 @@ private fun RecipeCardPreview() {
     )
     
     var isBookmarked by remember { mutableStateOf(false) }
+    var isBookmarked2 by remember { mutableStateOf(true) }
     
-    RecipeCard(
-        recipe = recipe,
-        isBookmarked = isBookmarked,
-    ) {
-        isBookmarked = !isBookmarked
+    Column {
+        RecipeCard(
+            recipe = recipe,
+            isBookmarked = isBookmarked,
+        ) {
+            isBookmarked = !isBookmarked
+        }
+        Spacer(Modifier.size(5.dp))
+        RecipeCard(
+            recipe = recipe,
+            isBookmarked = isBookmarked2,
+        ) {
+            isBookmarked2 = !isBookmarked2
+        }
     }
 }

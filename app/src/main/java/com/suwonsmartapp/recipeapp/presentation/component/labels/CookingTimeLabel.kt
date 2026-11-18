@@ -1,11 +1,11 @@
 package com.suwonsmartapp.recipeapp.presentation.component.labels
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
@@ -28,10 +28,10 @@ fun CookingTimeLabel(
 ) {
     Row(
         modifier = Modifier
-            .width(60.dp)
+            .widthIn(min = 60.dp)
             .height(24.dp),
         verticalAlignment = Alignment.CenterVertically,
-//        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         CompositionLocalProvider(  // 스타일 일괄 적용
             LocalContentColor provides AppColors.gray4,
@@ -44,18 +44,12 @@ fun CookingTimeLabel(
                     .size(17.dp)
             )
             
-            Spacer(Modifier.size(5.dp))
-            
             Text(
-                text = "$cookingTimeMinutes",
+                text = "$cookingTimeMinutes min",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .weight(1f, fill = false)
-            )
-            
-            Text(
-                text = " min",
             )
         }
     }
