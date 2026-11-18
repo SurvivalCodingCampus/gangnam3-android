@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.AppColors
-import com.suwonsmartapp.recipeapp.ui.TextStyles
+import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
@@ -59,7 +59,7 @@ fun RatingButton(
         Text(
             modifier = Modifier.padding(end = 5.dp),
             text = text,
-            style = TextStyles.smallerTextSemiBold,
+            style = AppTextStyles.smallerTextSemiBold,
             color = if (isSelected) AppColors.white else AppColors.primary80,
         )
         Icon(

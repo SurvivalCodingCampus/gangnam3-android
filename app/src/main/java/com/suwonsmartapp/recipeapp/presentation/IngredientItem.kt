@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.data.model.Ingredient
 import com.suwonsmartapp.recipeapp.ui.AppColors
-import com.suwonsmartapp.recipeapp.ui.TextStyles
+import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
@@ -79,12 +79,12 @@ fun IngredientItem(
         Text(
             modifier = Modifier.weight(weight = 1f),
             text = ingredient.name,
-            style = TextStyles.normalTextSemiBold,
+            style = AppTextStyles.normalTextSemiBold,
             color = AppColors.black2,
         )
         Text(
             text = stringResource(R.string.ingredient_gram, ingredient.amountInGrams),
-            style = TextStyles.smallerTextRegular,
+            style = AppTextStyles.smallerTextRegular,
             color = AppColors.gray3,
         )
     }

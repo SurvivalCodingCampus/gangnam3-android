@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.AppColors
-import com.suwonsmartapp.recipeapp.ui.TextStyles
+import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
@@ -60,7 +60,7 @@ fun RatingDialog(
     ) {
         Text(
             text = title,
-            style = TextStyles.smallTextRegular,
+            style = AppTextStyles.smallTextRegular,
             color = AppColors.black2,
         )
         Row(horizontalArrangement = Arrangement.spacedBy(space = 10.dp)) {
@@ -87,7 +87,7 @@ fun RatingDialog(
                 .clickable(enabled = rating > 0) { onChange(rating) }
                 .padding(horizontal = 20.dp, vertical = 4.dp),
             text = actionName,
-            style = TextStyles.smallerTextRegular,
+            style = AppTextStyles.smallerTextRegular,
             color = AppColors.white,
         )
     }
