@@ -1,13 +1,18 @@
 package com.suwonsmartapp.recipeapp.presentation.component
 
-import androidx.compose.foundation.clickable
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,11 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suwonsmartapp.recipeapp.R
-import com.suwonsmartapp.recipeapp.presentation.component.images.RoundedImage
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
@@ -81,29 +86,33 @@ fun SocialAuthButtons(
             alignment = Alignment.CenterHorizontally,
         )
     ) {
-        // Google
-        Box(
-            modifier = buttonModifier
-                .clickable(
-                    onClick = onGoogleClick,
-                )
+    
+    }
+}
+
+@Composable
+fun SocialButton(
+    @DrawableRes imageResId: Int,
+    contentDescription: String,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier.size(44.dp),
+        shape = RoundedCornerShape(10.dp),
+        color = AppColors.white,  // 배경색
+        shadowElevation = 5.dp,  // 흐린 정도
+    ) {
+        Box(  // Surface 특성상 정렬 등의 이유로 Box 쓰는 경우가 많음
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp),
         ) {
-            RoundedImage(
-                imageId = R.drawable.ic_community_google,
-                contentDescription = "Continue with Google",
-            )
-        }
-        
-        // Facebook
-        Box(
-            modifier = buttonModifier
-                .clickable(
-                    onClick = onFaceBookClick,
-                )
-        ) {
-            RoundedImage(
-                imageId = R.drawable.ic_community_facebook,
-                contentDescription = "Continue with Facebook",
+            Image(
+                painter = painterResource(id = imageResId),
+                contentDescription = contentDescription,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop,
             )
         }
     }
