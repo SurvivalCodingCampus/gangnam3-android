@@ -29,12 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-fun BigButtonPreview() {
-    BigButton("Button") { }
-}
-
 @Composable
 fun BigButton(
     text: String,
@@ -85,4 +79,10 @@ fun BigButton(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BigButtonPreview() {
+    BigButton("Button") { }
 }

@@ -22,12 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-fun SmallButtonPreview() {
-    SmallButton("Button") { }
-}
-
 @Composable
 fun SmallButton(
     text: String,
@@ -76,4 +70,10 @@ fun SmallButton(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SmallButtonPreview() {
+    SmallButton("Button") { }
 }
