@@ -21,7 +21,7 @@ fun IngredientItem(
     ingredient: Ingredient,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
-) {
+    ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
