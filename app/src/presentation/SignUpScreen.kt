@@ -29,7 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gangnam3.presentation.component.*
 
+@Preview(showBackgroubd = true)
+
 @Composable
+private  fun CounterViewModel
+
 fun SignUpScreen(
     name: String,
     email: String,
