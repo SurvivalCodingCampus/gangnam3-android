@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.StarRate
+import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -43,7 +45,6 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.domain.model.recipe.Recipe
 import com.suwonsmartapp.recipeapp.domain.model.recipe.RecipeCategory
 import com.suwonsmartapp.recipeapp.domain.model.user.UserSummary
-import com.suwonsmartapp.recipeapp.presentation.component.buttons.BookmarkIcon
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
@@ -61,7 +62,7 @@ fun RecipeCard(
     ) {
         // 배경 이미지
         Image(
-            painter = painterResource(recipe.imageUrl),
+            painter = painterResource(R.drawable.iu),
             contentDescription = recipe.title,
             modifier = Modifier
                 .fillMaxSize(),
@@ -175,7 +176,8 @@ private fun CookingTimeLabel(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        CompositionLocalProvider(  // 스타일 일괄 적용
+        CompositionLocalProvider(
+            // 스타일 일괄 적용
             LocalContentColor provides AppColors.gray4,
             LocalTextStyle provides AppTextStyles.smallerTextRegular,
         ) {
@@ -237,15 +239,15 @@ private fun RecipeCardPreview() {
     val chef = UserSummary(
         id = "A001",
         name = "John",
-        profileImageUrl = null,
-        location = null
+        profileImageUrl = "",
+        location = ""
     )
 
     val recipe = Recipe(
         id = "001",
         title = "Traditional spare ribs baked Traditional spare ribs baked Traditional spare ribs baked Traditional spare ribs baked ",
-        imageUrl = R.drawable.test_img_food01,
-        videoUrl = null,
+        imageUrl = "https://iu.png",
+        videoUrl = "",
         chef = chef,
         category = RecipeCategory.UNKNOWN,
         reviewCount = 10,
@@ -272,4 +274,21 @@ private fun RecipeCardPreview() {
             isBookmarked2 = !isBookmarked2
         }
     }
+}
+
+@Composable
+private fun BookmarkIcon(
+    isBookmarked: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val bookmarkImage = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder
+    val bookmarkColor = if (isBookmarked) AppColors.primary80 else AppColors.gray4
+
+    Icon(
+        imageVector = bookmarkImage,
+        contentDescription = "Bookmark",
+        tint = bookmarkColor,
+        modifier = modifier
+            .size(24.dp)
+    )
 }

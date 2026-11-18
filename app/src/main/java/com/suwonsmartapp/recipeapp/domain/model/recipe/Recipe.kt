@@ -5,8 +5,8 @@ import com.suwonsmartapp.recipeapp.domain.model.user.UserSummary
 data class Recipe(
     val id: String,
     val title: String,
-    val imageUrl: Int,
-    val videoUrl: String?,
+    val imageUrl: String,
+    val videoUrl: String,
     val chef: UserSummary,
     val category: RecipeCategory,
     val reviewCount: Int,

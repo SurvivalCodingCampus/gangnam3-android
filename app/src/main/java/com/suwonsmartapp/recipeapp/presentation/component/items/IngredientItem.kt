@@ -30,7 +30,7 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 private fun IngredientItemPreview() {
     val testIngredient = Ingredient(
         name = "TomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatos",
-        imageResId = R.drawable.iu,
+        imageUrl = "",
         grams = 500,
         description = "토마토 사진입니다",
     )
@@ -56,7 +56,7 @@ fun IngredientItem(
             modifier = Modifier
                 .size(52.dp)
                 .clip(RoundedCornerShape(12.dp)),
-            painter = painterResource(id = ingredient.imageResId),
+            painter = painterResource(id = R.drawable.iu),
             contentScale = ContentScale.Crop,
             contentDescription = ingredient.description,
         )

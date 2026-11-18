@@ -5,10 +5,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,7 +29,30 @@ import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Composable
-fun RatingStarIcon(
+fun RatingButton(
+    text: String,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    val shape = RoundedCornerShape(10.dp)
+
+    RatingStarIcon(
+        text = text,
+        isSelected = isSelected,
+        shape = shape,
+        modifier = modifier
+            .clip(shape = shape)
+            .selectable(
+                selected = isSelected,
+                role = Role.Tab,
+                onClick = onClick,
+            )
+    )
+}
+
+@Composable
+private fun RatingStarIcon(
     text: String,
     isSelected: Boolean,
     shape: RoundedCornerShape,
@@ -76,29 +97,6 @@ fun RatingStarIcon(
                 .size(18.dp)
         )
     }
-}
-
-@Composable
-fun RatingButton(
-    text: String,
-    isSelected: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    val shape = RoundedCornerShape(10.dp)
-
-    RatingStarIcon(
-        text = text,
-        isSelected = isSelected,
-        shape = shape,
-        modifier = modifier
-            .clip(shape = shape)
-            .selectable(
-                selected = isSelected,
-                role = Role.Tab,
-                onClick = onClick,
-            )
-    )
 }
 
 @Preview(showBackground = true)
