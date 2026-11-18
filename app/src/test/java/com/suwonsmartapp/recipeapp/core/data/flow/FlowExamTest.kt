@@ -1,10 +1,12 @@
 package com.suwonsmartapp.recipeapp.core.data.flow
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -68,11 +70,14 @@ fun exam3() = runBlocking {
             println(it)
         }
 
-    // 3-3
+    // 3-4
     val searchFlow = MutableStateFlow("")
 
+    @OptIn(FlowPreview::class)
     val job = launch {
-        searchFlow.collect { println("searchFlow: $it") }
+        searchFlow
+            .debounce(300.milliseconds)
+            .collect { println("searchFlow: $it") }
     }
 
     delay(100.milliseconds)
@@ -81,6 +86,6 @@ fun exam3() = runBlocking {
     searchFlow.value = "토마"
     delay(100.milliseconds)
     searchFlow.value = "토마토"
-    delay(100.milliseconds)
+    delay(400.milliseconds)
     job.cancel()
 }
