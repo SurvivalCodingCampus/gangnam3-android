@@ -1,13 +1,18 @@
 package com.suwonsmartapp.recipeapp.core.data.flow
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.time.Duration.Companion.milliseconds
@@ -15,7 +20,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class FlowExamTest {
     @Test
     fun run() = runBlocking {
-        exam2()
+        exam3()
     }
 }
 
@@ -33,6 +38,7 @@ suspend fun exam2() {
     val bookmarkFlow = flowOf("북마크 OFF", "북마크 ON", "북마크 OFF", "북마크 ON")
         .onEach { delay(100.milliseconds) }
 
+    // 2-3
     // zip
     println("=======zip=======")
     recipeFlow.zip(bookmarkFlow) { recipe, bookmark ->
@@ -41,6 +47,7 @@ suspend fun exam2() {
         println("레시피: $recipe, 북마크: $bookmark")
     }
 
+    // 2-4
     // combine
     println("=======combine=======")
     recipeFlow.combine(bookmarkFlow) { recipe, bookmark ->
@@ -48,4 +55,32 @@ suspend fun exam2() {
     }.collect { (recipe, bookmark) ->
         println("레시피: $recipe, 북마크: $bookmark")
     }
+}
+
+fun exam3() = runBlocking {
+    // 3-2
+    flow {
+        println("Flow: ${Thread.currentThread().name}")
+        emit("레시피 목록 로딩 중...")
+    }.flowOn(Dispatchers.Default)
+        .collect {
+            println("Collect: ${Thread.currentThread().name}")
+            println(it)
+        }
+
+    // 3-3
+    val searchFlow = MutableStateFlow("")
+
+    val job = launch {
+        searchFlow.collect { println("searchFlow: $it") }
+    }
+
+    delay(100.milliseconds)
+    searchFlow.value = "토"
+    delay(100.milliseconds)
+    searchFlow.value = "토마"
+    delay(100.milliseconds)
+    searchFlow.value = "토마토"
+    delay(100.milliseconds)
+    job.cancel()
 }
