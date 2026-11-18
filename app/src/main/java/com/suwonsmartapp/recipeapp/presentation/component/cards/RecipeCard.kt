@@ -110,7 +110,7 @@ fun RecipeCard(
                     
                     // Chef 정보
                     Text(
-                        text = "By Chef ${recipe.chef.name}",
+                        text = "By ${recipe.chef.name}",
                         color = AppColors.gray4,
                         style = AppTextStyles.smallLabelRegular,
                         maxLines = 1,
