@@ -17,14 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
@@ -66,17 +64,6 @@ fun SocialAuthButtons(
     onGoogleClick: () -> Unit,
     onFaceBookClick: () -> Unit,
 ) {
-    val shape = RoundedCornerShape(10.dp)
-    val shadowColor = Color(0xFF696969).copy(alpha = 0.1f)
-    val buttonModifier = Modifier
-        .shadow(
-            elevation = 5.dp,
-            shape = shape,
-            ambientColor = shadowColor,
-            spotColor = shadowColor,
-        )
-        .clip(shape = shape)
-    
     Row(
         modifier = modifier
             .fillMaxWidth(),
@@ -86,7 +73,19 @@ fun SocialAuthButtons(
             alignment = Alignment.CenterHorizontally,
         )
     ) {
-    
+        // Google
+        SocialButton(
+            imageResId = R.drawable.ic_community_google,
+            contentDescription = "Continue with Google",
+            onClick = onGoogleClick,
+        )
+        
+        // Facebook
+        SocialButton(
+            imageResId = R.drawable.ic_community_facebook,
+            contentDescription = "Continue with Facebook",
+            onClick = onFaceBookClick,
+        )
     }
 }
 
@@ -94,9 +93,11 @@ fun SocialAuthButtons(
 fun SocialButton(
     @DrawableRes imageResId: Int,
     contentDescription: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Surface(
+        onClick = onClick,
         modifier = modifier.size(44.dp),
         shape = RoundedCornerShape(10.dp),
         color = AppColors.white,  // 배경색
