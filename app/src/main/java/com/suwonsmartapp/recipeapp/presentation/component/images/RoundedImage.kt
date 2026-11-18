@@ -24,9 +24,10 @@ import com.suwonsmartapp.recipeapp.ui.AppColors
 fun RoundedImage(
     imageId: Int,
     contentDescription: String,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(52.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(color = AppColors.white)
