@@ -64,4 +64,10 @@ object TextStyles {
     val normalTextRegular = normalTextBold.copy(fontWeight = FontWeight.Normal)
     val smallTextRegular = smallTextBold.copy(fontWeight = FontWeight.Normal)
     val smallerTextRegular = smallerTextBold.copy(fontWeight = FontWeight.Normal)
+    val smallLabelRegular = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.Normal,
+        fontSize = 8.sp,
+        lineHeight = 12.sp,
+    )
 }

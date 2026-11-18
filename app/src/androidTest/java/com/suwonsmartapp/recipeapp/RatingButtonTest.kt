@@ -21,7 +21,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.suwonsmartapp.recipeapp.presentation.component.RatingButton
+import com.suwonsmartapp.recipeapp.presentation.component.buttons.RatingButton
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import org.junit.Assert.assertEquals
 import org.junit.Rule

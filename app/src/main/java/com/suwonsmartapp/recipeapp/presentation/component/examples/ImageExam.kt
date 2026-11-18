@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component
+package com.suwonsmartapp.recipeapp.presentation.component.examples
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
