@@ -44,7 +44,6 @@ fun RatingDialog(
     onDismissRequest: () -> Unit,
     onChange: (Int) -> Unit,
 ) {
-    
     Dialog(  // 기존 화면 위에 어두운 배경과 함께 팝업 창 띄움
         onDismissRequest = onDismissRequest,
     ) {
