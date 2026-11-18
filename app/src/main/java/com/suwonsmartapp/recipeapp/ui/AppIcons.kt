@@ -48,49 +48,51 @@ import com.suwonsmartapp.recipeapp.R
 object AppIcons {
 
     object Outline {
-        val bookmark: ImageVector = Icons.Outlined.BookmarkBorder
-        val home: ImageVector = Icons.Outlined.Home
-        val notification: ImageVector = Icons.Outlined.Notifications
-        val settings: ImageVector = Icons.Outlined.Settings
-        val star: ImageVector = Icons.Outlined.StarOutline
-        val filter: ImageVector = Icons.Outlined.Tune
-        val timer: ImageVector = Icons.Outlined.Timer
-        val search: ImageVector = Icons.Outlined.Search
-        val location: ImageVector = Icons.Outlined.LocationOn
-        val arrowRight: ImageVector = Icons.AutoMirrored.Outlined.ArrowForward
-        val arrowDown: ImageVector = Icons.Outlined.KeyboardArrowDown
-        val arrowUp: ImageVector = Icons.Outlined.KeyboardArrowUp
-        val more: ImageVector = Icons.Outlined.MoreHoriz
-        val document: ImageVector = Icons.Outlined.Description
-        val note: ImageVector = Icons.Outlined.NoteAlt
-        val chat: ImageVector = Icons.Outlined.Chat
-        val share: ImageVector = Icons.AutoMirrored.Outlined.Shortcut
-        val profile: ImageVector = Icons.Outlined.Person
+        val bookmark: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.BookmarkBorder
+        val home: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Home
+        val notification: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Notifications
+        val settings: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Settings
+        val star: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.StarOutline
+        val filter: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Tune
+        val timer: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Timer
+        val search: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Search
+        val location: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.LocationOn
+        val arrowRight: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.AutoMirrored.Outlined.ArrowForward
+        val arrowDown: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.KeyboardArrowDown
+        val arrowUp: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.KeyboardArrowUp
+        val more: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.MoreHoriz
+        val document: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Description
+        val note: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.NoteAlt
+        val chat: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Chat
+        val share: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.AutoMirrored.Outlined.Shortcut
+        val profile: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Outlined.Person
     }
 
     object Bold {
-        val bookmark: ImageVector = Icons.Filled.Bookmark
-        val home: ImageVector = Icons.Filled.Home
-        val notification: ImageVector = Icons.Filled.Notifications
-        val settings: ImageVector = Icons.Filled.Settings
-        val star: ImageVector = Icons.Filled.Star
-        val filter: ImageVector = Icons.Filled.Tune
-        val timer: ImageVector = Icons.Filled.Timer
-        val search: ImageVector = Icons.Filled.Search
-        val location: ImageVector = Icons.Filled.LocationOn
-        val arrowRight: ImageVector = Icons.AutoMirrored.Filled.ArrowForward
-        val arrowDown: ImageVector = Icons.Filled.KeyboardArrowDown
-        val arrowUp: ImageVector = Icons.Filled.KeyboardArrowUp
-        val more: ImageVector = Icons.Filled.MoreHoriz
-        val document: ImageVector = Icons.Filled.Description
-        val note: ImageVector = Icons.Filled.NoteAlt
-        val chat: ImageVector = Icons.Filled.Chat
-        val share: ImageVector = Icons.AutoMirrored.Filled.Shortcut
-        val profile: ImageVector = Icons.Filled.Person
+        val bookmark: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Bookmark
+        val home: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Home
+        val notification: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Notifications
+        val settings: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Settings
+        val star: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Star
+        val filter: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Tune
+        val timer: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Timer
+        val search: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Search
+        val location: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.LocationOn
+        val arrowRight: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowForward
+        val arrowDown: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.KeyboardArrowDown
+        val arrowUp: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.KeyboardArrowUp
+        val more: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.MoreHoriz
+        val document: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Description
+        val note: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.NoteAlt
+        val chat: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Chat
+        val share: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.Shortcut
+        val profile: androidx.compose.ui.graphics.vector.ImageVector = androidx.compose.material.icons.Icons.Filled.Person
     }
 
     object Social {
-        @DrawableRes val google: Int = R.drawable.ic_google
-        @DrawableRes val facebook: Int = R.drawable.ic_facebook
+        @androidx.annotation.DrawableRes
+        val google: Int = com.suwonsmartapp.recipeapp.R.drawable.ic_google
+        @androidx.annotation.DrawableRes
+        val facebook: Int = com.suwonsmartapp.recipeapp.R.drawable.ic_facebook
     }
 }
