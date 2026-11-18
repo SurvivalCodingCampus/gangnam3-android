@@ -1,11 +1,11 @@
 package com.suwonsmartapp.recipeapp.presentation.component.buttons
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
@@ -67,8 +68,10 @@ fun BookmarkButton(
 ) {
     Box(
         modifier = modifier
-            .clickable(
-                onClick = onBookmarkClick
+            .toggleable(  // 버튼 누를 때 clickable과 달리 음성 안내가 true/false를 안내해줌
+                value = isBookmarked,
+                role = Role.Checkbox,  // 체크/토글 상태를 나타내는 표준 롤
+                onValueChange = { onBookmarkClick() }
             ),
         contentAlignment = Alignment.Center,
     ) {
@@ -89,8 +92,10 @@ fun CircleBookmarkButton(
             .size(24.dp)
             .clip(shape = RoundedCornerShape(12.dp))
             .background(color = AppColors.white)
-            .clickable(
-                onClick = onBookmarkClick,
+            .toggleable(  // 버튼 누를 때 clickable과 달리 음성 안내가 true/false를 안내해줌
+                value = isBookmarked,
+                role = Role.Checkbox,
+                onValueChange = { onBookmarkClick() }
             )
             .padding(4.dp),
         contentAlignment = Alignment.Center,
