@@ -2,7 +2,6 @@ package com.suwonsmartapp.recipeapp.presentation.component.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,10 +31,9 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 fun FilterIcon(
     text: String,
     isSelected: Boolean,
+    shape: RoundedCornerShape,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(10.dp)
-    
     val textColor = if (isSelected) AppColors.white else AppColors.primary80
     val borderColor = if (isSelected) AppColors.primary100 else AppColors.primary80
     val backgroundColor = if (isSelected) AppColors.primary100 else AppColors.white
@@ -70,11 +70,17 @@ fun FilterButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
+    val shape = RoundedCornerShape(10.dp)
+    
     FilterIcon(
         text = text,
         isSelected = isSelected,
+        shape = shape,
         modifier = modifier
-            .clickable(
+            .clip(shape = shape)  // 클릭 시 물결 효과가 둥근 모서리 밖으로 빠져나가지 않게
+            .selectable(
+                selected = isSelected,
+                role = Role.Tab,
                 onClick = onClick,
             ),
     )
