@@ -44,7 +44,6 @@ private fun SignInScreenPreview() {
 
 @Composable
 fun SignInScreen(
-    modifier: Modifier = Modifier,
     email: String,
     password: String,
     onEmailChange: (String) -> Unit,
@@ -54,6 +53,7 @@ fun SignInScreen(
     onGoogleClick: () -> Unit,
     onFacebookClick: () -> Unit,
     onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
