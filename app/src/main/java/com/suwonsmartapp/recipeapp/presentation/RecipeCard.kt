@@ -40,7 +40,7 @@ import com.suwonsmartapp.recipeapp.ui.TextStyles
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
-private val previewRecipe = Recipe(
+private fun createPreviewRecipe() = Recipe(
     id = 1,
     title = "Traditional spare ribs  baked",
     imageUrl = "",
@@ -69,7 +69,7 @@ private val previewRecipe = Recipe(
 @Preview(showBackground = true)
 @Composable
 fun RecipeCardPreview() {
-    val recipe = remember { previewRecipe }
+    val recipe = remember { createPreviewRecipe() }
     var isBookmarked by remember { mutableStateOf(false) }
 
     RecipeCard(
