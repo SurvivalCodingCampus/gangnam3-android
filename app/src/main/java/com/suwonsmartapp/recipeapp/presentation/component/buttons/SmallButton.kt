@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,21 +31,32 @@ fun SmallButtonPreview() {
 @Composable
 fun SmallButton(
     text: String,
+    modifier: Modifier = Modifier,
+    enable: Boolean = true,  // 활성화 여부
+    containerColor: Color = AppColors.primary100,  // 기본 배경색
+    pressedColor: Color = AppColors.gray4,  // 눌렀을 때 배경색
+    disableColor: Color = AppColors.gray4,  // 비활성화 배경색
     onClick: () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     
-    val buttonColor = if (isPressed) AppColors.gray4 else AppColors.primary100
+    // 상태 우선순위에 따라 결정 : 비활성화 > 눌림 중 > 기본 상태
+    val buttonColor = when {
+        !enable -> disableColor
+        isPressed -> pressedColor
+        else -> containerColor
+    }
     
     Box(
-        modifier = Modifier
+        modifier = modifier
             .width(174.dp)
             .height(37.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(color = buttonColor)
             .clickable(
                 interactionSource = interactionSource,
+                enabled = enable,  // false일 때는 클릭/눌림 효과 막아줌
                 onClick = onClick
             ),
         contentAlignment = Alignment.Center,
