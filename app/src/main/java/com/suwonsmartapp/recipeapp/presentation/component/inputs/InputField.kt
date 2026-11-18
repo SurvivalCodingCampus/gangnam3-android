@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component
+package com.suwonsmartapp.recipeapp.presentation.component.inputs
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

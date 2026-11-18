@@ -56,6 +56,13 @@ object AppTextStyles {
         lineHeight = 11.sp,
     )
 
+    val smallLabelRegular = TextStyle(
+        fontFamily = AppFonts.Poppins,
+        fontWeight = FontWeight.Normal,
+        fontSize = 8.sp,
+        lineHeight = 11.sp,
+    )
+
     // Regular
     val titleTextRegular = titleTextBold.copy(fontWeight = FontWeight.Normal)
     val headerTextRegular = headerTextBold.copy(fontWeight = FontWeight.Normal)

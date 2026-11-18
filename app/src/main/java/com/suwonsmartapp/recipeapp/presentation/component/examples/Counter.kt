@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation
+package com.suwonsmartapp.recipeapp.presentation.component.examples
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
