@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.domain.model
+package com.suwonsmartapp.recipeapp.data.model
 
 enum class RecipeCategory {
     INDIAN,
