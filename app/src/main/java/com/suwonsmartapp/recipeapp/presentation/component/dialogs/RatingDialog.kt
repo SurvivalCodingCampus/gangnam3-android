@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.suwonsmartapp.recipeapp.presentation.component.buttons.SmallButton
@@ -35,56 +36,52 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 @Composable
 fun RatingDialog(
     modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit,
+    initialRating: Int = 0,
     onChange: (Int) -> Unit,
 ) {
-    var selectedRating by remember { mutableIntStateOf(0) }  // default는 0점
+    var selectedRating by remember { mutableIntStateOf(initialRating.coerceIn(0, 5)) }
 
-    Dialog(  // 기존 화면 위에 어두운 배경과 함께 팝업 창 띄움
-        onDismissRequest = onDismissRequest,
+    Card(
+        modifier = modifier
+            .width(170.dp)
+            .height(91.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = AppColors.white,
+        ),
     ) {
-        Card(
-            modifier = modifier
-                .width(170.dp)
-                .height(91.dp),
-            shape = RoundedCornerShape(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = AppColors.white,
-            ),
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
-            Column(
+            Text(
+                text = "Rate recipe",
+                color = AppColors.black2,
+                style = AppTextStyles.smallerTextRegular,
+                textAlign = TextAlign.Center,
+            )
+
+            // 별점
+            RatingStarBar(
+                rating = selectedRating,
+            ) {  // onRatingChange =
+                selectedRating = it
+            }
+
+            // 버튼
+            SmallButton(
+                text = "Send",
+                enable = selectedRating > 0,
+                containerColor = AppColors.rating,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-            ) {
-                Text(
-                    text = "Rate recipe",
-                    color = AppColors.black2,
-                    style = AppTextStyles.smallerTextRegular,
-                    textAlign = TextAlign.Center,
-                )
-
-                // 별점
-                RatingStarBar(
-                    rating = selectedRating,
-                ) {  // onRatingChange =
-                    selectedRating = it
-                }
-
-                // 버튼
-                SmallButton(
-                    text = "Send",
-                    enable = selectedRating > 0,
-                    containerColor = AppColors.rating,
-                    modifier = Modifier
-                        .width(61.dp)
-                        .height(20.dp)
-                ) {  // onClick = 아래 로직
-                    if (selectedRating in 1..5) {
-                        onChange(selectedRating)
-                    }
+                    .width(61.dp)
+                    .height(20.dp)
+            ) {  // onClick = 아래 로직
+                if (selectedRating in 1..5) {
+                    onChange(selectedRating)
                 }
             }
         }
@@ -121,4 +118,16 @@ fun RatingStarBar(
             )
         }
     }
+}
+
+@Preview(name = "기본")
+@Composable
+private fun RatingDialogPreview() {
+    RatingDialog(onChange = {})
+}
+
+@Preview(name = "별 3개")
+@Composable
+private fun RatingDialogThreeStarsPreview() {
+    RatingDialog(initialRating = 3, onChange = {})
 }
