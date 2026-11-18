@@ -42,9 +42,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
-import com.suwonsmartapp.recipeapp.domain.model.recipe.Recipe
-import com.suwonsmartapp.recipeapp.domain.model.recipe.RecipeCategory
-import com.suwonsmartapp.recipeapp.domain.model.user.UserSummary
+import com.suwonsmartapp.recipeapp.domain.model.Recipe
+import com.suwonsmartapp.recipeapp.domain.model.RecipeCategory
+import com.suwonsmartapp.recipeapp.domain.model.UserSummary
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 

@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.domain.model.user
+package com.suwonsmartapp.recipeapp.domain.model
 
 data class UserSummary(
     val id: String,
