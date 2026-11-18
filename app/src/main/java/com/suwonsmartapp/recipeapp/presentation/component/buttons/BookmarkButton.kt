@@ -69,6 +69,7 @@ fun BookmarkButton(
     Box(
         modifier = modifier
             .toggleable(  // 버튼 누를 때 clickable과 달리 음성 안내가 true/false를 안내해줌
+                // toggleable : 단일 항목을 껐다 켰다(on/off, 체크/해제)할 때 사용
                 value = isBookmarked,
                 role = Role.Checkbox,  // 체크/토글 상태를 나타내는 표준 롤
                 onValueChange = { onBookmarkClick() }
