@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,10 +41,12 @@ fun SignUpScreen(
     email: String,
     password: String,
     confirmPassword: String,
+    checked: Boolean,
     onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
+    onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // 화면 진입 시 초기 포커스 일괄 해제 : 회색 배경 방지
@@ -103,14 +110,10 @@ fun SignUpScreen(
         
         Spacer(Modifier.size(20.dp))
         
-        Row(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-        
-        }
+        TermsCheckboxRow(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+        )
         
         Spacer(Modifier.size(26.dp))
         
@@ -171,9 +174,41 @@ private fun SignUpHeader(
 
 @Composable
 fun TermsCheckboxRow(
-    modifier: Modifier = Modifier
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                start = 10.dp,
+            )
+            .toggleable(  // Row 전체 클릭 시 체크 상태
+                value = checked,
+                role = Role.Checkbox,
+                onValueChange = onCheckedChange,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = null,  // 상위 Row의 toggleable에서 클릭 한 번에 처리
+            colors = CheckboxDefaults.colors(
+                checkedColor = AppColors.secondary100,
+                uncheckedColor = AppColors.secondary100,
+                checkmarkColor = AppColors.white,
+            )
+        )
+        
+        Spacer(Modifier.size(5.dp))
+        
+        Text(
+            text = "Accept terms & Condition",
+            color = AppColors.secondary100,
+            style = AppTextStyles.smallerTextRegular,
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -183,15 +218,18 @@ private fun SignUpScreenPreview() {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var checked by rememberSaveable { mutableStateOf(false) }
     
     SignUpScreen(
         name = name,
         email = email,
         password = password,
         confirmPassword = confirmPassword,
+        checked = checked,
         onNameChange = { name = it },
         onEmailChange = { email = it },
         onPasswordChange = { password = it },
         onConfirmPasswordChange = { confirmPassword = it },
+        onCheckedChange = { checked = it },
     )
 }
