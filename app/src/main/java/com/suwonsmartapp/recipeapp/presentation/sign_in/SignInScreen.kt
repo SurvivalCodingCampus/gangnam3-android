@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -32,11 +32,11 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Composable
 fun SignInScreen(
-    modifier: Modifier = Modifier,
-    email: String = "",
-    password: String = "",
+    email: String,
+    password: String,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     // 화면 진입 시 초기 포커스 일괄 해제 : 회색 배경 방지
     val focusManager = LocalFocusManager.current
@@ -105,7 +105,7 @@ fun SignInScreen(
         
         SocialAuthButtons(
             onGoogleClick = {},
-            onFaceBookClick = {}
+            onFaceBookClick = {},
         )
         
         Spacer(Modifier.size(55.dp))
@@ -157,8 +157,8 @@ private fun SignInHeader(
 @Preview(showBackground = true)
 @Composable
 private fun SignInScreenPreview() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
     
     SignInScreen(
         email = email,
