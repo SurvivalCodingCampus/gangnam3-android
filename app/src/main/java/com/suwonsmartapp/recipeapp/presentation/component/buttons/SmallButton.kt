@@ -56,6 +56,7 @@ fun SmallButton(
             .background(color = buttonColor)
             .clickable(
                 interactionSource = interactionSource,
+                indication = null,
                 enabled = enable,  // false일 때는 클릭/눌림 효과 막아줌
                 onClick = onClick
             ),
