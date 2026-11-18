@@ -36,7 +36,12 @@ sealed interface DataError : RootError {
 3. **Fail-fast.** 첫 번째로 위반한 규칙 하나를 반환한다. (필드별 동시 에러 표시가 필요해지면 `List<Error>`로 확장)
 4. **데이터 실패는 그대로 통과**시키되, 규칙상 의미가 있는 코드(예: `CONFLICT`)만 규칙 에러로 **번역**한다.
 5. 규칙 함수의 반환 타입은 `Result<성공데이터, RootError>`이고, 실제로 오는 에러는 `해당 규칙 Error enum | DataError.Network` 둘 중 하나다.
-6. **보는 사람에 따라 달라지는 상태(북마크 여부, 팔로우 여부)는 도메인 모델에 넣지 않는다.** `observeSavedRecipeIds()`, `observeFollowingIds()` Flow를 ViewModel에서 목록과 `combine`해 카드/버튼 UI 상태를 만든다. 한 화면에서 저장·팔로우를 바꾸면 Flow를 통해 다른 화면에도 자동으로 반영된다.
+6. **보는 사람에 따라 달라지는 상태는 기본적으로 도메인 모델에 넣지 않는다.** 북마크 여부, 팔로우 여부는 `observeSavedRecipeIds()`, `observeFollowingIds()` Flow를 ViewModel에서 목록과 `combine`해 카드/버튼 UI 상태를 만든다. 한 화면에서 저장·팔로우를 바꾸면 Flow를 통해 다른 화면에도 자동으로 반영된다.
+   - **명시적 예외: `Review.myReaction`.** 아래 두 조건을 모두 만족하는 상태만 모델에 담는다.
+     1. **한 화면 안에서만 쓰인다.** 리뷰는 Reviews 화면에서만 보이므로 화면 간 동기화가 필요 없다 (북마크·팔로우는 홈, 검색, 상세, 프로필 등 여러 화면에 보여서 분리).
+     2. **같은 모델의 집계값과 한 번에 바뀌어야 한다.** `setReaction` 응답(`Review`) 하나로 `likeCount`, `dislikeCount`, `myReaction`이 함께 갱신된다. 분리하면 카운트와 내 반응이 어긋나는 순간이 생긴다.
+   - 상태 소유자는 `ReviewRepository` 하나다. 같은 리뷰에 대해 반응 Flow를 따로 두지 않는다.
+   - 새로운 사용자별 상태를 모델에 넣으려면 위 두 조건을 근거로 이 예외 목록에 추가한다. 하나라도 못 채우면 Flow로 분리한다.
 
 ---
 
@@ -285,7 +290,7 @@ enum class RateRecipeError : RootError {
 | `RatingRepository.submitRating(score)`가 1~5 범위를 검사하는가? | ❌ 검사하지 않음 (규칙 함수 R2 책임). Repository는 받은 값을 저장만 한다 |
 | `submitRating`이 "생성인지 수정인지", "같은 점수면 생략할지"를 판단하는가? | ❌ 서버 upsert로 저장만 한다. 같은 점수 생략(R5)은 규칙 함수가 정한다 |
 | `ReviewRepository.setReaction`이 "다음 반응 상태"를 계산하는가? | ❌ 목표 상태(`LIKE`/`DISLIKE`/`NONE`)를 받아 그대로 저장한다. 취소·전환 계산은 규칙 함수 몫 |
-| 보는 사람에 따라 달라지는 상태가 두 군데에 있는가? | ❌ 북마크 여부는 `observeSavedRecipeIds()`, 팔로우 여부는 `observeFollowingIds()`, 리뷰 반응은 서버 응답의 `Review.myReaction` 하나만 출처로 둔다. `Recipe`/`User`에 `isBookmarked`/`isFollowing`을 넣지 않는다 |
+| 보는 사람에 따라 달라지는 상태가 두 군데에 있는가? | ❌ 북마크 여부는 `observeSavedRecipeIds()`, 팔로우 여부는 `observeFollowingIds()` 하나만 출처로 둔다. `Recipe`/`User`에 `isBookmarked`/`isFollowing`을 넣지 않는다. 리뷰 반응은 0-2 원칙 6의 **명시적 예외**로 `Review.myReaction`에만 두고, 별도 Flow나 캐시를 만들지 않는다 |
 | `AuthRepository.signUp`이 "이메일 중복"을 판정하는가? | ❌ `CONFLICT`라는 **데이터 사실**만 반환한다. "중복 이메일"이라는 의미는 규칙 함수가 붙인다 |
 | `RecipeRepository.searchRecipes(query, filter)`가 입력을 검증하는가? | ❌ 검색어 길이, 조건 없음, rate 범위(R1~R4)는 규칙 함수가 검사한다. Repository는 검증된 조건을 서버/Room 쿼리로 **전달만** 한다 (R5~R8 계약 실행) |
 | `RecentSearchRepository`가 10건 제한을 거는가? | ❌ 규칙 함수가 `take(10)` 해서 id를 넘긴다. Repository는 받은 id 목록을 그대로 저장한다 |
@@ -307,7 +312,7 @@ enum class RateRecipeError : RootError {
 | `getCurrentUser()` 동기 함수 | **수용** | `observeCurrentUser(): Flow<User?>`. 401로 세션이 만료되면 데이터 계층이 세션을 지우고 null을 방출 → 앱 전역에서 로그인 화면으로 이동 |
 | `SearchFilter`에 query 없음 | **반론**: query는 시그니처로 해결 | `searchRecipes(query, filter)`. 검색어(입력창)와 필터(바텀시트)는 바뀌는 시점이 달라서 별도 값으로 둔다 |
 | 👍/👎 메서드, OAuth 토큰, `Procedure.imageUrl` | 수용 (이전 수정에서 반영) | `setReaction`, `oauthToken`, `imageUrl` |
-| `isBookmarked`/`isFollowing` 플래그 | **반론**: 모델이 아니라 Flow 결합으로 확정 | 0-2 원칙 6 |
+| `isBookmarked`/`isFollowing` 플래그 | **반론**: 모델이 아니라 Flow 결합으로 확정 (`Review.myReaction`만 조건부 예외) | 0-2 원칙 6 |
 | `markAllAsRead()` | **반론**: 디자인에 "모두 읽음" 버튼이 없음 | 미반영 |
 | `NotificationType` 확장성 | **부분 수용**: 화면에 없는 타입을 미리 만들지는 않음 | 서버가 새 타입을 추가해도 앱이 깨지지 않게 `UNKNOWN`만 추가 |
 
@@ -321,7 +326,7 @@ enum class RateRecipeError : RootError {
 | Q2 | 평점을 수정(재평가)할 수 있는가? | ✅ **확정: 가능** → 3-3 R4·R5, `submitRating` upsert |
 | Q3 | 비밀번호 정책 (길이, 특수문자) | 8자 이상, 영문+숫자 |
 | Q4 | "Recent Search"는 **최근 검색 결과**인가, **최근 본 레시피**인가? | 최근 검색 결과 상위 10건의 id를 로컬 저장, 표시할 때 최신 데이터로 복원 |
-| Q5 | 리뷰의 👍/👎는 누를 수 있는가? | ✅ **확정: 가능** → `Review.myReaction`, `ReviewRepository.setReaction`, 4-2 반응 규칙. 본인 리뷰에 반응 가능한지는 추가 확인 필요 |
+| Q5 | 리뷰의 👍/👎는 누를 수 있는가? | ✅ **확정: 가능** → `Review.myReaction`(0-2 원칙 6의 명시적 예외), `ReviewRepository.setReaction`, 4-2 반응 규칙. 본인 리뷰에 반응 가능한지는 추가 확인 필요 |
 | Q6 | 프로필의 Videos / Tag 탭은 어떤 데이터인가? | Videos = `videoUrl != null`인 레시피 (UI 필터), Tag는 미정 |
 | Q7 | Forgot Password 흐름이 있는가? | 범위 밖. 필요하면 `AuthRepository.requestPasswordReset(email)` 추가 |
 | Q8 | 홈 하단 `+` 버튼(레시피 작성) 화면이 있는가? | 디자인에 없음 → 이번 설계에서 제외 |

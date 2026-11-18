@@ -144,7 +144,7 @@ package "domain.model" {
     + content : String
     + likeCount : Int
     + dislikeCount : Int
-    + myReaction : ReviewReaction  // 내가 누른 반응 (서버 응답이 유일한 출처)
+    + myReaction : ReviewReaction  // 사용자별 상태지만 예외: 한 화면 전용 + 좋아요/싫어요 수와 함께 갱신 (business_rules.md 0-2 원칙 6)
     + createdAt : Long
   }
 
