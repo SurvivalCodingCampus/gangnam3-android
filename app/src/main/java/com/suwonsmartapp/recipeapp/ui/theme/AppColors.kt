@@ -4,7 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 object AppColors {
     // Neutral
-    val black = Color(0xFF000000)
+    val black1 = Color(0xFF000000)
+    val black2 = Color(0xFF121212)
     val gray1 = Color(0xFF484848)
     val gray2 = Color(0xFF797979)
     val gray3 = Color(0xFFA9A9A9)
