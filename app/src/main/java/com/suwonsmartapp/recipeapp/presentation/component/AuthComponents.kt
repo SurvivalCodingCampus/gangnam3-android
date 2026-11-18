@@ -34,7 +34,10 @@ fun TextDivider(
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(7.dp),
+        horizontalArrangement = Arrangement.spacedBy(
+            space = 7.dp,
+            alignment = Alignment.CenterHorizontally,
+        ),
     ) {
         HorizontalDivider(
             modifier = Modifier.width(50.dp),
