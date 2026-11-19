@@ -26,6 +26,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.lifecycleScope
+import com.suwonsmartapp.recipeapp.presentation.component.examples.CounterScreen
+import com.suwonsmartapp.recipeapp.presentation.component.examples.CounterViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,31 +39,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            var isOpen by rememberSaveable { mutableStateOf(false) }
-
-            Column(
-                modifier = Modifier
-                    .safeDrawingPadding()
-                    .fillMaxSize(),
-            ) {
-                Button(onClick = {
-                    isOpen = !isOpen
-                }) {
-                    Text("Dialog")
-                }
-
-                if (isOpen) {
-                    Dialog(onDismissRequest = { isOpen = false }) {
-                        Box(
-                            modifier = Modifier
-                                .size(300.dp)
-                                .background(color = Color.Red)
-                        ) {
-                            Text("나는 다이얼로그다")
-                        }
-                    }
-                }
-            }
+            CounterScreen()
         }
     }
 }
