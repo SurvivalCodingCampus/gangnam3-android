@@ -1,13 +1,11 @@
-package com.suwonsmartapp.recipeapp.core.data.repository
+package com.suwonsmartapp.recipeapp.core.data.datasource
 
-import com.suwonsmartapp.recipeapp.core.data.model.Recipe
+import com.suwonsmartapp.recipeapp.core.Response
 import com.suwonsmartapp.recipeapp.core.data.model.RecipesResponse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.serialization.json.Json
 
-class FakeRecipeRepository(
+class FakeRecipeDataSource(
+    private val statusCode: Int = 200,
     private val recipesJson: String = """
         {
             "recipes": [
@@ -283,17 +281,15 @@ class FakeRecipeRepository(
             ]
         }
     """.trimIndent()
-) : RecipeRepository {
-
-
-    private val recipes: List<Recipe> =
-        Json.decodeFromString<RecipesResponse>(recipesJson).recipes
-
-    override suspend fun getRecipe(id: Long): Flow<Recipe?> = flow {
-        val recipe = recipes.firstOrNull { it.id == id }
-            ?: throw NoSuchElementException("Recipe not found: id=$id")
-        emit(recipe)
+) : RecipeDataSource {
+    override suspend fun getRecipes(): Response<RecipesResponse> {
+        return Response(
+            statusCode = statusCode,
+            body = if (statusCode in 200..299) {
+                Json.decodeFromString<RecipesResponse>(recipesJson)
+            } else {
+                null
+            },
+        )
     }
-
-    override suspend fun getRecipes(): Flow<List<Recipe>> = flowOf(recipes)
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.suwonsmartapp.recipeapp.RecipeApplication
+import com.suwonsmartapp.recipeapp.core.Result
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,8 +26,11 @@ class SavedRecipesScreenViewModel(
 
     private fun loadSavedRecipes() {
         viewModelScope.launch {
-            recipeRepository.getRecipes().collect { recipes ->
-                _savedRecipes.value = recipes
+            recipeRepository.getRecipes().collect { result ->
+                when (result) {
+                    is Result.Success -> _savedRecipes.value = result.value
+                    is Result.Error -> _savedRecipes.value = emptyList()
+                }
             }
         }
     }

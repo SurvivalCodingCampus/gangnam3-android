@@ -1,6 +1,8 @@
 package com.suwonsmartapp.recipeapp.presentation.saved_recpies
 
-import com.suwonsmartapp.recipeapp.core.data.repository.FakeRecipeRepository
+import com.suwonsmartapp.recipeapp.core.Result
+import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
+import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -15,7 +17,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SavedRecipesScreenViewModelTest {
-    private val repository = FakeRecipeRepository()
+    private val repository = RecipeRepositoryImpl(FakeRecipeDataSource())
 
     @Before
     fun setUp() {
@@ -39,7 +41,7 @@ class SavedRecipesScreenViewModelTest {
     fun `불러온 레시피가 Repository 데이터와 같다`() = runTest {
         val viewModel = SavedRecipesScreenViewModel(repository)
 
-        val expected = repository.getRecipes().first()
+        val expected = (repository.getRecipes().first() as Result.Success).value
         assertEquals(expected, viewModel.savedRecipes.value)
     }
 
