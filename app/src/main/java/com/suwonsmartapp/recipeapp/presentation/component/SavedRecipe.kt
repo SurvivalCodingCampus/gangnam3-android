@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.BrokenImage
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -31,12 +34,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import com.suwonsmartapp.recipeapp.R
+import coil3.compose.SubcomposeAsyncImage
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
@@ -109,15 +110,43 @@ fun SavedRecipe(
             ),
     ) {
         // 배경 이미지
-        AsyncImage(
+        SubcomposeAsyncImage(
             modifier = Modifier.fillMaxWidth(),
             model = recipe.image,
             contentDescription = recipe.name,
             contentScale = ContentScale.Crop,
-            // 로딩 중 / Preview(네트워크 불가)에서 보여줄 이미지
-            placeholder = painterResource(id = R.drawable.recipe_spare_ribs_baked),
-            // 로딩 실패 시 보여줄 이미지
-            error = painterResource(id = R.drawable.recipe_spare_ribs_baked),
+            // 로딩 중 / Preview(네트워크 불가): 사진 아이콘
+            loading = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(AppColors.gray4),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        modifier = Modifier.size(40.dp),
+                        imageVector = Icons.Outlined.Image,
+                        contentDescription = "이미지 로딩 중",
+                        tint = AppColors.gray2,
+                    )
+                }
+            },
+            // 로딩 실패: 깨진 사진 아이콘
+            error = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(AppColors.gray4),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        modifier = Modifier.size(40.dp),
+                        imageVector = Icons.Outlined.BrokenImage,
+                        contentDescription = "이미지 로드 실패",
+                        tint = AppColors.gray2,
+                    )
+                }
+            },
         )
 
         // 그라데이션
