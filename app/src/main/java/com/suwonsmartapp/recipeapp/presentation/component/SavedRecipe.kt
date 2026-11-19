@@ -1,6 +1,5 @@
 package com.suwonsmartapp.recipeapp.presentation.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -36,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
@@ -109,12 +109,15 @@ fun SavedRecipe(
             ),
     ) {
         // 배경 이미지
-        Image(
+        AsyncImage(
             modifier = Modifier.fillMaxWidth(),
-            // TODO: recipe.image(URL) 로딩 (이미지 로더 도입 전까지 placeholder)
-            painter = painterResource(id = R.drawable.recipe_spare_ribs_baked),
+            model = recipe.image,
             contentDescription = recipe.name,
             contentScale = ContentScale.Crop,
+            // 로딩 중 / Preview(네트워크 불가)에서 보여줄 이미지
+            placeholder = painterResource(id = R.drawable.recipe_spare_ribs_baked),
+            // 로딩 실패 시 보여줄 이미지
+            error = painterResource(id = R.drawable.recipe_spare_ribs_baked),
         )
 
         // 그라데이션
