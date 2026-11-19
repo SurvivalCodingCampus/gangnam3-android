@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
-import com.suwonsmartapp.recipeapp.presentation.component.SavedRecipe
+import com.suwonsmartapp.recipeapp.presentation.component.recipe.SavedRecipe
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
