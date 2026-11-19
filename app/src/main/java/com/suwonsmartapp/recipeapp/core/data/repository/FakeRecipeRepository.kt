@@ -1,6 +1,6 @@
 package com.suwonsmartapp.recipeapp.core.data.repository
 
-가import com.suwonsmartapp.recipeapp.core.data.model.Recipe
+import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import kotlinx.serialization.json.Json
 
 class FakeRecipeRepository : RecipeRepository {
