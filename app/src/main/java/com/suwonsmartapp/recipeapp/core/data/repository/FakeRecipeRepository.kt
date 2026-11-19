@@ -1,17 +1,10 @@
 package com.suwonsmartapp.recipeapp.core.data.repository
 
-import com.suwonsmartapp.recipeapp.core.data.model.Ingredient
-import com.suwonsmartapp.recipeapp.core.data.model.Recipe
-import com.suwonsmartapp.recipeapp.core.data.model.RecipeIngredient
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import org.json.JSONObject
+가import com.suwonsmartapp.recipeapp.core.data.model.Recipe
+import kotlinx.serialization.json.Json
 
 class FakeRecipeRepository : RecipeRepository {
-
-    private val data = "{\n" +
-            "  \"recipes\": [\n" +
+    private val recipesJson = "[\n" +
             "    {\n" +
             "      \"category\": \"Indian\",\n" +
             "      \"id\": 1,\n" +
@@ -281,43 +274,13 @@ class FakeRecipeRepository : RecipeRepository {
             "        }\n" +
             "      ]\n" +
             "    }\n" +
-            "  ]\n" +
-            "}\n"
+            "]\n"
 
-    private val recipes: List<Recipe> by lazy { parseRecipes(data) }
+    private val recipes: List<Recipe> = Json.decodeFromString(recipesJson)
 
-    override fun getRecipe(id: Long): Flow<Recipe> = flow {
-        emit(recipes.firstOrNull { it.id == id } ?: throw NoSuchElementException("Recipe not found: id=$id"))
-    }
+    override suspend fun getRecipe(id: Long): Recipe =
+        recipes.firstOrNull { it.id == id }
+            ?: throw NoSuchElementException("Recipe not found: id=$id")
 
-    override fun getRecipes(): Flow<List<Recipe>> = flowOf(recipes)
-
-    private fun parseRecipes(json: String): List<Recipe> {
-        val array = JSONObject(json).getJSONArray("recipes")
-        return List(array.length()) { index ->
-            val obj = array.getJSONObject(index)
-            val ingredients = obj.getJSONArray("ingredients")
-            Recipe(
-                id = obj.getLong("id"),
-                category = obj.getString("category"),
-                name = obj.getString("name"),
-                image = obj.getString("image"),
-                chef = obj.getString("chef"),
-                time = obj.getString("time"),
-                rating = obj.getDouble("rating"),
-                ingredients = List(ingredients.length()) { i ->
-                    val item = ingredients.getJSONObject(i)
-                    val ingredient = item.getJSONObject("ingredient")
-                    RecipeIngredient(
-                        ingredient = Ingredient(
-                            id = ingredient.getLong("id"),
-                            name = ingredient.getString("name"),
-                            image = ingredient.getString("image"),
-                        ),
-                        amount = item.getInt("amount"),
-                    )
-                },
-            )
-        }
-    }
+    override suspend fun getRecipes(): List<Recipe> = recipes
 }
