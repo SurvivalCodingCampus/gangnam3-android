@@ -33,6 +33,8 @@
     <string name="sign_up_already_member">Already a member?</string>
     <string name="sign_up_or_in">Sign in</string>
 
+    <string name="saved_recipes_title">Saved recipes</string>
+
     <string name="splash_background">Background Image</string>
     <string name="splash_chef_hat">Chef Hat Image</string>
     <string name="splash_header">100K+ Premium Recipe</string>
