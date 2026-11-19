@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.data.model.Recipe
 import com.suwonsmartapp.recipeapp.ui.AppColors
@@ -71,7 +72,11 @@ fun RecipeCard(
             .height(height = 150.dp)
             .clip(shape = RoundedCornerShape(size = 10.dp))
             .paint(
-                painter = painterResource(id = R.drawable.traditional_spare_ribs_baked),
+                painter = rememberAsyncImagePainter(
+                    model = recipe.imageUrl,
+                    placeholder = painterResource(id = R.drawable.traditional_spare_ribs_baked),
+                    error = painterResource(id = R.drawable.traditional_spare_ribs_baked),
+                ),
                 contentScale = ContentScale.Crop,
             )
             .background(
