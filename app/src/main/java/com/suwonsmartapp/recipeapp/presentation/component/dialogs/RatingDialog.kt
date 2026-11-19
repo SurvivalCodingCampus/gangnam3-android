@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -47,7 +49,10 @@ fun RatingDialog(
     Dialog(  // 기존 화면 위에 어두운 배경과 함께 팝업 창 띄움
         onDismissRequest = onDismissRequest,
     ) {
-        RatingCard(onChange = onChange)
+        RatingCard(
+            modifier = modifier,
+            onChange = onChange,
+        )
     }
 }
 
@@ -60,8 +65,8 @@ fun RatingCard(
     
     Card(
         modifier = modifier
-            .width(170.dp)
-            .height(91.dp),
+            .widthIn(min = 170.dp)
+            .heightIn(min = 91.dp),
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
             containerColor = AppColors.white,
@@ -70,7 +75,10 @@ fun RatingCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp),
+                .padding(
+                    vertical = 10.dp,
+                    horizontal = 15.dp,
+                    ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
