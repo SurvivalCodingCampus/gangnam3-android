@@ -49,4 +49,26 @@ class SavedRecipesScreenViewModelTest {
 
         assertEquals("Traditional spare ribs baked", viewModel.savedRecipes.value.first().name)
     }
+
+    @Test
+    fun `북마크를 누르면 목록은 그대로고 북마크만 해제된다`() = runTest {
+        val viewModel = SavedRecipesScreenViewModel(repository)
+        val target = viewModel.savedRecipes.value.first()
+
+        viewModel.onBookmarkClick(target)
+
+        assertEquals(10, viewModel.savedRecipes.value.size)
+        assertEquals(setOf(target.id), viewModel.unbookmarkedIds.value)
+    }
+
+    @Test
+    fun `북마크를 두 번 누르면 다시 활성화된다`() = runTest {
+        val viewModel = SavedRecipesScreenViewModel(repository)
+        val target = viewModel.savedRecipes.value.first()
+
+        viewModel.onBookmarkClick(target)
+        viewModel.onBookmarkClick(target)
+
+        assertEquals(emptySet<Long>(), viewModel.unbookmarkedIds.value)
+    }
 }
