@@ -1,11 +1,10 @@
 package com.suwonsmartapp.recipeapp.presentation.component.buttons
 
-import android.R.attr.onClick
-import android.R.attr.text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +34,6 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 fun BigButtonPreview() {
     BigButton(
         "Button ButtonButton 3333",
-        modifier = Modifier.width(100.dp)
     )
 }
 
@@ -43,6 +41,7 @@ fun BigButtonPreview() {
 fun BigButton(
     text: String,
     modifier: Modifier = Modifier,
+    enable: Boolean = true,
     onClick: () -> Unit = {},
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -57,6 +56,7 @@ fun BigButton(
             )
             .clickable(
                 interactionSource = interactionSource,
+                enabled = enable,
                 onClick = onClick,
             )
             .padding(
@@ -65,7 +65,10 @@ fun BigButton(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
         ) {
+            Spacer(modifier = Modifier.weight(1f))
+
             Text(
                 text = text,
                 color = AppColors.white,
@@ -84,6 +87,8 @@ fun BigButton(
                 tint = AppColors.white,
                 modifier = Modifier.size(20.dp),
             )
+
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
