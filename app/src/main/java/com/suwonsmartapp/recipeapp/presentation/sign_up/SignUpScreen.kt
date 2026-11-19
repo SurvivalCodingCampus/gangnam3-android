@@ -127,12 +127,14 @@ fun SignUpScreen(
                 label = "Password",
                 placeholder = "Enter Password",
                 value = password,
+                isPassword = true,
                 onValueChange = onPasswordChange,
             )
             InputField(
                 label = "Confirm Password",
                 placeholder = "Retype Password",
                 value = confirmPassword,
+                isPassword = true,
                 onValueChange = onConfirmPasswordChange,
             )
         }

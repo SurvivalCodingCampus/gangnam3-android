@@ -98,6 +98,7 @@ fun SignInScreen(
                 label = "Password",
                 placeholder = "Enter Password",
                 value = password,
+                isPassword = true,
                 onValueChange = onPasswordChange,
             )
         }
