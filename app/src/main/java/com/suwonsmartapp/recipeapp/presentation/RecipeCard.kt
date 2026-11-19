@@ -36,7 +36,7 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.data.model.Recipe
 import com.suwonsmartapp.recipeapp.data.model.User
 import com.suwonsmartapp.recipeapp.ui.AppColors
-import com.suwonsmartapp.recipeapp.ui.TextStyles
+import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 import java.time.LocalDateTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -125,7 +125,7 @@ fun RecipeCard(
             )
             Text(
                 text = recipe.rating.toString(),
-                style = TextStyles.smallerTextRegular,
+                style = AppTextStyles.smallerTextRegular,
                 color = AppColors.black1,
             )
         }
@@ -137,14 +137,14 @@ fun RecipeCard(
                 Text(
                     modifier = Modifier.widthIn(max = 200.dp),
                     text = recipe.title,
-                    style = TextStyles.smallTextBold,
+                    style = AppTextStyles.smallTextBold,
                     color = AppColors.white,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = stringResource(R.string.recipe_chef, recipe.chef.name),
-                    style = TextStyles.smallerTextRegular,
+                    style = AppTextStyles.smallerTextRegular,
                     color = AppColors.gray4,
                 )
             }
@@ -160,7 +160,7 @@ fun RecipeCard(
                 Text(
                     modifier = Modifier.padding(end = 10.dp),
                     text = stringResource(R.string.recipe_cooking_time, recipe.cookingTimeMinutes),
-                    style = TextStyles.smallerTextRegular,
+                    style = AppTextStyles.smallerTextRegular,
                     color = AppColors.gray4,
                 )
                 Icon(

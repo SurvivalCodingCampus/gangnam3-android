@@ -1,7 +1,36 @@
 <resources>
     <string name="app_name">RecipeApp</string>
+
     <string name="ingredient_gram">%1$dg</string>
     <string name="recipe_chef">By %1$s</string>
     <string name="recipe_cooking_time">%1$d min</string>
     <string name="recipe_bookmark">Bookmark</string>
+
+    <string name="sign_in_hello">Hello,</string>
+    <string name="sign_in_welcome_back">Welcome Back!</string>
+    <string name="sign_in_email">Email</string>
+    <string name="sign_in_enter_email">Enter Email</string>
+    <string name="sign_in_password">Password</string>
+    <string name="sign_in_enter_password">Enter Password</string>
+    <string name="sign_in_forgot_password">Forgot Password?</string>
+    <string name="sign_in_button">Sign In</string>
+    <string name="sign_in_or_with">Or Sign in With</string>
+    <string name="sign_in_have_account">Don\'t have an account?</string>
+    <string name="sign_in_or_up">Sign up</string>
+
+    <string name="sign_up_create_account">Create an account</string>
+    <string name="sign_up_notice_account">Let\'s help you set up your account,\nit won\'t take long.</string>
+    <string name="sign_up_name">Name</string>
+    <string name="sign_up_enter_name">Enter Name</string>
+    <string name="sign_up_email">Email</string>
+    <string name="sign_up_enter_email">Enter Email</string>
+    <string name="sign_up_password">Password</string>
+    <string name="sign_up_enter_password">Enter Password</string>
+    <string name="sign_up_confirm_password">Confirm Password</string>
+    <string name="sign_up_retype_password">Retype Password</string>
+    <string name="sign_up_term_condition">Accept terms &amp; Condition</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="sign_up_or_with">Or Sign in With</string>
+    <string name="sign_up_already_member">Already a member?</string>
+    <string name="sign_up_or_in">Sign in</string>
 </resources>

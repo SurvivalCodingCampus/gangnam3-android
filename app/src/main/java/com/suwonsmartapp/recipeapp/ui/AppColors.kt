@@ -37,4 +37,7 @@ object AppColors {
 
     // Green
     val success = Color(0xFF31B057)
+
+    // Shadow
+    val shadow = Color(0xFF696969)
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.AppColors
-import com.suwonsmartapp.recipeapp.ui.TextStyles
+import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
@@ -49,7 +49,7 @@ fun FilterButton(
             .clickable(onClick = onClick)
             .padding(horizontal = 10.dp, vertical = 5.dp),
         text = text,
-        style = TextStyles.smallerTextRegular,
+        style = AppTextStyles.smallerTextRegular,
         color = if (isSelected) AppColors.white else AppColors.primary80,
     )
 }
