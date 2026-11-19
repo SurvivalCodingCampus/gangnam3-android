@@ -25,9 +25,13 @@ class SavedRecipesScreenViewModel(
 
     private fun loadSavedRecipes() {
         viewModelScope.launch {
-            recipeRepository.getRecipes()
+            recipeRepository.getRecipes().collect { recipes ->
+                _savedRecipes.value = recipes
+            }
         }
     }
+
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
