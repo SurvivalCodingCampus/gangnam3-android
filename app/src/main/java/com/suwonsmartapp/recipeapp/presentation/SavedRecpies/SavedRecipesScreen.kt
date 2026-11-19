@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.presentation.component.SavedRecipe
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
@@ -32,12 +31,14 @@ private fun SavedRecipesScreenPreview() {
         mutableStateListOf(
             *List(7) { index ->
                 Recipe(
-                    title = "Traditional spare ribs baked ${index + 1}",
-                    imageResId = R.drawable.recipe_spare_ribs_baked,
-                    imageDescription = "오븐에 구운 전통 돼지갈비 이미지",
-                    userName = "Chef John",
-                    requiredTime = 20,
-                    rating = 4.0f,
+                    id = index.toLong() + 1,
+                    category = "Indian",
+                    name = "Traditional spare ribs baked ${index + 1}",
+                    image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+                    chef = "Chef John",
+                    time = "20 min",
+                    rating = 4.0,
+                    ingredients = emptyList(),
                 )
             }.toTypedArray()
         )

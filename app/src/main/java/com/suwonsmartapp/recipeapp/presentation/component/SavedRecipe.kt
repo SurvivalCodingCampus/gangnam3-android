@@ -47,13 +47,15 @@ private fun SavedRecipeBookmarkedPreview() {
     var isBookmarked by rememberSaveable { mutableStateOf(true) }
 
     val previewRecipe = Recipe(
-        title = "Traditional spare ribs baked 오이시" +
+        id = 1,
+        category = "Indian",
+        name = "Traditional spare ribs baked 오이시" +
                 " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
-        imageResId = R.drawable.recipe_spare_ribs_baked,
-        imageDescription = "오븐에 구운 전통 돼지갈비 이미지",
-        userName = "junsik",
-        requiredTime = 20,
-        rating = 4.0f,
+        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+        chef = "junsik",
+        time = "20 min",
+        rating = 4.0,
+        ingredients = emptyList(),
     )
 
     SavedRecipe(
@@ -70,13 +72,15 @@ private fun SavedRecipePreview() {
     var isBookmarked by rememberSaveable { mutableStateOf(false) }
 
     val previewRecipe = Recipe(
-        title = "Traditional spare ribs baked 오이시" +
+        id = 1,
+        category = "Indian",
+        name = "Traditional spare ribs baked 오이시" +
                 " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
-        imageResId = R.drawable.recipe_spare_ribs_baked,
-        imageDescription = "오븐에 구운 전통 돼지갈비 이미지",
-        userName = "junsik",
-        requiredTime = 20,
-        rating = 4.0f,
+        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+        chef = "junsik",
+        time = "20 min",
+        rating = 4.0,
+        ingredients = emptyList(),
     )
 
     SavedRecipe(
@@ -107,8 +111,9 @@ fun SavedRecipe(
         // 배경 이미지
         Image(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = recipe.imageResId),
-            contentDescription = recipe.imageDescription,
+            // TODO: recipe.image(URL) 로딩 (이미지 로더 도입 전까지 placeholder)
+            painter = painterResource(id = R.drawable.recipe_spare_ribs_baked),
+            contentDescription = recipe.name,
             contentScale = ContentScale.Crop,
         )
 
@@ -175,7 +180,7 @@ fun SavedRecipe(
             Text(
                 modifier = Modifier
                     .width(200.dp),
-                text = recipe.title,
+                text = recipe.name,
                 color = AppColors.white,
                 style = AppTextStyles.smallTextBold,
                 maxLines = 2,
@@ -184,7 +189,7 @@ fun SavedRecipe(
 
             // 유저
             Text(
-                text = "By ${recipe.userName}",
+                text = "By ${recipe.chef}",
                 color = AppColors.gray4,
                 style = AppTextStyles.smallerTextRegular
             )
@@ -210,7 +215,7 @@ fun SavedRecipe(
 
             // 시간
             Text(
-                text = "${recipe.requiredTime} min",
+                text = recipe.time,
                 color = AppColors.gray4,
                 style = AppTextStyles.smallerTextRegular
             )
