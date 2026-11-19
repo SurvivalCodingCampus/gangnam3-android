@@ -1,19 +1,11 @@
 package com.suwonsmartapp.recipeapp.data.model
 
-import java.time.LocalDateTime
-
 data class Recipe(
     val id: Int,
-    val title: String,
-    val imageUrl: String,
-    val videoUrl: String?,
-    val chef: User,
     val category: String,
+    val name: String,
+    val imageUrl: String,
+    val chef: String,
+    val time: String,
     val rating: Double,
-    val reviewCount: Int,
-    val cookingTimeMinutes: Int,
-    val serving: Int,
-    val ingredients: List<Ingredient>,
-    val procedures: List<Procedure>,
-    val createdAt: LocalDateTime,
 )

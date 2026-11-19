@@ -3,7 +3,6 @@
 
     <string name="ingredient_gram">%1$dg</string>
     <string name="recipe_chef">By %1$s</string>
-    <string name="recipe_cooking_time">%1$d min</string>
     <string name="recipe_bookmark">Bookmark</string>
 
     <string name="sign_in_hello">Hello,</string>
