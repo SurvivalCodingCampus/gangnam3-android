@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.sign_up
+package com.suwonsmartapp.recipeapp.presentation.screen.sign_in
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,11 +17,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,18 +31,12 @@ import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Composable
-fun SignUpScreen(
-    name: String,
+fun SignInScreen(
     email: String,
     password: String,
-    confirmPassword: String,
-    checked: Boolean,
-    onNameChange: (String) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    onConfirmPasswordChange: (String) -> Unit,
-    onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // 화면 진입 시 초기 포커스 일괄 해제 : 회색 배경 방지
     val focusManager = LocalFocusManager.current
@@ -59,29 +48,19 @@ fun SignUpScreen(
         modifier = modifier
             .fillMaxSize()
             .safeDrawingPadding()  // 기기 시스템 영역(상태바,노치,하단바,키보드) 여백 먼저 확보
-            .padding(
-                // 디자인 여백 적용
-                vertical = 10.dp,
+            .padding(  // 디자인 여백 적용
+                vertical = 50.dp,
                 horizontal = 30.dp,
             )
-            .pointerInput(Unit) {  // 입력 후 빈 배경 터치 시 포커스 해제 및 키보드 내리기
+            .pointerInput(Unit) {  // 입력 후 빈 배경 터치하면 포커스 해제 및 키보드 내리기
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
                 })
             }
     ) {
-        SignUpHeader()
+        SignInHeader()
         
-        Spacer(Modifier.size(20.dp))
-        
-        InputField(
-            label = "Name",
-            placeholder = "Enter Name",
-            value = name,
-            onValueChange = onNameChange,
-        )
-        
-        Spacer(Modifier.size(20.dp))
+        Spacer(Modifier.size(57.dp))
         
         InputField(
             label = "Email",
@@ -90,7 +69,7 @@ fun SignUpScreen(
             onValueChange = onEmailChange,
         )
         
-        Spacer(Modifier.size(20.dp))
+        Spacer(Modifier.size(30.dp))
         
         InputField(
             label = "Password",
@@ -101,32 +80,24 @@ fun SignUpScreen(
         
         Spacer(Modifier.size(20.dp))
         
-        InputField(
-            label = "Confirm Password",
-            placeholder = "Retype Password",
-            value = confirmPassword,
-            onValueChange = onConfirmPasswordChange,
+        Text(
+            text = "Forgot Password?",
+            color = AppColors.secondary100,
+            style = AppTextStyles.smallerTextRegular,
+            modifier = Modifier
+                .padding(
+                    start = 10.dp,
+                )
         )
         
-        Spacer(Modifier.size(20.dp))
-        
-        TermsCheckboxRow(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-        )
-        
-        Spacer(Modifier.size(26.dp))
+        Spacer(Modifier.size(25.dp))
         
         BigButton(
-            text = "Sign Up",
-            enable = name.isNotBlank()
-                    && email.isNotBlank()
-                    && password.isNotBlank()
-                    && confirmPassword.isNotBlank()
-                    && (password == confirmPassword)
+            text = "Sign In",
+            enable = email.isNotBlank() && password.isNotBlank()
         ) { }
         
-        Spacer(Modifier.size(14.dp))
+        Spacer(Modifier.size(20.dp))
         
         TextDivider("Or Sign in With")
         
@@ -137,14 +108,14 @@ fun SignUpScreen(
             onFaceBookClick = {},
         )
         
-        Spacer(Modifier.size(20.dp))
+        Spacer(Modifier.size(55.dp))
         
         Row(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
         ) {
             Text(
-                text = "Already a member? ",
+                text = "Don't have an account? ",
                 color = AppColors.black1,
                 style = AppTextStyles.smallerTextBold.copy(
                     fontWeight = FontWeight.SemiBold,
@@ -152,7 +123,7 @@ fun SignUpScreen(
             )
             
             Text(
-                text = "Sign In",
+                text = "Sign Up",
                 color = AppColors.secondary100,
                 style = AppTextStyles.smallerTextBold.copy(
                     fontWeight = FontWeight.SemiBold,
@@ -163,89 +134,40 @@ fun SignUpScreen(
 }
 
 @Composable
-private fun SignUpHeader(
-    modifier: Modifier = Modifier,
-    title: String = "Create an account",
-    subtitle: String = "Let’s help you set up your account,\nit won’t take long."
+private fun SignInHeader(
+    title: String = "Hello,",
+    subtitle: String = "Welcome Back!",
 ) {
-    Column(
-        modifier = modifier,
-    ) {
+    Column {
         Text(
             text = title,
             color = AppColors.black1,
-            style = AppTextStyles.largeTextBold.copy(
+            style = AppTextStyles.headerTextBold.copy(
                 fontWeight = FontWeight.SemiBold,
             ),
         )
-        
         Text(
             text = subtitle,
             color = AppColors.black2,
-            style = AppTextStyles.smallerTextRegular,
-        )
-        
-    }
-}
-
-@Composable
-fun TermsCheckboxRow(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                start = 10.dp,
-            )
-            .toggleable(  // Row 전체 클릭 시 체크 상태
-                value = checked,
-                role = Role.Checkbox,
-                onValueChange = onCheckedChange,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = null,  // 상위 Row의 toggleable에서 클릭 한 번에 처리
-            colors = CheckboxDefaults.colors(
-                checkedColor = AppColors.secondary100,
-                uncheckedColor = AppColors.secondary100,
-                checkmarkColor = AppColors.white,
-            )
-        )
-        
-        Spacer(Modifier.size(5.dp))
-        
-        Text(
-            text = "Accept terms & Condition",
-            color = AppColors.secondary100,
-            style = AppTextStyles.smallerTextRegular,
+            style = AppTextStyles.largeTextRegular,
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SignUpScreenPreview() {
-    var name by rememberSaveable { mutableStateOf("") }
+private fun SignInScreenPreview() {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
-    var checked by rememberSaveable { mutableStateOf(false) }
     
-    SignUpScreen(
-        name = name,
+    SignInScreen(
         email = email,
         password = password,
-        confirmPassword = confirmPassword,
-        checked = checked,
-        onNameChange = { name = it },
-        onEmailChange = { email = it },
-        onPasswordChange = { password = it },
-        onConfirmPasswordChange = { confirmPassword = it },
-        onCheckedChange = { checked = it },
+        onEmailChange = {
+            email = it
+        },
+        onPasswordChange = {
+            password = it
+        }
     )
 }
