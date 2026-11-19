@@ -49,6 +49,9 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.lifecycle.viewmodel.compose.android)
     
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     
