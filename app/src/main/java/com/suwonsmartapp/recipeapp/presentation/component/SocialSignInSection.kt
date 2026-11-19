@@ -38,9 +38,9 @@ private fun SocialSignInSectionPreview() {
 // "Or Sign in With" 구분선 + 구글/페이스북 버튼 (Sign In, Sign Up 화면 공통)
 @Composable
 fun SocialSignInSection(
-    modifier: Modifier = Modifier,
     onGoogleClick: () -> Unit,
     onFacebookClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
