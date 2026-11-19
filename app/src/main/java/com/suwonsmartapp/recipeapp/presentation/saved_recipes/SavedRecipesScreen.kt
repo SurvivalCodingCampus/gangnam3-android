@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.saved_recpies
+package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

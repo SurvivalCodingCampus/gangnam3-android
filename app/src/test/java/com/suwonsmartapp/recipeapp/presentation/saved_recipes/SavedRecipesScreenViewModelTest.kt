@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.saved_recpies
+package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
 import com.suwonsmartapp.recipeapp.core.Result
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource

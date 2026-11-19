@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.saved_recpies
+package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
