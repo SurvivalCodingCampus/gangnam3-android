@@ -1,5 +1,8 @@
 package com.suwonsmartapp.recipeapp.core.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Recipe(
     val id: Long,
     val category: String,

@@ -4,6 +4,6 @@ import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
-    fun getRecipe(id: Long): Flow<Recipe>
-    fun getRecipes(): Flow<List<Recipe>>
+    suspend fun getRecipe(id: Long): Recipe
+    suspend fun getRecipes(): List<Recipe>
 }

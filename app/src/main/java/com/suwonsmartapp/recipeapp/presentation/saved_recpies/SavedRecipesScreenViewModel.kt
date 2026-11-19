@@ -25,9 +25,7 @@ class SavedRecipesScreenViewModel(
 
     private fun loadSavedRecipes() {
         viewModelScope.launch {
-            recipeRepository.getRecipes().collect { recipes ->
-                _savedRecipes.value = recipes
-            }
+            recipeRepository.getRecipes()
         }
     }
 
