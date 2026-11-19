@@ -4,9 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,59 +26,60 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-fun MediumButtonPreview() {
-    MediumButton("Button") { }
-}
-
 @Composable
 fun MediumButton(
     text: String,
+    modifier: Modifier = Modifier,
+    enable: Boolean = false,  // 버튼 활성화 여부
     onClick: () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     
-    val buttonColor = if (isPressed) AppColors.gray4 else AppColors.primary100
+    val buttonColor = when {  // 상태 우선순위에 따라 결정 : 비활성화 > 눌림 중 > 기본 상태
+        !enable -> AppColors.primary100
+        isPressed -> AppColors.gray4
+        else -> AppColors.primary100
+    }
     
-    Box(
-        modifier = Modifier
+    Row(
+        modifier = modifier
             .width(243.dp)
             .height(54.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(color = buttonColor)
             .clickable(
+                // clickable이 터치 이벤트를 감지하면 interactionSource로 신호 보냄
                 interactionSource = interactionSource,
+                indication = null,
+                enabled = enable,  // false일 때 클릭/눌림 효과 제어
                 onClick = onClick
             ),
-        contentAlignment = Alignment.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(
+            space = 9.dp,
+            alignment = Alignment.CenterHorizontally,
+        )
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(  // Text에 Modifier 적용하기 위해 Box로 감싸줌
-                modifier = Modifier
-                    .width(114.dp)
-                    .height(24.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = text,
-                    color = AppColors.white,
-                    style = AppTextStyles.normalTextBold,
-                    textAlign = TextAlign.Center,
-                )
-            }
-            
-            Spacer(modifier = Modifier.width(9.dp))
-            
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                contentDescription = "arrow forward",
-                tint = AppColors.white,
-                modifier = Modifier.size(20.dp),  // 하나만 적어주면 가로세로 20.dp 적용됨
-            )
-        }
+        Text(
+            text = text,
+            color = AppColors.white,
+            style = AppTextStyles.normalTextBold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.width(114.dp)
+        )
+        
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = "arrow forward",
+            tint = AppColors.white,
+            modifier = Modifier.size(20.dp),  // 하나만 적어주면 가로세로 20.dp 적용됨
+        )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MediumButtonPreview() {
+    MediumButton("Button") { }
 }

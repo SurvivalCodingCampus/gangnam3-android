@@ -17,35 +17,6 @@ import androidx.compose.ui.unit.sp
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-fun InputFieldPreview() {
-    val (text, setValue) = remember { mutableStateOf("") }
-    
-    Column(
-        verticalArrangement = Arrangement.spacedBy(5.dp),
-    ) {
-        InputField(
-            label = "Label",
-            placeholder = "Placeholder",
-            value = text,
-            onValueChange = setValue,
-        )
-        InputField(
-            label = "Label",
-            placeholder = "Placeholder",
-            value = text,
-            onValueChange = setValue,
-        )
-        InputField(
-            label = "Label",
-            placeholder = "Placeholder",
-            value = "text",
-            onValueChange = setValue,
-        )
-    }
-}
-
 @Composable
 fun InputField(
     label: String,
@@ -85,6 +56,35 @@ fun InputField(
                 unfocusedBorderColor = AppColors.gray4,
             ),
             modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun InputFieldPreview() {
+    val (text, setValue) = remember { mutableStateOf("") }
+    
+    Column(
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        InputField(
+            label = "Label",
+            placeholder = "Placeholder",
+            value = text,
+            onValueChange = setValue,
+        )
+        InputField(
+            label = "Label",
+            placeholder = "Placeholder",
+            value = text,
+            onValueChange = setValue,
+        )
+        InputField(
+            label = "Label",
+            placeholder = "Placeholder",
+            value = "text",
+            onValueChange = setValue,
         )
     }
 }
