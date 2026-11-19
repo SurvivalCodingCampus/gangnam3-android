@@ -1,13 +1,11 @@
-package com.suwonsmartapp.recipeapp.presentation.component
+package com.suwonsmartapp.recipeapp.presentation.component.items
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,83 +17,75 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
+import com.suwonsmartapp.recipeapp.data.model.Ingredient
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.TextStyles
-
-data class Ingredient(
-    val name: String,
-    val amount: String,
-    val image: Int,
-)
-
-@Preview(showBackground = true)
-@Composable
-fun IngredientItemPreview() {
-    IngredientItem(
-        ingredient = Ingredient(
-            name = "Tomato",
-            amount = "500g",
-            image = R.drawable.tomato,
-        ),
-        onClick = {
-            println("클릭")
-        },
-    )
-}
 
 @Composable
 fun IngredientItem(
     ingredient: Ingredient,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .height(76.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(AppColors.gray4)
             .clickable(onClick = onClick)
-            .padding(
-                start = 15.dp,
-                top = 12.dp,
-                end = 15.dp,
-                bottom = 12.dp,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(horizontal = 15.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
+        // 재료 이미지 (52dp 흰 배경 + 안쪽 6dp 여백 = 이미지 40dp)
+        Image(
             modifier = Modifier
                 .size(52.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(AppColors.white),
-            contentAlignment = Alignment.Center,
-        ) {
-            Image(
-                painter = painterResource(id = ingredient.image),
-                contentDescription = ingredient.name,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(10.dp)),
-            )
-        }
-
+                .clip(RoundedCornerShape(12.dp)),
+            painter = painterResource(id = R.drawable.tomato),
+            contentScale = ContentScale.Crop,
+            contentDescription = ingredient.description,
+        )
         Spacer(modifier = Modifier.width(16.dp))
 
+        // 재료 명
         Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(
+                    top = 29.dp,
+                    bottom = 23.dp,
+                ),
             text = ingredient.name,
             color = AppColors.black2,
             style = TextStyles.normalTextBold,
-            modifier = Modifier.weight(1f),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
         )
 
+        // 그램
         Text(
-            text = ingredient.amount,
+            modifier = Modifier
+                .align(Alignment.Bottom)
+                .padding(bottom = 27.dp),
+            text = "${ingredient.grams}g",
             color = AppColors.gray3,
             style = TextStyles.smallTextRegular,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun IngredientItemPreview() {
+    val testIngredient = Ingredient(
+        name = "TomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatosTomatos",
+        imageUrl = "",
+        grams = 500,
+        description = "토마토 사진입니다",
+    )
+    IngredientItem(testIngredient) {}
 }

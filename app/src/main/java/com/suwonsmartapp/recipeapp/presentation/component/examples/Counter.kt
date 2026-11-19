@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation
+package com.suwonsmartapp.recipeapp.presentation.component.examples
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
+
 @Preview(showBackground = true)
 @Composable
 fun Counter() {
@@ -25,7 +26,7 @@ fun Counter() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text (
+        Text(
             text = "Count: $counter"
         )
 
@@ -38,4 +39,3 @@ fun Counter() {
         }
     }
 }
-
