@@ -58,4 +58,6 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.lifecycle.viewmodel.compose.android)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
