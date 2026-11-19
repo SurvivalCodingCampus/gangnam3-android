@@ -142,7 +142,23 @@ fun SignUpScreen(
         Row(
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.Center,
-        ) { }
+        ) {
+            Text(
+                text = "Already a member? ",
+                color = AppColors.black1,
+                style = AppTextStyles.smallerTextBold.copy(
+                    fontWeight = FontWeight.SemiBold,
+                )
+            )
+            
+            Text(
+                text = "Sign In",
+                color = AppColors.secondary100,
+                style = AppTextStyles.smallerTextBold.copy(
+                    fontWeight = FontWeight.SemiBold,
+                )
+            )
+        }
     }
 }
 
