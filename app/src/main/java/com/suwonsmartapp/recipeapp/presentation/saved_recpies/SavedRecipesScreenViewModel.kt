@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.SavedRecpies
+package com.suwonsmartapp.recipeapp.presentation.saved_recpies
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.suwonsmartapp.recipeapp.RecipeApplication
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
-import com.suwonsmartapp.recipeapp.core.data.repository.FakeRecipeRepository
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
