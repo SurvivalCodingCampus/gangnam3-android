@@ -1,12 +1,12 @@
-package com.suwonsmartapp.recipeapp.presentation.component
+package com.suwonsmartapp.recipeapp.presentation.component.recipe
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.outlined.BrokenImage
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -32,11 +34,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suwonsmartapp.recipeapp.R
+import coil3.compose.SubcomposeAsyncImage
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
@@ -47,13 +48,15 @@ private fun SavedRecipeBookmarkedPreview() {
     var isBookmarked by rememberSaveable { mutableStateOf(true) }
 
     val previewRecipe = Recipe(
-        title = "Traditional spare ribs baked 오이시" +
+        id = 1,
+        category = "Indian",
+        name = "Traditional spare ribs baked 오이시" +
                 " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
-        imageResId = R.drawable.recipe_spare_ribs_baked,
-        imageDescription = "오븐에 구운 전통 돼지갈비 이미지",
-        userName = "junsik",
-        requiredTime = 20,
-        rating = 4.0f,
+        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+        chef = "junsik",
+        time = "20 min",
+        rating = 4.0,
+        ingredients = emptyList(),
     )
 
     SavedRecipe(
@@ -70,13 +73,15 @@ private fun SavedRecipePreview() {
     var isBookmarked by rememberSaveable { mutableStateOf(false) }
 
     val previewRecipe = Recipe(
-        title = "Traditional spare ribs baked 오이시" +
+        id = 1,
+        category = "Indian",
+        name = "Traditional spare ribs baked 오이시" +
                 " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
-        imageResId = R.drawable.recipe_spare_ribs_baked,
-        imageDescription = "오븐에 구운 전통 돼지갈비 이미지",
-        userName = "junsik",
-        requiredTime = 20,
-        rating = 4.0f,
+        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+        chef = "junsik",
+        time = "20 min",
+        rating = 4.0,
+        ingredients = emptyList(),
     )
 
     SavedRecipe(
@@ -105,11 +110,43 @@ fun SavedRecipe(
             ),
     ) {
         // 배경 이미지
-        Image(
+        SubcomposeAsyncImage(
             modifier = Modifier.fillMaxWidth(),
-            painter = painterResource(id = recipe.imageResId),
-            contentDescription = recipe.imageDescription,
+            model = recipe.image,
+            contentDescription = recipe.name,
             contentScale = ContentScale.Crop,
+            // 로딩 중 / Preview(네트워크 불가): 사진 아이콘
+            loading = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(AppColors.gray4),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        modifier = Modifier.size(40.dp),
+                        imageVector = Icons.Outlined.Image,
+                        contentDescription = "이미지 로딩 중",
+                        tint = AppColors.gray2,
+                    )
+                }
+            },
+            // 로딩 실패: 깨진 사진 아이콘
+            error = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(AppColors.gray4),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        modifier = Modifier.size(40.dp),
+                        imageVector = Icons.Outlined.BrokenImage,
+                        contentDescription = "이미지 로드 실패",
+                        tint = AppColors.gray2,
+                    )
+                }
+            },
         )
 
         // 그라데이션
@@ -175,7 +212,7 @@ fun SavedRecipe(
             Text(
                 modifier = Modifier
                     .width(200.dp),
-                text = recipe.title,
+                text = recipe.name,
                 color = AppColors.white,
                 style = AppTextStyles.smallTextBold,
                 maxLines = 2,
@@ -184,7 +221,7 @@ fun SavedRecipe(
 
             // 유저
             Text(
-                text = "By ${recipe.userName}",
+                text = "By ${recipe.chef}",
                 color = AppColors.gray4,
                 style = AppTextStyles.smallerTextRegular
             )
@@ -210,7 +247,7 @@ fun SavedRecipe(
 
             // 시간
             Text(
-                text = "${recipe.requiredTime} min",
+                text = recipe.time,
                 color = AppColors.gray4,
                 style = AppTextStyles.smallerTextRegular
             )

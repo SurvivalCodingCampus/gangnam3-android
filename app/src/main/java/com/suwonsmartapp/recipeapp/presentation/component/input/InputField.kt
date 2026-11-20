@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component
+package com.suwonsmartapp.recipeapp.presentation.component.input
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -72,7 +72,7 @@ fun InputField(
     label: String,
     placeholder: String,
     value: String,
-    isPassword: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onValueChange: (String) -> Unit,
 ) {
     Column(
@@ -88,8 +88,12 @@ fun InputField(
             },
             textStyle = TextStyle(fontSize = 11.sp, color = AppColors.black1),     // Filled 글자
             singleLine = true,
-            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-            keyboardOptions = if (isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions.Default,
+            visualTransformation = if (keyboardOptions.keyboardType == KeyboardType.Password) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            },
+            keyboardOptions = keyboardOptions,
             shape = RoundedCornerShape(10.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = AppColors.gray4, // Default 테두리 (추정)

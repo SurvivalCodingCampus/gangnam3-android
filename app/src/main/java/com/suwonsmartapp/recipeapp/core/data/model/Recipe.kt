@@ -1,12 +1,15 @@
 package com.suwonsmartapp.recipeapp.core.data.model
 
-import androidx.annotation.DrawableRes
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Recipe(
-    val title: String,
-    @param:DrawableRes val imageResId: Int,
-    val imageDescription: String,
-    val userName: String,
-    val requiredTime: Int,
-    val rating: Float,
+    val id: Long,
+    val category: String,
+    val name: String,
+    val image: String,
+    val chef: String,
+    val time: String,
+    val rating: Double,
+    val ingredients: List<RecipeIngredient>,
 )

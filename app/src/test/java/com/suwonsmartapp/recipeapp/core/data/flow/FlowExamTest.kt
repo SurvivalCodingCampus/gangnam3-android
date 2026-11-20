@@ -16,12 +16,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.time.Duration.Companion.milliseconds
 
 class FlowExamTest {
     @Test
-    fun run() = runBlocking {
+    fun run() = runTest {
         exam3()
     }
 }

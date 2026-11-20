@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component
+package com.suwonsmartapp.recipeapp.presentation.component.recipe
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,26 +20,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.core.data.model.Ingredient
+import com.suwonsmartapp.recipeapp.core.data.model.RecipeIngredient
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
 @Preview(showBackground = true)
 @Composable
 private fun IngredientItemPreview() {
-    val testIngredient = Ingredient(
-        name = "Tomatos",
-        imageResId = R.drawable.ingredient_tomatos,
-        grams = 500,
-        description = "토마토 사진입니다",
+    val testIngredient = RecipeIngredient(
+        ingredient = Ingredient(
+            id = 1,
+            name = "Tomato",
+            image = "https://cdn.pixabay.com/photo/2017/10/06/17/17/tomato-2823826_1280.jpg",
+        ),
+        amount = 500,
     )
     IngredientItem(testIngredient) {}
 }
 
 @Composable
 fun IngredientItem(
-    ingredient: Ingredient,
+    recipeIngredient: RecipeIngredient,
     onClick: () -> Unit,
 ) {
+    val ingredient = recipeIngredient.ingredient
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -58,8 +63,9 @@ fun IngredientItem(
                     shape = RoundedCornerShape(12.dp),
                 )
                 .padding(6.dp),
-            painter = painterResource(id = ingredient.imageResId),
-            contentDescription = ingredient.description,
+            // TODO: ingredient.image(URL) 로딩 (이미지 로더 도입 전까지 placeholder)
+            painter = painterResource(id = R.drawable.ingredient_tomatos),
+            contentDescription = ingredient.name,
         )
         Spacer(modifier = Modifier.width(16.dp))
 
@@ -81,7 +87,7 @@ fun IngredientItem(
             modifier = Modifier
                 .align(Alignment.Bottom)
                 .padding(bottom = 27.dp),
-            text = "${ingredient.grams}g",
+            text = "${recipeIngredient.amount}g",
             color = AppColors.gray3,
             style = AppTextStyles.smallTextRegular,
         )
