@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.suwonsmartapp.recipeapp.RecipeApplication
-import com.suwonsmartapp.recipeapp.core.network.NetworkError
 import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
+import com.suwonsmartapp.recipeapp.core.network.toMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,17 +34,7 @@ class SavedRecipesScreenViewModel(
         viewModelScope.launch {
             _state.value = when (val result = recipeRepository.getRecipes()) {
                 is Result.Success -> SavedRecipesState.Success(recipes = result.value)
-                is Result.Error -> SavedRecipesState.Error(
-                    when (result.error) {
-                        NetworkError.NO_INTERNET_ERR -> "인터넷 연결 확인"
-                        NetworkError.TIMEOUT_ERR -> "응답 시간 초과"
-                        NetworkError.SERVER_ERR -> "서버 문제"
-                        NetworkError.CLIENT_ERR -> "클라 에러"
-                        NetworkError.NULL_DATA_ERR -> "널 데이터 에러"
-                        NetworkError.PARSE_ERR -> "파싱 에러"
-                        NetworkError.UNKNOWN_ERR -> "언노운 에러"
-                    }
-                )
+                is Result.Error -> SavedRecipesState.Error(result.error.toMessage())
             }
         }
     }
