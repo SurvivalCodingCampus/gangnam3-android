@@ -3,7 +3,10 @@ package com.suwonsmartapp.recipeapp.data.repository
 import com.suwonsmartapp.recipeapp.data.model.Recipe
 import com.suwonsmartapp.recipeapp.data.model.RecipeCategory
 import com.suwonsmartapp.recipeapp.data.model.UserSummary
+import kotlinx.coroutines.delay
 import org.json.JSONObject
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 class FakeRecipeRepository : RecipeRepository {
     private val json = """{
@@ -281,6 +284,8 @@ class FakeRecipeRepository : RecipeRepository {
 }"""
 
     override suspend fun getRecipes(): List<Recipe> {
+        delay(1500.milliseconds)
+
         val recipes = JSONObject(json).getJSONArray("recipes")
         return List(recipes.length()) { index ->
             val recipe = recipes.getJSONObject(index)

@@ -1,6 +1,7 @@
 package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,8 +31,8 @@ fun SavedRecipesScreen(
         factory = SavedRecipesViewModel.Factory,
     ),
 ) {
-    val recipes by viewModel.recipes.collectAsStateWithLifecycle()
-    
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -45,7 +47,7 @@ fun SavedRecipesScreen(
             space = 20.dp,
             alignment = Alignment.CenterVertically,
         )
-    ){
+    ) {
         Text(
             text = "Saved recipes",
             color = AppColors.black2,
@@ -53,22 +55,33 @@ fun SavedRecipesScreen(
                 fontWeight = FontWeight.SemiBold,
             )
         )
-        
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            contentPadding = PaddingValues(bottom = 20.dp), // 내부 콘텐츠 가장 아래에 스크롤 가능한 여백 주기
-        ) {
-            items(
-                items = recipes,
-                key = { it.id },
-            ) { recipe ->
-                RecipeCard(
-                    recipe = recipe,
-                    isBookmarked = true,
-                    onBookmarkClick = {},
-                )
+
+        if (state.isLoading) {
+            // 뺑글
+            Box(
+                modifier = modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                contentPadding = PaddingValues(bottom = 20.dp), // 내부 콘텐츠 가장 아래에 스크롤 가능한 여백 주기
+            ) {
+                items(
+                    items = state.recipes,
+                    key = { it.id },
+                ) { recipe ->
+                    RecipeCard(
+                        recipe = recipe,
+                        isBookmarked = true,
+                        onBookmarkClick = {},
+                    )
+                }
             }
         }
     }

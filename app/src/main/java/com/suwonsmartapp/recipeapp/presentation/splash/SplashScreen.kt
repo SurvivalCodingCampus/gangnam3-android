@@ -31,12 +31,6 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-fun SplashScreenPreview() {
-    SplashScreen()
-}
-
 @Composable
 fun SplashScreen(modifier: Modifier = Modifier) {
     Box(
@@ -110,4 +104,10 @@ fun SplashScreen(modifier: Modifier = Modifier) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview() {
+    SplashScreen()
 }
