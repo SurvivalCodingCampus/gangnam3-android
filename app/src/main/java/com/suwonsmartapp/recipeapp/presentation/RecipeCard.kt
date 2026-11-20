@@ -1,7 +1,5 @@
 package com.suwonsmartapp.recipeapp.presentation
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -32,44 +30,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.data.model.Recipe
-import com.suwonsmartapp.recipeapp.data.model.User
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
-import java.time.LocalDateTime
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun createPreviewRecipe() = Recipe(
-    id = 1,
-    title = "Traditional spare ribs  baked",
-    imageUrl = "",
-    videoUrl = null,
-    chef = User(
-        id = 1,
-        name = "Chef John",
-        profileImageUrl = "",
-        job = "Chef",
-        introduction = "",
-        location = "",
-        followerCount = 0,
-        followingCount = 0,
-    ),
-    category = "Dinner",
-    rating = 4.0,
-    reviewCount = 0,
-    cookingTimeMinutes = 20,
-    serving = 1,
-    ingredients = emptyList(),
-    procedures = emptyList(),
-    createdAt = LocalDateTime.of(2026, 11, 17, 0, 0),
-)
-
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun RecipeCardPreview() {
-    val recipe = remember { createPreviewRecipe() }
+    val recipe = remember {
+        Recipe(
+            id = 1,
+            category = "Indian",
+            name = "Traditional spare ribs baked",
+            imageUrl = "",
+            chef = "Chef John",
+            time = "20 min",
+            rating = 4.0,
+        )
+    }
     var isBookmarked by remember { mutableStateOf(false) }
 
     RecipeCard(
@@ -92,7 +72,11 @@ fun RecipeCard(
             .height(height = 150.dp)
             .clip(shape = RoundedCornerShape(size = 10.dp))
             .paint(
-                painter = painterResource(id = R.drawable.traditional_spare_ribs_baked),
+                painter = rememberAsyncImagePainter(
+                    model = recipe.imageUrl,
+                    placeholder = painterResource(id = R.drawable.traditional_spare_ribs_baked),
+                    error = painterResource(id = R.drawable.traditional_spare_ribs_baked),
+                ),
                 contentScale = ContentScale.Crop,
             )
             .background(
@@ -136,14 +120,14 @@ fun RecipeCard(
             Column(modifier = Modifier.weight(weight = 1f)) {
                 Text(
                     modifier = Modifier.widthIn(max = 200.dp),
-                    text = recipe.title,
+                    text = recipe.name,
                     style = AppTextStyles.smallTextBold,
                     color = AppColors.white,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    text = stringResource(R.string.recipe_chef, recipe.chef.name),
+                    text = stringResource(R.string.recipe_chef, recipe.chef),
                     style = AppTextStyles.smallerTextRegular,
                     color = AppColors.gray4,
                 )
@@ -159,7 +143,7 @@ fun RecipeCard(
                 )
                 Text(
                     modifier = Modifier.padding(end = 10.dp),
-                    text = stringResource(R.string.recipe_cooking_time, recipe.cookingTimeMinutes),
+                    text = recipe.time,
                     style = AppTextStyles.smallerTextRegular,
                     color = AppColors.gray4,
                 )
