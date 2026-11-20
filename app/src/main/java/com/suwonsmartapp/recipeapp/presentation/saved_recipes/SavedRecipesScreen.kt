@@ -2,6 +2,7 @@ package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,17 +45,18 @@ private fun SavedRecipesScreenPreview() {
             ingredients = emptyList(),
         )
     }
-    var unbookmarkedIds by remember { mutableStateOf(setOf(2L, 5L)) }
+    var state: SavedRecipesState by remember {
+        mutableStateOf(SavedRecipesState.Success(recipes, unbookmarkedIds = setOf(2L, 5L)))
+    }
 
     SavedRecipesScreen(
-        recipes = recipes,
-        unbookmarkedIds = unbookmarkedIds,
+        state = state,
         onBookmarkClick = { recipe ->
-            unbookmarkedIds = if (recipe.id in unbookmarkedIds) {
-                unbookmarkedIds - recipe.id
-            } else {
-                unbookmarkedIds + recipe.id
-            }
+            val current = state as? SavedRecipesState.Success ?: return@SavedRecipesScreen
+            val ids = current.unbookmarkedIds
+            state = current.copy(
+                unbookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id,
+            )
         },
     )
 }
@@ -64,12 +67,11 @@ fun SavedRecipesScreenRoot(
     viewModel: SavedRecipesScreenViewModel
         = viewModel(factory = SavedRecipesScreenViewModel.Factory),
 ) {
-    val recipes by viewModel.savedRecipes.collectAsStateWithLifecycle()
-    val unbookmarkedIds by viewModel.unbookmarkedIds.collectAsStateWithLifecycle()
+    // 라이프사이클 인식: STARTED 상태에서만 수집
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     SavedRecipesScreen(
-        recipes = recipes,
-        unbookmarkedIds = unbookmarkedIds,
+        state = state,
         onBookmarkClick = { recipe -> viewModel.onBookmarkClick(recipe) },
     )
 }
@@ -77,8 +79,7 @@ fun SavedRecipesScreenRoot(
 // 화면만 그리는 Screen (상태 없음)
 @Composable
 fun SavedRecipesScreen(
-    recipes: List<Recipe>,
-    unbookmarkedIds: Set<Long>,
+    state: SavedRecipesState,
     onBookmarkClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -100,25 +101,59 @@ fun SavedRecipesScreen(
             textAlign = TextAlign.Center,
         )
 
-        // 저장된 레시피 목록
-        LazyColumn(
-            contentPadding = PaddingValues(
-                horizontal = 30.dp,
-                vertical = 20.dp,
-            ),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            items(
-                items = recipes,
-                key = { it.id } // 동일한 key면 skip
-            ) { recipe ->
-                SavedRecipe(
-                    recipe = recipe,
-                    isBookmarked = recipe.id !in unbookmarkedIds,
-                    onBookmarkClick = { onBookmarkClick(recipe) },
+        // 컴파일러가 모든 케이스 처리를 강제
+        when (state) {
+            SavedRecipesState.Loading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(color = AppColors.primary100)
+            }
+
+            is SavedRecipesState.Error -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = "레시피를 불러오지 못했습니다 (${state.error})",
+                    color = AppColors.gray3,
+                    style = AppTextStyles.normalTextRegular,
                 )
             }
+
+            is SavedRecipesState.Success -> SavedRecipeList(
+                recipes = state.recipes,
+                unbookmarkedIds = state.unbookmarkedIds,
+                onBookmarkClick = onBookmarkClick,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SavedRecipeList(
+    recipes: List<Recipe>,
+    unbookmarkedIds: Set<Long>,
+    onBookmarkClick: (Recipe) -> Unit,
+) {
+    // 저장된 레시피 목록
+    LazyColumn(
+        contentPadding = PaddingValues(
+            horizontal = 30.dp,
+            vertical = 20.dp,
+        ),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        items(
+            items = recipes,
+            key = { it.id } // 동일한 key면 skip
+        ) { recipe ->
+            SavedRecipe(
+                recipe = recipe,
+                isBookmarked = recipe.id !in unbookmarkedIds,
+                onBookmarkClick = { onBookmarkClick(recipe) },
+            )
         }
     }
 }

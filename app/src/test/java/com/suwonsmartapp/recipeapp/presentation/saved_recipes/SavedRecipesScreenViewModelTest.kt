@@ -1,5 +1,6 @@
 package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
+import com.suwonsmartapp.recipeapp.core.RecipeError
 import com.suwonsmartapp.recipeapp.core.Result
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
@@ -29,11 +30,14 @@ class SavedRecipesScreenViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private fun SavedRecipesScreenViewModel.success() =
+        state.value as SavedRecipesState.Success
+
     @Test
     fun `생성되면 저장된 레시피 10개를 불러온다`() = runTest {
         val viewModel = SavedRecipesScreenViewModel(repository)
 
-        assertEquals(10, viewModel.savedRecipes.value.size)
+        assertEquals(10, viewModel.success().recipes.size)
     }
 
     @Test
@@ -41,35 +45,43 @@ class SavedRecipesScreenViewModelTest {
         val viewModel = SavedRecipesScreenViewModel(repository)
 
         val expected = (repository.getRecipes() as Result.Success).value
-        assertEquals(expected, viewModel.savedRecipes.value)
+        assertEquals(expected, viewModel.success().recipes)
     }
 
     @Test
     fun `첫 번째 레시피 이름이 맞다`() = runTest {
         val viewModel = SavedRecipesScreenViewModel(repository)
 
-        assertEquals("Traditional spare ribs baked", viewModel.savedRecipes.value.first().name)
+        assertEquals("Traditional spare ribs baked", viewModel.success().recipes.first().name)
     }
 
     @Test
     fun `북마크를 누르면 목록은 그대로고 북마크만 해제된다`() = runTest {
         val viewModel = SavedRecipesScreenViewModel(repository)
-        val target = viewModel.savedRecipes.value.first()
+        val target = viewModel.success().recipes.first()
 
         viewModel.onBookmarkClick(target)
 
-        assertEquals(10, viewModel.savedRecipes.value.size)
-        assertEquals(setOf(target.id), viewModel.unbookmarkedIds.value)
+        assertEquals(10, viewModel.success().recipes.size)
+        assertEquals(setOf(target.id), viewModel.success().unbookmarkedIds)
     }
 
     @Test
     fun `북마크를 두 번 누르면 다시 활성화된다`() = runTest {
         val viewModel = SavedRecipesScreenViewModel(repository)
-        val target = viewModel.savedRecipes.value.first()
+        val target = viewModel.success().recipes.first()
 
         viewModel.onBookmarkClick(target)
         viewModel.onBookmarkClick(target)
 
-        assertEquals(emptySet<Long>(), viewModel.unbookmarkedIds.value)
+        assertEquals(emptySet<Long>(), viewModel.success().unbookmarkedIds)
+    }
+
+    @Test
+    fun `Repository가 실패하면 Error 상태가 된다`() = runTest {
+        val errorRepository = RecipeRepositoryImpl(FakeRecipeDataSource(statusCode = 500))
+        val viewModel = SavedRecipesScreenViewModel(errorRepository)
+
+        assertEquals(SavedRecipesState.Error(RecipeError.SERVER_ERR), viewModel.state.value)
     }
 }

@@ -5,7 +5,9 @@ import com.suwonsmartapp.recipeapp.core.Result
 import com.suwonsmartapp.recipeapp.core.data.datasource.RecipeDataSource
 import com.suwonsmartapp.recipeapp.core.data.mapper.toModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
+import kotlinx.coroutines.delay
 import kotlinx.serialization.SerializationException
+import kotlin.time.Duration.Companion.seconds
 
 class RecipeRepositoryImpl(
     private val dataSource: RecipeDataSource,
@@ -27,6 +29,7 @@ class RecipeRepositoryImpl(
 
     override suspend fun getRecipes(): Result<List<Recipe>, RecipeError> {
         return try {
+            delay(2.seconds)
             val response = dataSource.getRecipes()
 
             when (response.statusCode) {
