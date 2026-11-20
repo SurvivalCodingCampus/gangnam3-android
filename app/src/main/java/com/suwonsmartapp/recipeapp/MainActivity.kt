@@ -27,8 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.lifecycleScope
-import com.suwonsmartapp.recipeapp.presentation.component.examples.CounterScreen
 import com.suwonsmartapp.recipeapp.presentation.component.examples.CounterViewModel
+import com.suwonsmartapp.recipeapp.presentation.splash.SplashScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            CounterScreen()
+            SplashScreen()
         }
     }
 }
