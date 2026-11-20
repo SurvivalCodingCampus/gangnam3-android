@@ -1,7 +1,7 @@
 package com.suwonsmartapp.recipeapp.core.data.datasource
 
 import com.suwonsmartapp.recipeapp.core.Response
-import com.suwonsmartapp.recipeapp.core.data.model.RecipesResponse
+import com.suwonsmartapp.recipeapp.core.data.dto.RecipesResponseDto
 import kotlinx.serialization.json.Json
 
 class FakeRecipeDataSource(
@@ -282,11 +282,11 @@ class FakeRecipeDataSource(
         }
     """.trimIndent()
 ) : RecipeDataSource {
-    override suspend fun getRecipes(): Response<RecipesResponse> {
+    override suspend fun getRecipes(): Response<RecipesResponseDto> {
         return Response(
             statusCode = statusCode,
             body = if (statusCode in 200..299) {
-                Json.decodeFromString<RecipesResponse>(recipesJson)
+                Json.decodeFromString<RecipesResponseDto>(recipesJson)
             } else {
                 null
             },

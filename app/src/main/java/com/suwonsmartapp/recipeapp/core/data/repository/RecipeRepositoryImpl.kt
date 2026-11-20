@@ -3,6 +3,7 @@ package com.suwonsmartapp.recipeapp.core.data.repository
 import com.suwonsmartapp.recipeapp.core.RecipeError
 import com.suwonsmartapp.recipeapp.core.Result
 import com.suwonsmartapp.recipeapp.core.data.datasource.RecipeDataSource
+import com.suwonsmartapp.recipeapp.core.data.mapper.toModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import kotlinx.serialization.SerializationException
 
@@ -36,7 +37,7 @@ class RecipeRepositoryImpl(
                     if (body == null) {
                         Result.Error(RecipeError.NULL_DATA_ERR)
                     } else {
-                        Result.Success(body.recipes)
+                        Result.Success(body.recipes.orEmpty().map { it.toModel() })
                     }
                 }
             }
