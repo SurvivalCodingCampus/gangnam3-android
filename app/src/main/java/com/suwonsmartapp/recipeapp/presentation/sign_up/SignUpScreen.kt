@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.sign_up
+package com.suwonsmartapp.recipeapp.presentation.sign_up
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

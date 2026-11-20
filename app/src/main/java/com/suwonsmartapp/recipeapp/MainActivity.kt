@@ -22,6 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role.Companion.Button
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.suwonsmartapp.recipeapp.presentation.component.examples.CounterScreen
+import com.suwonsmartapp.recipeapp.presentation.saved_recipes.SavedRecipesScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,35 +31,47 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            //화면을 rotate하면 dialog에도 반영
-            var isOpen by rememberSaveable { mutableStateOf(false) }
-
-            Column(
-                modifier = Modifier
-                    .safeDrawingPadding()
-                    .fillMaxSize(),
-            ) {
-                Button(onClick = {
-                    isOpen = !isOpen
-                }) {
-                    Text("Dialog")
-                }
-
-                if (isOpen) {
-                    Dialog(onDismissRequest = { isOpen = false }) {
-                        Box(
-                            modifier = Modifier
-                                .size(300.dp)
-                                .background(color = Color.Red)
-                        ) {
-                            Text("나는 다이얼로그다")
-                        }
-                    }
-                }
-            }
+            SavedRecipesScreen()
+        //           CounterScreen()
         }
     }
 }
+
+//class MainActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        enableEdgeToEdge()
+//        setContent {
+//            //화면을 rotate하면 dialog에도 반영
+//            var isOpen by rememberSaveable { mutableStateOf(false) }
+//
+//            Column(
+//                modifier = Modifier
+//                    .safeDrawingPadding()
+//                    .fillMaxSize(),
+//            ) {
+//                Button(onClick = {
+//                    isOpen = !isOpen
+//                }) {
+//                    Text("Dialog")
+//                }
+//
+//                if (isOpen) {
+//                    Dialog(onDismissRequest = { isOpen = false }) {
+//                        Box(
+//                            modifier = Modifier
+//                                .size(300.dp)
+//                                .background(color = Color.Red)
+//                        ) {
+//                            Text("나는 다이얼로그다")
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun MyComp(modifier: Modifier = Modifier) {
