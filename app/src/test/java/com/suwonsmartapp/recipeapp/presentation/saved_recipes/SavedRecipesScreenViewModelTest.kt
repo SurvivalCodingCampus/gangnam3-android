@@ -5,7 +5,6 @@ import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -41,7 +40,7 @@ class SavedRecipesScreenViewModelTest {
     fun `불러온 레시피가 Repository 데이터와 같다`() = runTest {
         val viewModel = SavedRecipesScreenViewModel(repository)
 
-        val expected = (repository.getRecipes().first() as Result.Success).value
+        val expected = (repository.getRecipes() as Result.Success).value
         assertEquals(expected, viewModel.savedRecipes.value)
     }
 

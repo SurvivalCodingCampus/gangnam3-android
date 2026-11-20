@@ -26,11 +26,9 @@ class SavedRecipesScreenViewModel(
 
     private fun loadSavedRecipes() {
         viewModelScope.launch {
-            recipeRepository.getRecipes().collect { result ->
-                when (result) {
-                    is Result.Success -> _savedRecipes.value = result.value
-                    is Result.Error -> _savedRecipes.value = emptyList()
-                }
+            when (val result = recipeRepository.getRecipes()) {
+                is Result.Success -> _savedRecipes.value = result.value
+                is Result.Error -> _savedRecipes.value = emptyList()
             }
         }
     }
