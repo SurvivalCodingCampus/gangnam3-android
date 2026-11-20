@@ -45,7 +45,6 @@ fun BigButton(
         else -> AppColors.primary100
     }
     // isPressed가 바뀔 때마다 BigButton 함수 전체가 처음부터 Recomposition되기 때문에 val로 ㄱㄱ
-    
     Row(
         modifier = modifier
             .fillMaxWidth()
