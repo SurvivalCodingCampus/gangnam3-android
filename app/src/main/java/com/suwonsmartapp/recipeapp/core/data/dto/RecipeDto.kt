@@ -11,5 +11,5 @@ data class RecipeDto(
     val chef: String? = null,
     val time: String? = null,
     val rating: Double? = null,
-    val ingredients: List<RecipeIngredientDto>? = null,
+    val ingredients: List<RecipeIngredientDto> = listOf(),
 )

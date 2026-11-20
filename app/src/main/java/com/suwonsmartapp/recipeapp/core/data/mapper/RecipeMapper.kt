@@ -37,7 +37,7 @@ fun RecipeDto.toModel(): Recipe = Recipe(
     chef = chef.orEmpty(),
     time = time.orEmpty(),
     rating = rating ?: 0.0,
-    ingredients = ingredients.orEmpty().map { it.toModel() },
+    ingredients = ingredients.map { it.toModel() },
 )
 
 fun Recipe.toDto(): RecipeDto = RecipeDto(

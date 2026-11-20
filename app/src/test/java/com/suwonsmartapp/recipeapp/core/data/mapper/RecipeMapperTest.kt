@@ -6,6 +6,7 @@ import com.suwonsmartapp.recipeapp.core.data.dto.RecipeIngredientDto
 import com.suwonsmartapp.recipeapp.core.data.model.Ingredient
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.model.RecipeIngredient
+import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -57,8 +58,10 @@ class RecipeMapperTest {
     }
 
     @Test
-    fun `ingredients가 null이면 빈 리스트로 변환된다`() {
-        assertTrue(RecipeDto(ingredients = null).toModel().ingredients.isEmpty())
+    fun `JSON에 ingredients가 없으면 빈 리스트로 변환된다`() {
+        val dto = Json.decodeFromString<RecipeDto>("""{ "id": 1 }""")
+
+        assertTrue(dto.toModel().ingredients.isEmpty())
     }
 
     @Test

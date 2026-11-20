@@ -1,11 +1,12 @@
 package com.suwonsmartapp.recipeapp.core.data.datasource
 
-import com.suwonsmartapp.recipeapp.core.Response
+import com.suwonsmartapp.recipeapp.core.network.Response
+import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import com.suwonsmartapp.recipeapp.core.data.dto.RecipesResponseDto
 import kotlinx.serialization.json.Json
 
 class FakeRecipeDataSource(
-    private val statusCode: Int = 200,
+    private val statusCode: StatusCode = StatusCode.Ok,
     private val recipesJson: String = """
         {
             "recipes": [
@@ -285,7 +286,7 @@ class FakeRecipeDataSource(
     override suspend fun getRecipes(): Response<RecipesResponseDto> {
         return Response(
             statusCode = statusCode,
-            body = if (statusCode in 200..299) {
+            body = if (statusCode.isSuccess()) {
                 Json.decodeFromString<RecipesResponseDto>(recipesJson)
             } else {
                 null

@@ -1,8 +1,8 @@
 package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
-import com.suwonsmartapp.recipeapp.core.RecipeError
-import com.suwonsmartapp.recipeapp.core.Result
+import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
+import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -63,7 +63,7 @@ class SavedRecipesScreenViewModelTest {
         viewModel.onBookmarkClick(target)
 
         assertEquals(10, viewModel.success().recipes.size)
-        assertEquals(setOf(target.id), viewModel.success().unbookmarkedIds)
+        assertEquals(setOf(target.id), viewModel.unbookmarkedIds.value)
     }
 
     @Test
@@ -74,14 +74,14 @@ class SavedRecipesScreenViewModelTest {
         viewModel.onBookmarkClick(target)
         viewModel.onBookmarkClick(target)
 
-        assertEquals(emptySet<Long>(), viewModel.success().unbookmarkedIds)
+        assertEquals(emptySet<Long>(), viewModel.unbookmarkedIds.value)
     }
 
     @Test
     fun `Repository가 실패하면 Error 상태가 된다`() = runTest {
-        val errorRepository = RecipeRepositoryImpl(FakeRecipeDataSource(statusCode = 500))
+        val errorRepository = RecipeRepositoryImpl(FakeRecipeDataSource(statusCode = StatusCode.InternalServerError))
         val viewModel = SavedRecipesScreenViewModel(errorRepository)
 
-        assertEquals(SavedRecipesState.Error(RecipeError.SERVER_ERR), viewModel.state.value)
+        assertEquals(SavedRecipesState.Error("서버 문제"), viewModel.state.value)
     }
 }

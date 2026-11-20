@@ -1,53 +1,40 @@
 package com.suwonsmartapp.recipeapp.core.data.repository
 
-import com.suwonsmartapp.recipeapp.core.RecipeError
-import com.suwonsmartapp.recipeapp.core.Result
+import com.suwonsmartapp.recipeapp.core.network.NetworkError
+import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.datasource.RecipeDataSource
 import com.suwonsmartapp.recipeapp.core.data.mapper.toModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.serialization.SerializationException
+import java.net.SocketException
 import kotlin.time.Duration.Companion.seconds
 
 class RecipeRepositoryImpl(
     private val dataSource: RecipeDataSource,
 ) : RecipeRepository {
-    override suspend fun getRecipe(id: Long): Result<Recipe, RecipeError> {
-        return when (val result = getRecipes()) {
-            is Result.Success -> {
-                val recipe = result.value.firstOrNull { it.id == id }
-                if (recipe == null) {
-                    Result.Error(RecipeError.NOT_FOUND_ERR)
-                } else {
-                    Result.Success(recipe)
-                }
-            }
-
-            is Result.Error -> result
-        }
-    }
-
-    override suspend fun getRecipes(): Result<List<Recipe>, RecipeError> {
-        return try {
+    override suspend fun getRecipes(): Result<List<Recipe>, NetworkError> {
+        try {
             delay(2.seconds)
             val response = dataSource.getRecipes()
 
-            when (response.statusCode) {
-                in 500..599 -> Result.Error(RecipeError.SERVER_ERR)
-                in 400..499 -> Result.Error(RecipeError.CLIENT_ERR)
-                else -> {
-                    val body = response.body
-                    if (body == null) {
-                        Result.Error(RecipeError.NULL_DATA_ERR)
-                    } else {
-                        Result.Success(body.recipes.orEmpty().map { it.toModel() })
-                    }
-                }
+            when {
+                response.statusCode.isServerError() -> return Result.Error(NetworkError.SERVER_ERR)
+                response.statusCode.isClientError() -> return Result.Error(NetworkError.CLIENT_ERR)
             }
+
+            val recipesDto = response.body ?: return Result.Error(NetworkError.NULL_DATA_ERR)
+
+            return Result.Success(recipesDto.recipes.map { it.toModel() })
         } catch (_: SerializationException) {
-            Result.Error(RecipeError.PARSE_ERR)
+            return Result.Error(NetworkError.PARSE_ERR)
+        } catch (_: SocketException) {
+            return Result.Error(NetworkError.NO_INTERNET_ERR)
+        } catch (_: TimeoutCancellationException) {
+            return Result.Error(NetworkError.TIMEOUT_ERR)
         } catch (_: Exception) {
-            Result.Error(RecipeError.UNKNOWN_ERR)
+            return Result.Error(NetworkError.UNKNOWN_ERR)
         }
     }
 }

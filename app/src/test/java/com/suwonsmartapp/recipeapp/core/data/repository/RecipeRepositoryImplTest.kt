@@ -1,8 +1,9 @@
 package com.suwonsmartapp.recipeapp.core.data.repository
 
-import com.suwonsmartapp.recipeapp.core.RecipeError
-import com.suwonsmartapp.recipeapp.core.Result
+import com.suwonsmartapp.recipeapp.core.network.NetworkError
+import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
+import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -57,42 +58,20 @@ class RecipeRepositoryImplTest {
     fun `getRecipes - JSON이 깨지면 PARSE_ERR를 반환한다`() = runTest {
         val brokenRepository = RecipeRepositoryImpl(FakeRecipeDataSource(recipesJson = "{ broken json"))
 
-        assertEquals(Result.Error(RecipeError.PARSE_ERR), brokenRepository.getRecipes())
+        assertEquals(Result.Error(NetworkError.PARSE_ERR), brokenRepository.getRecipes())
     }
 
     @Test
     fun `getRecipes - 5xx 응답이면 SERVER_ERR를 반환한다`() = runTest {
-        val serverErrorRepository = RecipeRepositoryImpl(FakeRecipeDataSource(statusCode = 500))
+        val serverErrorRepository = RecipeRepositoryImpl(FakeRecipeDataSource(statusCode = StatusCode.InternalServerError))
 
-        assertEquals(Result.Error(RecipeError.SERVER_ERR), serverErrorRepository.getRecipes())
+        assertEquals(Result.Error(NetworkError.SERVER_ERR), serverErrorRepository.getRecipes())
     }
 
     @Test
     fun `getRecipes - 4xx 응답이면 CLIENT_ERR를 반환한다`() = runTest {
-        val clientErrorRepository = RecipeRepositoryImpl(FakeRecipeDataSource(statusCode = 404))
+        val clientErrorRepository = RecipeRepositoryImpl(FakeRecipeDataSource(statusCode = StatusCode.NotFound))
 
-        assertEquals(Result.Error(RecipeError.CLIENT_ERR), clientErrorRepository.getRecipes())
-    }
-
-    @Test
-    fun `getRecipe - id로 해당 레시피를 반환한다`() = runTest {
-        val recipe = (repository.getRecipe(6L) as Result.Success).value
-
-        assertEquals(6L, recipe.id)
-        assertEquals("Beef Wellington", recipe.name)
-        assertEquals("Gordon Ramsay", recipe.chef)
-        assertEquals(5.0, recipe.rating, 0.0)
-    }
-
-    @Test
-    fun `getRecipe - 모든 id에 대해 getRecipes 결과와 같은 레시피를 반환한다`() = runTest {
-        getAllRecipes().forEach { expected ->
-            assertEquals(Result.Success(expected), repository.getRecipe(expected.id))
-        }
-    }
-
-    @Test
-    fun `getRecipe - 없는 id면 NOT_FOUND_ERR를 반환한다`() = runTest {
-        assertEquals(Result.Error(RecipeError.NOT_FOUND_ERR), repository.getRecipe(999L))
+        assertEquals(Result.Error(NetworkError.CLIENT_ERR), clientErrorRepository.getRecipes())
     }
 }
