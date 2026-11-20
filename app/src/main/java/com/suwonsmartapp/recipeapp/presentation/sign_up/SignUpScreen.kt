@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.sign_up
+package com.suwonsmartapp.recipeapp.presentation.sign_up
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,17 +49,22 @@ import com.suwonsmartapp.recipeapp.ui.TextStyles
 
 @Composable
 fun SignUpScreen(
+    name: String,
+    email: String,
+    password: String,
+    confirmPassword: String,
+    isTermsAccepted: Boolean,
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onTermsAcceptedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    onSignUpClick: (name: String, email: String, password: String) -> Unit = { _, _, _ -> },
+    onSignUpClick: () -> Unit = {},
     onGoogleClick: () -> Unit = {},
     onFacebookClick: () -> Unit = {},
     onSignInClick: () -> Unit = {},
 ) {
-    var name by rememberSaveable { mutableStateOf("") }
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
-    var isTermsAccepted by rememberSaveable { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     // 전달받은 modifier 는 루트 레이아웃에만 적용한다.
@@ -101,7 +106,8 @@ fun SignUpScreen(
                 placeholder = "Enter Name",
                 value = name,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            ) { name = it }
+                onValueChange = onNameChange,
+            )
 
             InputField(
                 label = "Email",
@@ -111,7 +117,8 @@ fun SignUpScreen(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Next,
                 ),
-            ) { email = it }
+                onValueChange = onEmailChange,
+            )
 
             InputField(
                 label = "Password",
@@ -122,7 +129,8 @@ fun SignUpScreen(
                     imeAction = ImeAction.Next,
                 ),
                 visualTransformation = PasswordVisualTransformation(),
-            ) { password = it }
+                onValueChange = onPasswordChange,
+            )
 
             InputField(
                 label = "Confirm Password",
@@ -136,7 +144,8 @@ fun SignUpScreen(
                     onDone = { focusManager.clearFocus() },
                 ),
                 visualTransformation = PasswordVisualTransformation(),
-            ) { confirmPassword = it }
+                onValueChange = onConfirmPasswordChange,
+            )
         }
 
         Spacer(Modifier.height(20.dp))
@@ -144,13 +153,14 @@ fun SignUpScreen(
         TermsCheckbox(
             checked = isTermsAccepted,
             modifier = Modifier.padding(start = 10.dp),
-        ) { isTermsAccepted = it }
+            onCheckedChange = onTermsAcceptedChange,
+        )
 
         Spacer(Modifier.height(26.dp))
 
         BigButton(text = "Sign Up") {
             focusManager.clearFocus()
-            onSignUpClick(name, email, password)
+            onSignUpClick()
         }
 
         Spacer(Modifier.height(14.dp))
@@ -231,5 +241,24 @@ private fun TermsCheckbox(
 @Preview(showBackground = true, widthDp = 375, heightDp = 812)
 @Composable
 private fun SignUpScreenPreview() {
-    SignUpScreen()
+    // 상태는 상위(Preview)에서 관리하고, SignUpScreen 은 값과 이벤트만 주고받는다.
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var isTermsAccepted by rememberSaveable { mutableStateOf(false) }
+
+    SignUpScreen(
+        name = name,
+        email = email,
+        password = password,
+        confirmPassword = confirmPassword,
+        isTermsAccepted = isTermsAccepted,
+        onNameChange = { name = it },
+        onEmailChange = { email = it },
+        onPasswordChange = { password = it },
+        onConfirmPasswordChange = { confirmPassword = it },
+        onTermsAcceptedChange = { isTermsAccepted = it },
+        onSignUpClick = { println("sign up: $name / $email / $password") },
+    )
 }

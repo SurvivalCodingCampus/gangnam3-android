@@ -19,7 +19,7 @@ import kotlinx.coroutines.runBlocking
 
 // 실행할 연습문제 호출
 fun main() {
-    exam4()
+    exam3()
 }
 
 fun exam1(): Unit = runBlocking {

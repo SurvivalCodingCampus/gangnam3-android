@@ -13,17 +13,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.suwonsmartapp.recipeapp.presentation.counter.CounterViewModel
 
 
 @Preview(showBackground = true)
 @Composable
-fun Counter() {
+private fun CounterScreenPreview() {
     var counter by rememberSaveable { mutableIntStateOf(0) }
+}
+
+@Composable
+fun CounterScreen(
+    viewModel: CounterViewModel = viewModel(factory = CounterViewModel.Factory),
+    onIncrement: () -> Unit= {},
+) {
+
+    val counter by viewModel.count.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment =Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
@@ -32,10 +44,33 @@ fun Counter() {
 
         Button(
             onClick = {
-                counter++
+                viewModel.increment()
             }
-        ) {
+        ){
             Text("Increment")
         }
     }
 }
+
+//fun Counter() {
+//    var counter by rememberSaveable { mutableIntStateOf(0) }
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center,
+//    ) {
+//        Text(
+//            text = "Count: $counter"
+//        )
+//
+//        Button(
+//            onClick = {
+//                counter++
+//            }
+//        ) {
+//            Text("Increment")
+//        }
+//    }
+//}

@@ -1,6 +1,5 @@
 package com.suwonsmartapp.recipeapp.presentation.component.cards
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,14 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.StarRate
-import androidx.compose.material.icons.outlined.BookmarkBorder
-import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
@@ -34,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
@@ -41,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.data.model.Recipe
 import com.suwonsmartapp.recipeapp.data.model.RecipeCategory
@@ -56,14 +55,18 @@ fun RecipeCard(
 ) {
     Box(
         modifier = Modifier
+            // 폭은 부모가 주는 만큼 채운다 (디자인 기준 화면 375 에서 315)
             .fillMaxWidth()
             .height(150.dp)
             .clip(shape = RoundedCornerShape(10.dp))
     ) {
         // 배경 이미지
-        Image(
-            painter = painterResource(R.drawable.iu),
+        // 네트워크 이미지 (Preview, 로딩 중, 실패 시에는 placeholder 표시)
+        AsyncImage(
+            model = recipe.imageUrl,
             contentDescription = recipe.title,
+            placeholder = painterResource(R.drawable.iu),
+            error = painterResource(R.drawable.iu),
             modifier = Modifier
                 .fillMaxSize(),
             contentScale = ContentScale.Crop,
@@ -114,6 +117,9 @@ fun RecipeCard(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,  // ... 으로 생략
                         modifier = Modifier
+                            // 디자인 스펙은 200 이지만, 200 에서는 디자인 이미지와 줄바꿈이 달라진다
+                            // 이미지와 같은 위치에서 줄바꿈되도록 폭을 좁혔다
+                            .width(170.dp)
                             .height(42.dp)
                     )
 
@@ -182,7 +188,7 @@ private fun CookingTimeLabel(
             LocalTextStyle provides TextStyles.smallerTextRegular,
         ) {
             Icon(
-                imageVector = Icons.Outlined.Timer,
+                painter = painterResource(R.drawable.timer),
                 contentDescription = "Timer",
                 modifier = Modifier
                     .size(17.dp)
@@ -281,14 +287,14 @@ private fun BookmarkIcon(
     isBookmarked: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val bookmarkImage = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder
-    val bookmarkColor = if (isBookmarked) AppColors.primary80 else AppColors.gray4
+    // 북마크된 상태는 아이콘 원래 색(초록) 그대로, 해제된 상태는 회색으로 표시
+    val bookmarkColor = if (isBookmarked) Color.Unspecified else AppColors.gray4
 
     Icon(
-        imageVector = bookmarkImage,
+        painter = painterResource(R.drawable.inactive),
         contentDescription = "Bookmark",
         tint = bookmarkColor,
         modifier = modifier
-            .size(24.dp)
+            .size(16.dp)
     )
 }

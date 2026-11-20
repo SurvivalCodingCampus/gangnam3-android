@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.sign_in
+package com.suwonsmartapp.recipeapp.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,15 +37,17 @@ import com.suwonsmartapp.recipeapp.ui.TextStyles
 
 @Composable
 fun SignInScreen(
+    email: String,
+    password: String,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onSignInClick: (email: String, password: String) -> Unit = { _, _ -> },
+    onSignInClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {},
     onGoogleClick: () -> Unit = {},
     onFacebookClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {},
 ) {
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
 
     // 전달받은 modifier 는 루트 레이아웃에만 적용한다.
@@ -85,7 +87,8 @@ fun SignInScreen(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,  // 키보드의 Next 로 다음 입력칸 이동
             ),
-        ) { email = it }
+            onValueChange = onEmailChange,
+        )
 
         Spacer(Modifier.height(30.dp))
 
@@ -101,7 +104,8 @@ fun SignInScreen(
                 onDone = { focusManager.clearFocus() },
             ),
             visualTransformation = PasswordVisualTransformation(),
-        ) { password = it }
+            onValueChange = onPasswordChange,
+        )
 
         Spacer(Modifier.height(20.dp))
 
@@ -118,7 +122,7 @@ fun SignInScreen(
 
         BigButton(text = "Sign In") {
             focusManager.clearFocus()
-            onSignInClick(email, password)
+            onSignInClick()
         }
 
         Spacer(Modifier.height(20.dp))
@@ -154,5 +158,15 @@ fun SignInScreen(
 @Preview(showBackground = true, widthDp = 375, heightDp = 812)
 @Composable
 private fun SignInScreenPreview() {
-    SignInScreen()
+    // 상태는 상위(Preview)에서 관리하고, SignInScreen 은 값과 이벤트만 주고받는다.
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+
+    SignInScreen(
+        email = email,
+        password = password,
+        onEmailChange = { email = it },
+        onPasswordChange = { password = it },
+        onSignInClick = { println("sign in: $email / $password") },
+    )
 }
