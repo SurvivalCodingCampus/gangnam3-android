@@ -8,4 +8,5 @@ data class SearchRecipesState(
     val errorMessage: String? = null,
     val query: String? = null,
     val recipes: List<Recipe>,
+    val filterSearchState: FilterSearchState = FilterSearchState(),
 )

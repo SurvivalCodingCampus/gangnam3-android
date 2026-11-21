@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
+import com.suwonsmartapp.recipeapp.presentation.component.bottomsheet.FilterSearchBottomSheet
 import com.suwonsmartapp.recipeapp.presentation.component.input.SearchField
 import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeThumbnail
 import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeThumbnailStyle
@@ -51,13 +52,26 @@ fun SearchRecipesScreenRoot(
     viewModel: SearchRecipesScreenViewModel = viewModel(factory = SearchRecipesScreenViewModel.Factory),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var showFilterSheet by remember { mutableStateOf(false) }
 
     SearchRecipesScreen(
         state = state,
         onQueryChange = { query -> viewModel.onQueryChange(query) },
         onBackClick = {},
-        onFilterClick = {},
+        onFilterClick = { showFilterSheet = true },
     )
+
+    // 필터 버튼을 누르면 하단 시트 표시
+    if (showFilterSheet) {
+        FilterSearchBottomSheet(
+            initialState = state.filterSearchState,
+            onFilterClick = { filterSearchState ->
+                viewModel.onFilterChange(filterSearchState)
+                showFilterSheet = false
+            },
+            onDismissRequest = { showFilterSheet = false },
+        )
+    }
 }
 
 // 화면만 그리는 Screen (상태 없음)

@@ -46,11 +46,7 @@ class SearchRecipesScreenViewModel(
                 .debounce(0.5.seconds)
                 .collect { query ->
                     _state.update { state ->
-                        state.copy(
-                            recipes = allRecipes.filter { recipe ->
-                                recipe.name.contains(query.trim(), ignoreCase = true)
-                            },
-                        )
+                        state.copy(recipes = filterRecipes(query, state.filterSearchState))
                     }
                 }
         }
@@ -75,6 +71,35 @@ class SearchRecipesScreenViewModel(
     fun onQueryChange(query: String) {
         _state.update { it.copy(query = query) }
         _query.value = query
+    }
+
+    fun onFilterChange(filterSearchState: FilterSearchState) {
+        _state.update { state ->
+            state.copy(
+                filterSearchState = filterSearchState,
+                recipes = filterRecipes(_query.value, filterSearchState),
+            )
+        }
+    }
+
+    // 검색어 + 필터를 한 번에 적용
+    private fun filterRecipes(query: String, filter: FilterSearchState): List<Recipe> {
+        val filtered = allRecipes.filter { recipe ->
+            val matchesQuery = recipe.name.contains(query.trim(), ignoreCase = true)
+            val matchesRate = filter.rate == null || recipe.rating >= filter.rate
+            val matchesCategory = filter.category == "All" ||
+                recipe.category.equals(filter.category, ignoreCase = true)
+
+            matchesQuery && matchesRate && matchesCategory
+        }
+
+        // 날짜 정보가 없어서 id 순서로 Newest/Oldest 처리
+        return when (filter.time) {
+            "Newest" -> filtered.sortedByDescending { it.id }
+            "Oldest" -> filtered.sortedBy { it.id }
+            "Popularity" -> filtered.sortedByDescending { it.rating }
+            else -> filtered
+        }
     }
 
     companion object {
