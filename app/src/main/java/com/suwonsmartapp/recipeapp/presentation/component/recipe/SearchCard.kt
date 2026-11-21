@@ -1,6 +1,7 @@
 package com.suwonsmartapp.recipeapp.presentation.component.recipe
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,14 +16,15 @@ import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
-// RecipeThumbnail에서 크기만 150 x 150으로 줄이고, 시간/북마크를 뺀 카드
+// 정사각형 카드 (너비는 바깥에서 정함, 높이 = 너비), 시간/북마크 없음
 @Composable
 fun SearchCard(
     recipe: Recipe,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
-            .size(150.dp)
+        modifier = modifier
+            .aspectRatio(1f)
             .clip(
                 shape = RoundedCornerShape(10.dp)
             ),
@@ -69,6 +71,7 @@ fun SearchCard(
 @Composable
 private fun SearchCardPreview() {
     SearchCard(
+        modifier = Modifier.size(150.dp),
         recipe = Recipe(
             id = 1,
             category = "Indian",
