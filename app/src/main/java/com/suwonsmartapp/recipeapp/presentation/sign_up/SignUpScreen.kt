@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.component.auth.SocialSignInSection
 import com.suwonsmartapp.recipeapp.presentation.component.button.BigButton
 import com.suwonsmartapp.recipeapp.presentation.component.input.InputField
-import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
+import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
+import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
 @Composable
 fun SignUpScreen(
