@@ -40,9 +40,12 @@ class SavedRecipesScreenViewModel(
     }
 
     fun onBookmarkClick(recipe: Recipe) {
-        // update()로 thread-safe하게 토글
         _unbookmarkedIds.update { ids ->
-            if (recipe.id in ids) ids - recipe.id else ids + recipe.id
+            if (recipe.id in ids) {
+                ids - recipe.id
+            } else {
+                ids + recipe.id
+            }
         }
     }
 

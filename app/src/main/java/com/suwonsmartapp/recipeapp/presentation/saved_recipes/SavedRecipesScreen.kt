@@ -36,7 +36,6 @@ fun SavedRecipesScreenRoot(
     viewModel: SavedRecipesScreenViewModel
         = viewModel(factory = SavedRecipesScreenViewModel.Factory),
 ) {
-    // 라이프사이클 인식: STARTED 상태에서만 수집
     val state by viewModel.state.collectAsStateWithLifecycle()
     val unbookmarkedIds by viewModel.unbookmarkedIds.collectAsStateWithLifecycle()
 

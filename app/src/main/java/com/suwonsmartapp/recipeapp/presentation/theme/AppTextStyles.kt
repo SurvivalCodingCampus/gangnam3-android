@@ -31,4 +31,7 @@ object AppTextStyles {
     val normalTextRegular = normalTextBold.copy(fontWeight = FontWeight.Normal)
     val smallTextRegular = smallTextBold.copy(fontWeight = FontWeight.Normal)
     val smallerTextRegular = smallerTextBold.copy(fontWeight = FontWeight.Normal)
+
+    // Small Label (Figma: Smaller Text/Small Label, 8sp)
+    val smallLabelRegular = poppins(size = 8.sp, lineHeight = 12.sp, weight = FontWeight.Normal)
 }
