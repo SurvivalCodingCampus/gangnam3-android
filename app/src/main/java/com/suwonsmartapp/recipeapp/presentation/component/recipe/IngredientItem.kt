@@ -24,20 +24,6 @@ import com.suwonsmartapp.recipeapp.core.data.model.RecipeIngredient
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-private fun IngredientItemPreview() {
-    val testIngredient = RecipeIngredient(
-        ingredient = Ingredient(
-            id = 1,
-            name = "Tomato",
-            image = "https://cdn.pixabay.com/photo/2017/10/06/17/17/tomato-2823826_1280.jpg",
-        ),
-        amount = 500,
-    )
-    IngredientItem(testIngredient) {}
-}
-
 @Composable
 fun IngredientItem(
     recipeIngredient: RecipeIngredient,
@@ -92,4 +78,18 @@ fun IngredientItem(
             style = AppTextStyles.smallTextRegular,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun IngredientItemPreview() {
+    val testIngredient = RecipeIngredient(
+        ingredient = Ingredient(
+            id = 1,
+            name = "Tomato",
+            image = "https://cdn.pixabay.com/photo/2017/10/06/17/17/tomato-2823826_1280.jpg",
+        ),
+        amount = 500,
+    )
+    IngredientItem(testIngredient) {}
 }

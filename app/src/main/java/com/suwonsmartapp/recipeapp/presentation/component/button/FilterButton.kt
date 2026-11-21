@@ -21,32 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-private fun Filter0ButtonPreview() {
-    var selectedFilter by rememberSaveable { mutableIntStateOf(0) }
-
-    FilterButtons(
-        selectedFilter = selectedFilter,
-        onFilterClick = { index ->
-            selectedFilter = index
-        },
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun Filter2ButtonPreview() {
-    var selectedFilter by rememberSaveable { mutableIntStateOf(2) }
-
-    FilterButtons(
-        selectedFilter = selectedFilter,
-        onFilterClick = { index ->
-            selectedFilter = index
-        },
-    )
-}
-
 @Composable
 fun FilterButtons(
     selectedFilter: Int,
@@ -102,3 +76,30 @@ fun FilterButton(
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun Filter0ButtonPreview() {
+    var selectedFilter by rememberSaveable { mutableIntStateOf(0) }
+
+    FilterButtons(
+        selectedFilter = selectedFilter,
+        onFilterClick = { index ->
+            selectedFilter = index
+        },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Filter2ButtonPreview() {
+    var selectedFilter by rememberSaveable { mutableIntStateOf(2) }
+
+    FilterButtons(
+        selectedFilter = selectedFilter,
+        onFilterClick = { index ->
+            selectedFilter = index
+        },
+    )
+}
+

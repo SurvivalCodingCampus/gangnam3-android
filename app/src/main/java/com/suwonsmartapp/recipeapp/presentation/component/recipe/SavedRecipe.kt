@@ -39,56 +39,6 @@ import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-private fun SavedRecipeBookmarkedPreview() {
-    var isBookmarked by rememberSaveable { mutableStateOf(true) }
-
-    val previewRecipe = Recipe(
-        id = 1,
-        category = "Indian",
-        name = "Traditional spare ribs baked 오이시" +
-                " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
-        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
-        chef = "junsik",
-        time = "20 min",
-        rating = 4.0,
-        ingredients = emptyList(),
-    )
-
-    SavedRecipe(
-        recipe = previewRecipe,
-        isBookmarked = isBookmarked
-    ) {
-        isBookmarked = !isBookmarked
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SavedRecipePreview() {
-    var isBookmarked by rememberSaveable { mutableStateOf(false) }
-
-    val previewRecipe = Recipe(
-        id = 1,
-        category = "Indian",
-        name = "Traditional spare ribs baked 오이시" +
-                " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
-        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
-        chef = "junsik",
-        time = "20 min",
-        rating = 4.0,
-        ingredients = emptyList(),
-    )
-
-    SavedRecipe(
-        recipe = previewRecipe,
-        isBookmarked = isBookmarked
-    ) {
-        isBookmarked = !isBookmarked
-    }
-}
-
 @Composable
 fun SavedRecipe(
     recipe: Recipe,
@@ -235,5 +185,55 @@ fun SavedRecipe(
                 tint = AppColors.primary80,
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SavedRecipeBookmarkedPreview() {
+    var isBookmarked by rememberSaveable { mutableStateOf(true) }
+
+    val previewRecipe = Recipe(
+        id = 1,
+        category = "Indian",
+        name = "Traditional spare ribs baked 오이시" +
+                " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
+        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+        chef = "junsik",
+        time = "20 min",
+        rating = 4.0,
+        ingredients = emptyList(),
+    )
+
+    SavedRecipe(
+        recipe = previewRecipe,
+        isBookmarked = isBookmarked
+    ) {
+        isBookmarked = !isBookmarked
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SavedRecipePreview() {
+    var isBookmarked by rememberSaveable { mutableStateOf(false) }
+
+    val previewRecipe = Recipe(
+        id = 1,
+        category = "Indian",
+        name = "Traditional spare ribs baked 오이시" +
+                " dasdasdasdadasdasalkfjlaskdfjsadkfjsadflasklfflaksdjfsklkjsasjkfdl",
+        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+        chef = "junsik",
+        time = "20 min",
+        rating = 4.0,
+        ingredients = emptyList(),
+    )
+
+    SavedRecipe(
+        recipe = previewRecipe,
+        isBookmarked = isBookmarked
+    ) {
+        isBookmarked = !isBookmarked
     }
 }

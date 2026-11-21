@@ -14,12 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
-@Preview(showBackground = true)
-@Composable
-private fun CounterPreview() {
-    Counter()
-}
-
 @Composable
 fun Counter() {
     var counter by rememberSaveable { mutableIntStateOf(0) }
@@ -38,4 +32,10 @@ fun Counter() {
             Text("Increment")
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CounterPreview() {
+    Counter()
 }

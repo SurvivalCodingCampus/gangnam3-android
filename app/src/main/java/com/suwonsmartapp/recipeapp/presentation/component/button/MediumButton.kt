@@ -26,18 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-fun MediumButtonDefaultPreview() {
-    MediumButtonContent(text = "Sign In", isPressed = false) {}
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MediumButtonPressedPreview() {
-    MediumButtonContent(text = "Sign In", isPressed = true) {}
-}
-
 @Composable
 fun MediumButton(
     text: String,
@@ -103,4 +91,16 @@ private fun MediumButtonContent(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MediumButtonDefaultPreview() {
+    MediumButtonContent(text = "Sign In", isPressed = false) {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MediumButtonPressedPreview() {
+    MediumButtonContent(text = "Sign In", isPressed = true) {}
 }

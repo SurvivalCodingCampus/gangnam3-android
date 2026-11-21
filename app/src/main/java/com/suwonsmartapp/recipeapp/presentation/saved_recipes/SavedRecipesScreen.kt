@@ -30,33 +30,6 @@ import com.suwonsmartapp.recipeapp.presentation.component.recipe.SavedRecipe
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-private fun SavedRecipesScreenPreview() {
-    val recipes = List(7) { index ->
-        Recipe(
-            id = index.toLong() + 1,
-            category = "Indian",
-            name = "Traditional spare ribs baked ${index + 1}",
-            image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
-            chef = "Chef John",
-            time = "20 min",
-            rating = 4.0,
-            ingredients = emptyList(),
-        )
-    }
-    var unbookmarkedIds by remember { mutableStateOf(setOf(2L, 5L)) }
-
-    SavedRecipesScreen(
-        state = SavedRecipesState.Success(recipes),
-        unbookmarkedIds = unbookmarkedIds,
-        onBookmarkClick = { recipe ->
-            val ids = unbookmarkedIds
-            unbookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id
-        },
-    )
-}
-
 // ViewModel과 연결하는 Root (상태를 가진 쪽)
 @Composable
 fun SavedRecipesScreenRoot(
@@ -154,4 +127,51 @@ private fun SavedRecipeList(
             )
         }
     }
+}
+
+@Preview(showBackground = true, name = "Loading")
+@Composable
+private fun SavedRecipesScreenLoadingPreview() {
+    SavedRecipesScreen(
+        state = SavedRecipesState.Loading,
+        unbookmarkedIds = emptySet(),
+        onBookmarkClick = {},
+    )
+}
+
+@Preview(showBackground = true, name = "Error")
+@Composable
+private fun SavedRecipesScreenErrorPreview() {
+    SavedRecipesScreen(
+        state = SavedRecipesState.Error("서버 문제"),
+        unbookmarkedIds = emptySet(),
+        onBookmarkClick = {},
+    )
+}
+
+@Preview(showBackground = true, name = "Success")
+@Composable
+private fun SavedRecipesScreenSuccessPreview() {
+    val recipes = List(7) { index ->
+        Recipe(
+            id = index.toLong() + 1,
+            category = "Indian",
+            name = "Traditional spare ribs baked ${index + 1}",
+            image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+            chef = "Chef John",
+            time = "20 min",
+            rating = 4.0,
+            ingredients = emptyList(),
+        )
+    }
+    var unbookmarkedIds by remember { mutableStateOf(setOf(2L, 5L)) }
+
+    SavedRecipesScreen(
+        state = SavedRecipesState.Success(recipes),
+        unbookmarkedIds = unbookmarkedIds,
+        onBookmarkClick = { recipe ->
+            val ids = unbookmarkedIds
+            unbookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id
+        },
+    )
 }

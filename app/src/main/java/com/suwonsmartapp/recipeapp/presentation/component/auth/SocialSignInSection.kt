@@ -26,15 +26,6 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-private fun SocialSignInSectionPreview() {
-    SocialSignInSection(
-        onGoogleClick = {},
-        onFacebookClick = {},
-    )
-}
-
 // "Or Sign in With" 구분선 + 구글/페이스북 버튼 (Sign In, Sign Up 화면 공통)
 @Composable
 fun SocialSignInSection(
@@ -114,3 +105,13 @@ private fun SocialButton(
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun SocialSignInSectionPreview() {
+    SocialSignInSection(
+        onGoogleClick = {},
+        onFacebookClick = {},
+    )
+}
+

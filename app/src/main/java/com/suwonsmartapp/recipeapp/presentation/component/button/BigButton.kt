@@ -28,18 +28,6 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-fun BigButtonDefaultPreview() {
-    BigButtonContent(text = "Button", isPressed = false) {}
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BigButtonPressedPreview() {
-    BigButtonContent(text = "Button", isPressed = true) {}
-}
-
 @Composable
 fun BigButton(
     text: String,
@@ -105,3 +93,16 @@ private fun BigButtonContent(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun BigButtonDefaultPreview() {
+    BigButtonContent(text = "Button", isPressed = false) {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BigButtonPressedPreview() {
+    BigButtonContent(text = "Button", isPressed = true) {}
+}
+

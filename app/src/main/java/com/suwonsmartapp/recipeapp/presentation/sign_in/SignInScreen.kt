@@ -26,25 +26,6 @@ import com.suwonsmartapp.recipeapp.presentation.component.input.InputField
 import com.suwonsmartapp.recipeapp.ui.theme.AppColors
 import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
 
-@Preview(showBackground = true)
-@Composable
-private fun SignInScreenPreview() {
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-
-    SignInScreen(
-        email = email,
-        password = password,
-        onEmailChange = { email = it },
-        onPasswordChange = { password = it },
-        onForgotPasswordClick = {},
-        onSignInClick = {},
-        onGoogleClick = {},
-        onFacebookClick = {},
-        onSignUpClick = {},
-    )
-}
-
 @Composable
 fun SignInScreen(
     email: String,
@@ -153,3 +134,23 @@ fun SignInScreen(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun SignInScreenPreview() {
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+
+    SignInScreen(
+        email = email,
+        password = password,
+        onEmailChange = { email = it },
+        onPasswordChange = { password = it },
+        onForgotPasswordClick = {},
+        onSignInClick = {},
+        onGoogleClick = {},
+        onFacebookClick = {},
+        onSignUpClick = {},
+    )
+}
+
