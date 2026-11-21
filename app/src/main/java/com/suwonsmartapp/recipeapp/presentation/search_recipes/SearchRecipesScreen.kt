@@ -15,9 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -39,7 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.presentation.component.input.SearchField
-import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeCard
+import com.suwonsmartapp.recipeapp.presentation.component.recipe.SearchCard
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
@@ -181,18 +180,22 @@ fun SearchRecipesScreen(
 private fun RecipeGrid(
     recipes: List<Recipe>,
 ) {
-    // 2열 그리드 (카드 150, 간격 15)
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+    // 2개씩 묶어서 한 줄(Row)에 배치 (카드 150, 간격 15)
+    LazyColumn(
         contentPadding = PaddingValues(vertical = 20.dp),
-        horizontalArrangement = Arrangement.spacedBy(15.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp),
     ) {
         items(
-            items = recipes,
-            key = { it.id },
-        ) { recipe ->
-            RecipeCard(recipe = recipe)
+            items = recipes.chunked(2),
+            key = { row -> row.first().id }, // 줄의 첫 레시피 id를 key로
+        ) { row ->
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(15.dp),
+            ) {
+                row.forEach { recipe ->
+                    SearchCard(recipe = recipe)
+                }
+            }
         }
     }
 }

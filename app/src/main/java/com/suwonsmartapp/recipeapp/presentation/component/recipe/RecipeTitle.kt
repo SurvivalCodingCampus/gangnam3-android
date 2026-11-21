@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
@@ -18,6 +21,10 @@ fun RecipeTitle(
     name: String,
     chef: String,
     modifier: Modifier = Modifier,
+    titleWidth: Dp = 200.dp,
+    titleStyle: TextStyle = AppTextStyles.smallTextBold,
+    chefStyle: TextStyle = AppTextStyles.smallerTextRegular,
+    chefColor: Color = AppColors.gray4,
 ) {
     Column(
         modifier = modifier,
@@ -25,10 +32,10 @@ fun RecipeTitle(
         // 제목
         Text(
             modifier = Modifier
-                .width(200.dp),
+                .width(titleWidth),
             text = name,
             color = AppColors.white,
-            style = AppTextStyles.smallTextBold,
+            style = titleStyle,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
@@ -36,8 +43,8 @@ fun RecipeTitle(
         // 유저
         Text(
             text = "By $chef",
-            color = AppColors.gray4,
-            style = AppTextStyles.smallerTextRegular
+            color = chefColor,
+            style = chefStyle
         )
     }
 }

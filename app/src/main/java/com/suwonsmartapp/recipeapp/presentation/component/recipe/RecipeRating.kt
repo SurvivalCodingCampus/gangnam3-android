@@ -14,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
@@ -24,6 +26,8 @@ import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 fun RecipeRating(
     rating: Double,
     modifier: Modifier = Modifier,
+    iconSize: Dp = 12.dp,
+    textStyle: TextStyle = AppTextStyles.smallerTextRegular,
 ) {
     Row(
         modifier = modifier
@@ -39,7 +43,7 @@ fun RecipeRating(
     ) {
         // 별점
         Icon(
-            modifier = Modifier.size(12.dp),
+            modifier = Modifier.size(iconSize),
             imageVector = Icons.Filled.Star,
             contentDescription = "평점",
             tint = AppColors.rating,
@@ -50,7 +54,7 @@ fun RecipeRating(
         Text(
             text = "$rating",
             color = AppColors.black1,
-            style = AppTextStyles.smallerTextRegular
+            style = textStyle
         )
     }
 }

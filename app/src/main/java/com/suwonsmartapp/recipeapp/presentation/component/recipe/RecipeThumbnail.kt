@@ -17,11 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 
+// 썸네일 (배경, 별점, 제목/셰프) + 우측하단 슬롯
 @Composable
-fun SavedRecipe(
+fun RecipeThumbnail(
     recipe: Recipe,
-    isBookmarked: Boolean,
-    onBookmarkClick: () -> Unit,
+    bottomEnd: (@Composable () -> Unit)? = null, // 우측하단에 넣을 내용
 ) {
     Box(
         modifier = Modifier
@@ -62,24 +62,25 @@ fun SavedRecipe(
             chef = recipe.chef,
         )
 
-        // 우측하단 시간, 북마크 여부
-        RecipeTimeBookmark(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(
-                    end = 10.dp,
-                    bottom = 10.dp,
-                ),
-            time = recipe.time,
-            isBookmarked = isBookmarked,
-            onBookmarkClick = onBookmarkClick,
-        )
+        // 우측하단 슬롯 (넘겨준 게 있을 때만 그림)
+        if (bottomEnd != null) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(
+                        end = 10.dp,
+                        bottom = 10.dp,
+                    ),
+            ) {
+                bottomEnd()
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SavedRecipeBookmarkedPreview() {
+private fun RecipeThumbnailBookmarkedPreview() {
     var isBookmarked by rememberSaveable { mutableStateOf(true) }
 
     val previewRecipe = Recipe(
@@ -94,17 +95,18 @@ private fun SavedRecipeBookmarkedPreview() {
         ingredients = emptyList(),
     )
 
-    SavedRecipe(
-        recipe = previewRecipe,
-        isBookmarked = isBookmarked
-    ) {
-        isBookmarked = !isBookmarked
+    RecipeThumbnail(recipe = previewRecipe) {
+        RecipeTimeBookmark(
+            time = previewRecipe.time,
+            isBookmarked = isBookmarked,
+            onBookmarkClick = { isBookmarked = !isBookmarked },
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SavedRecipePreview() {
+private fun RecipeThumbnailPreview() {
     var isBookmarked by rememberSaveable { mutableStateOf(false) }
 
     val previewRecipe = Recipe(
@@ -119,10 +121,28 @@ private fun SavedRecipePreview() {
         ingredients = emptyList(),
     )
 
-    SavedRecipe(
-        recipe = previewRecipe,
-        isBookmarked = isBookmarked
-    ) {
-        isBookmarked = !isBookmarked
+    RecipeThumbnail(recipe = previewRecipe) {
+        RecipeTimeBookmark(
+            time = previewRecipe.time,
+            isBookmarked = isBookmarked,
+            onBookmarkClick = { isBookmarked = !isBookmarked },
+        )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RecipeThumbnailNoBookmarkPreview() {
+    val previewRecipe = Recipe(
+        id = 1,
+        category = "Indian",
+        name = "Traditional spare ribs baked",
+        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+        chef = "junsik",
+        time = "20 min",
+        rating = 4.0,
+        ingredients = emptyList(),
+    )
+
+    RecipeThumbnail(recipe = previewRecipe)
 }

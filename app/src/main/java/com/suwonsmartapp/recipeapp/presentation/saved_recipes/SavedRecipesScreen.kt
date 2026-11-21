@@ -26,7 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
-import com.suwonsmartapp.recipeapp.presentation.component.recipe.SavedRecipe
+import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeThumbnail
+import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeTimeBookmark
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
@@ -119,11 +120,14 @@ private fun SavedRecipeList(
             items = recipes,
             key = { it.id } // 동일한 key면 skip
         ) { recipe ->
-            SavedRecipe(
-                recipe = recipe,
-                isBookmarked = recipe.id !in unbookmarkedIds,
-                onBookmarkClick = { onBookmarkClick(recipe) },
-            )
+            RecipeThumbnail(recipe = recipe) {
+                // 우측하단: 시간, 북마크
+                RecipeTimeBookmark(
+                    time = recipe.time,
+                    isBookmarked = recipe.id !in unbookmarkedIds,
+                    onBookmarkClick = { onBookmarkClick(recipe) },
+                )
+            }
         }
     }
 }
