@@ -1,8 +1,10 @@
 package com.suwonsmartapp.recipeapp.presentation.component.recipe
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -21,13 +23,12 @@ import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 @Composable
 fun RecipeThumbnail(
     recipe: Recipe,
+    modifier: Modifier = Modifier, // 카드 크기는 바깥에서 정함
+    style: RecipeThumbnailStyle = RecipeThumbnailStyle.Large,
     bottomEnd: (@Composable () -> Unit)? = null, // 우측하단에 넣을 내용
 ) {
     Box(
-        modifier = Modifier
-//            .fillMaxWidth()
-            .width(315.dp)
-            .height(150.dp)
+        modifier = modifier
             .clip(
                 shape = RoundedCornerShape(10.dp)
             ),
@@ -48,18 +49,24 @@ fun RecipeThumbnail(
                     end = 10.dp,
                 ),
             rating = recipe.rating,
+            iconSize = style.ratingIconSize,
+            textStyle = style.ratingTextStyle,
         )
 
         // 좌측하단 제목, 유저
         RecipeTitle(
             modifier = Modifier
                 .align(Alignment.BottomStart)
+                .fillMaxWidth(style.titleWidthFraction)
                 .padding(
                     start = 10.dp,
                     bottom = 10.dp,
                 ),
             name = recipe.name,
             chef = recipe.chef,
+            titleStyle = style.titleStyle,
+            chefStyle = style.chefStyle,
+            chefColor = style.chefColor,
         )
 
         // 우측하단 슬롯 (넘겨준 게 있을 때만 그림)
@@ -95,7 +102,12 @@ private fun RecipeThumbnailBookmarkedPreview() {
         ingredients = emptyList(),
     )
 
-    RecipeThumbnail(recipe = previewRecipe) {
+    RecipeThumbnail(
+        recipe = previewRecipe,
+        modifier = Modifier
+            .width(315.dp)
+            .height(150.dp),
+    ) {
         RecipeTimeBookmark(
             time = previewRecipe.time,
             isBookmarked = isBookmarked,
@@ -121,7 +133,12 @@ private fun RecipeThumbnailPreview() {
         ingredients = emptyList(),
     )
 
-    RecipeThumbnail(recipe = previewRecipe) {
+    RecipeThumbnail(
+        recipe = previewRecipe,
+        modifier = Modifier
+            .width(315.dp)
+            .height(150.dp),
+    ) {
         RecipeTimeBookmark(
             time = previewRecipe.time,
             isBookmarked = isBookmarked,
@@ -144,5 +161,31 @@ private fun RecipeThumbnailNoBookmarkPreview() {
         ingredients = emptyList(),
     )
 
-    RecipeThumbnail(recipe = previewRecipe)
+    RecipeThumbnail(
+        recipe = previewRecipe,
+        modifier = Modifier
+            .width(315.dp)
+            .height(150.dp),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RecipeThumbnailSmallPreview() {
+    val previewRecipe = Recipe(
+        id = 1,
+        category = "Indian",
+        name = "Lamb chops with fruity couscous and mintㅇㅁㄴㅇㅁㄴ",
+        image = "https://cdn.pixabay.com/photo/2017/11/10/15/04/steak-2936531_1280.jpg",
+        chef = "Spicy Nelly",
+        time = "20 min",
+        rating = 4.0,
+        ingredients = emptyList(),
+    )
+
+    RecipeThumbnail(
+        recipe = previewRecipe,
+        modifier = Modifier.size(150.dp),
+        style = RecipeThumbnailStyle.Small,
+    )
 }

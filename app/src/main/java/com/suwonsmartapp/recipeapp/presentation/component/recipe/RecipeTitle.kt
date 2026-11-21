@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
@@ -20,8 +19,7 @@ import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 fun RecipeTitle(
     name: String,
     chef: String,
-    modifier: Modifier = Modifier,
-    titleWidth: Dp = 200.dp,
+    modifier: Modifier = Modifier, // 너비는 바깥에서 정함
     titleStyle: TextStyle = AppTextStyles.smallTextBold,
     chefStyle: TextStyle = AppTextStyles.smallerTextRegular,
     chefColor: Color = AppColors.gray4,
@@ -31,8 +29,6 @@ fun RecipeTitle(
     ) {
         // 제목
         Text(
-            modifier = Modifier
-                .width(titleWidth),
             text = name,
             color = AppColors.white,
             style = titleStyle,
@@ -53,7 +49,9 @@ fun RecipeTitle(
 @Composable
 private fun RecipeTitlePreview() {
     RecipeTitle(
-        modifier = Modifier.background(AppColors.black1),
+        modifier = Modifier
+            .width(200.dp)
+            .background(AppColors.black1),
         name = "Traditional spare ribs baked",
         chef = "Chef John",
     )

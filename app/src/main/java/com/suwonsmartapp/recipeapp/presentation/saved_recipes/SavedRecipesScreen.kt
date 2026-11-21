@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -120,7 +122,12 @@ private fun SavedRecipeList(
             items = recipes,
             key = { it.id } // 동일한 key면 skip
         ) { recipe ->
-            RecipeThumbnail(recipe = recipe) {
+            RecipeThumbnail(
+                recipe = recipe,
+                modifier = Modifier
+                    .width(315.dp)
+                    .height(150.dp),
+            ) {
                 // 우측하단: 시간, 북마크
                 RecipeTimeBookmark(
                     time = recipe.time,

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,7 +40,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.presentation.component.input.SearchField
-import com.suwonsmartapp.recipeapp.presentation.component.recipe.SearchCard
+import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeThumbnail
+import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeThumbnailStyle
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
@@ -192,7 +194,11 @@ private fun RecipeGrid(
             items = recipes,
             key = { it.id }, // 동일한 key면 skip
         ) { recipe ->
-            SearchCard(recipe = recipe)
+            RecipeThumbnail(
+                recipe = recipe,
+                modifier = Modifier.aspectRatio(1f), // 칸 너비에 맞춘 정사각형
+                style = RecipeThumbnailStyle.Small,
+            )
         }
     }
 }
