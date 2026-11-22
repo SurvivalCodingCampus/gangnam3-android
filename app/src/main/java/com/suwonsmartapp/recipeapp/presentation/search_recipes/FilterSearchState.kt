@@ -5,4 +5,8 @@ data class FilterSearchState(
     val time: String = "All",
     val rate: Int? = null, // null이면 별점 필터 없음
     val category: String = "All",
-)
+) {
+    // 아무 필터도 안 골랐는지
+    val isEmpty: Boolean
+        get() = time == "All" && rate == null && category == "All"
+}
