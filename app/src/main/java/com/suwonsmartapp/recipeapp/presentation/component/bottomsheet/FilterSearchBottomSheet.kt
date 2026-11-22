@@ -4,15 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,18 +26,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suwonsmartapp.recipeapp.presentation.component.button.FilterButton
-import com.suwonsmartapp.recipeapp.presentation.component.button.RatingButton
 import com.suwonsmartapp.recipeapp.presentation.component.button.SmallButton
+import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
 import com.suwonsmartapp.recipeapp.presentation.search_recipes.FilterSearchState
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
 private val times = listOf("All", "Newest", "Oldest", "Popularity")
+private val rates = listOf("5", "4", "3", "2", "1")
 private val categories = listOf(
     "All", "Cereal", "Vegetables", "Dinner", "Chinese",
     "Local Dish", "Fruit", "BreakFast", "Spanish", "Lunch",
 )
+
+// 내가 좋아하는 카테고리 (별 표시)
+private val favoriteCategories = setOf("Dinner")
 
 @OptIn(ExperimentalMaterial3Api::class) // ModalBottomSheet가 실험적 API라 필요
 @Composable
@@ -82,48 +87,61 @@ private fun FilterSearchContent(
 
         // Time
         SectionTitle(text = "Time")
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            times.forEach { time ->
-                FilterButton(
-                    text = time,
-                    isSelected = time == filterState.time,
-                    onClick = { filterState = filterState.copy(time = time) },
-                )
-            }
-        }
+        Tabs(
+            labels = times,
+            selectedIndex = times.indexOf(filterState.time),
+            onValueChange = { index -> filterState = filterState.copy(time = times[index]) },
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Rate
+        // Rate (글자 + 별 아이콘을 slot으로 넣음)
         SectionTitle(text = "Rate")
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            for (rate in 5 downTo 1) {
-                RatingButton(
-                    text = "$rate",
-                    isSelected = rate == filterState.rate,
-                    onClick = { filterState = filterState.copy(rate = rate) },
+        Tabs(
+            labels = rates,
+            selectedIndex = rates.indexOf(filterState.rate.toString()), // null이면 -1 → 선택 없음
+            onValueChange = { index -> filterState = filterState.copy(rate = rates[index].toInt()) },
+            horizontalArrangement = Arrangement.spacedBy(space = 15.dp),
+            tabContent = { label, contentColor ->
+                Text(
+                    text = label,
+                    color = contentColor,
+                    style = AppTextStyles.smallerTextRegular,
                 )
-            }
-        }
+                Spacer(modifier = Modifier.width(5.dp))
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    imageVector = Icons.Filled.Star,
+                    contentDescription = "별점 ${label}점",
+                    tint = contentColor,
+                )
+            },
+        )
         Spacer(modifier = Modifier.height(20.dp))
 
         // Category (넘치면 다음 줄로)
         SectionTitle(text = "Category")
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            categories.forEach { category ->
-                FilterButton(
-                    text = category,
-                    isSelected = category == filterState.category,
-                    onClick = { filterState = filterState.copy(category = category) },
+        Tabs(
+            labels = categories,
+            selectedIndex = categories.indexOf(filterState.category),
+            onValueChange = { index -> filterState = filterState.copy(category = categories[index]) },
+            tabContent = { label, contentColor ->
+                Text(
+                    text = label,
+                    color = contentColor,
+                    style = AppTextStyles.smallerTextRegular,
                 )
-            }
-        }
+                // 좋아하는 카테고리면 별 추가
+                if (label in favoriteCategories) {
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Icon(
+                        modifier = Modifier.size(18.dp),
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = "좋아하는 카테고리",
+                        tint = contentColor,
+                    )
+                }
+            },
+        )
         Spacer(modifier = Modifier.height(30.dp))
 
         // Filter 버튼
