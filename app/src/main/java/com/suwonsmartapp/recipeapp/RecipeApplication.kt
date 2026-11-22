@@ -2,14 +2,17 @@ package com.suwonsmartapp.recipeapp
 
 import android.app.Application
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
+import com.suwonsmartapp.recipeapp.core.data.datasource.RecipeDataSource
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
 
 class RecipeApplication : Application() {
+    val recipeDataSource: RecipeDataSource by lazy {
+        FakeRecipeDataSource()
+    }
 
-    // 지연된 초기화
     val recipeRepository: RecipeRepository by lazy {
-        RecipeRepositoryImpl(FakeRecipeDataSource())
+        RecipeRepositoryImpl(recipeDataSource)
     }
 
     override fun onCreate() {

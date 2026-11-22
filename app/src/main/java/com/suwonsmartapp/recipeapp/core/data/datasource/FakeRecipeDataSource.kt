@@ -283,14 +283,42 @@ class FakeRecipeDataSource(
         }
     """.trimIndent()
 ) : RecipeDataSource {
-    override suspend fun getRecipes(): Response<RecipesResponseDto> {
+    override suspend fun getRecipes(
+        query: String?,
+        rate: Int?,
+        category: String?,
+        sort: String?,
+    ): Response<RecipesResponseDto> {
+        if (!statusCode.isSuccess()) {
+            return Response(statusCode = statusCode, body = null)
+        }
+
+        val response = Json.decodeFromString<RecipesResponseDto>(recipesJson)
+
+        // 서버가 쿼리를 보고 걸러서 내려주는 것처럼 흉내
+        val filteredRecipes = response.recipes.filter { recipe ->
+            val matchesQuery = query == null ||
+                recipe.name.orEmpty().contains(query, ignoreCase = true)
+            val rating = recipe.rating ?: 0.0
+            // 4면 4.0 이상 5.0 미만 (5면 5.0만)
+            val matchesRate = rate == null || (rating >= rate && rating < rate + 1)
+            val matchesCategory = category == null ||
+                recipe.category.equals(category, ignoreCase = true)
+
+            matchesQuery && matchesRate && matchesCategory
+        }
+
+        // 날짜 정보가 없어서 id 순서로 newest/oldest 처리
+        val sortedRecipes = when (sort) {
+            "newest" -> filteredRecipes.sortedByDescending { it.id }
+            "oldest" -> filteredRecipes.sortedBy { it.id }
+            "popularity" -> filteredRecipes.sortedByDescending { it.rating }
+            else -> filteredRecipes
+        }
+
         return Response(
             statusCode = statusCode,
-            body = if (statusCode.isSuccess()) {
-                Json.decodeFromString<RecipesResponseDto>(recipesJson)
-            } else {
-                null
-            },
+            body = response.copy(recipes = sortedRecipes),
         )
     }
 }
