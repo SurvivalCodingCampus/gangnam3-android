@@ -1,87 +1,110 @@
+@file:Suppress("NonAsciiCharacters")
+
 package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
-import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
-import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
+import com.suwonsmartapp.recipeapp.core.network.Result
+import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SavedRecipesScreenViewModelTest {
     private val repository = RecipeRepositoryImpl(FakeRecipeDataSource())
 
-    @Before
+    @BeforeEach
     fun setUp() {
-        // viewModelScope는 Dispatchers.Main을 쓰기 때문에 테스트용으로 교체
-        Dispatchers.setMain(UnconfinedTestDispatcher())
+        // Repository의 delay(1초)를 advanceUntilIdle()로 넘기려고 StandardTestDispatcher 사용
+        Dispatchers.setMain(StandardTestDispatcher())
     }
 
-    @After
+    @AfterEach
     fun tearDown() {
         Dispatchers.resetMain()
+    }
+
+    // ViewModel을 만들고 로딩이 끝날 때까지 시간을 넘김
+    private fun TestScope.loadedViewModel(
+        repository: RecipeRepositoryImpl = this@SavedRecipesScreenViewModelTest.repository,
+    ): SavedRecipesScreenViewModel {
+        val viewModel = SavedRecipesScreenViewModel(repository)
+        advanceUntilIdle()
+        return viewModel
     }
 
     private fun SavedRecipesScreenViewModel.success() =
         state.value as SavedRecipesState.Success
 
     @Test
-    fun `생성되면 저장된 레시피 10개를 불러온다`() = runTest {
+    fun `생성 직후에는 Loading 상태다`() = runTest {
         val viewModel = SavedRecipesScreenViewModel(repository)
 
-        assertEquals(10, viewModel.success().recipes.size)
+        assertThat(viewModel.state.value).isEqualTo(SavedRecipesState.Loading)
+    }
+
+    @Test
+    fun `생성되면 저장된 레시피 10개를 불러온다`() = runTest {
+        val viewModel = loadedViewModel()
+
+        assertThat(viewModel.success().recipes).hasSize(10)
     }
 
     @Test
     fun `불러온 레시피가 Repository 데이터와 같다`() = runTest {
-        val viewModel = SavedRecipesScreenViewModel(repository)
+        val viewModel = loadedViewModel()
 
         val expected = (repository.getRecipes() as Result.Success).value
-        assertEquals(expected, viewModel.success().recipes)
+        assertThat(viewModel.success().recipes).isEqualTo(expected)
     }
 
     @Test
     fun `첫 번째 레시피 이름이 맞다`() = runTest {
-        val viewModel = SavedRecipesScreenViewModel(repository)
+        val viewModel = loadedViewModel()
 
-        assertEquals("Traditional spare ribs baked", viewModel.success().recipes.first().name)
+        assertThat(viewModel.success().recipes.first().name)
+            .isEqualTo("Traditional spare ribs baked")
     }
 
     @Test
     fun `북마크를 누르면 목록은 그대로고 북마크만 해제된다`() = runTest {
-        val viewModel = SavedRecipesScreenViewModel(repository)
+        val viewModel = loadedViewModel()
         val target = viewModel.success().recipes.first()
 
         viewModel.onBookmarkClick(target)
 
-        assertEquals(10, viewModel.success().recipes.size)
-        assertEquals(setOf(target.id), viewModel.unbookmarkedIds.value)
+        assertThat(viewModel.success().recipes).hasSize(10)
+        assertThat(viewModel.unbookmarkedIds.value).containsExactly(target.id)
     }
 
     @Test
     fun `북마크를 두 번 누르면 다시 활성화된다`() = runTest {
-        val viewModel = SavedRecipesScreenViewModel(repository)
+        val viewModel = loadedViewModel()
         val target = viewModel.success().recipes.first()
 
         viewModel.onBookmarkClick(target)
         viewModel.onBookmarkClick(target)
 
-        assertEquals(emptySet<Long>(), viewModel.unbookmarkedIds.value)
+        assertThat(viewModel.unbookmarkedIds.value).isEmpty()
     }
 
     @Test
     fun `Repository가 실패하면 Error 상태가 된다`() = runTest {
-        val errorRepository = RecipeRepositoryImpl(FakeRecipeDataSource(statusCode = StatusCode.InternalServerError))
-        val viewModel = SavedRecipesScreenViewModel(errorRepository)
+        val errorRepository = RecipeRepositoryImpl(
+            FakeRecipeDataSource(statusCode = StatusCode.InternalServerError)
+        )
+        val viewModel = loadedViewModel(errorRepository)
 
-        assertEquals(SavedRecipesState.Error("서버 문제"), viewModel.state.value)
+        assertThat(viewModel.state.value).isEqualTo(SavedRecipesState.Error("서버 문제"))
     }
 }

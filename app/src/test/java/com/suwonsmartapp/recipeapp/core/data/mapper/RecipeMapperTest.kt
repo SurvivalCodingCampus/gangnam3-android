@@ -7,9 +7,8 @@ import com.suwonsmartapp.recipeapp.core.data.model.Ingredient
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.model.RecipeIngredient
 import kotlinx.serialization.json.Json
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 class RecipeMapperTest {
 
@@ -47,44 +46,44 @@ class RecipeMapperTest {
             ),
         )
 
-        assertEquals(recipe, dto.toModel())
+        assertThat(dto.toModel()).isEqualTo(recipe)
     }
 
     @Test
     fun `모든 필드가 null이어도 예외 없이 기본값 Model이 만들어진다`() {
         val model = RecipeDto().toModel()
 
-        assertEquals(Recipe(0L, "", "", "", "", "", 0.0, emptyList()), model)
+        assertThat(model).isEqualTo(Recipe(0L, "", "", "", "", "", 0.0, emptyList()))
     }
 
     @Test
     fun `JSON에 ingredients가 없으면 빈 리스트로 변환된다`() {
         val dto = Json.decodeFromString<RecipeDto>("""{ "id": 1 }""")
 
-        assertTrue(dto.toModel().ingredients.isEmpty())
+        assertThat(dto.toModel().ingredients).isEmpty()
     }
 
     @Test
     fun `RecipeIngredientDto의 ingredient가 null이면 기본값 Ingredient로 변환된다`() {
         val model = RecipeIngredientDto(ingredient = null, amount = null).toModel()
 
-        assertEquals(RecipeIngredient(Ingredient(0L, "", ""), 0), model)
+        assertThat(model).isEqualTo(RecipeIngredient(Ingredient(0L, "", ""), 0))
     }
 
     @Test
     fun `Model을 DTO로 변환하면 모든 필드가 그대로 옮겨진다`() {
         val dto = recipe.toDto()
 
-        assertEquals(1L, dto.id)
-        assertEquals("Indian", dto.category)
-        assertEquals("Chef John", dto.chef)
-        assertEquals(4.0, dto.rating!!, 0.0)
-        assertEquals("Pork", dto.ingredients!!.first().ingredient!!.name)
-        assertEquals(500, dto.ingredients!!.first().amount)
+        assertThat(dto.id).isEqualTo(1L)
+        assertThat(dto.category).isEqualTo("Indian")
+        assertThat(dto.chef).isEqualTo("Chef John")
+        assertThat(dto.rating).isEqualTo(4.0)
+        assertThat(dto.ingredients!!.first().ingredient!!.name).isEqualTo("Pork")
+        assertThat(dto.ingredients!!.first().amount).isEqualTo(500)
     }
 
     @Test
     fun `유효한 Model은 DTO를 거쳐 다시 변환해도 동일하다`() {
-        assertEquals(recipe, recipe.toDto().toModel())
+        assertThat(recipe.toDto().toModel()).isEqualTo(recipe)
     }
 }

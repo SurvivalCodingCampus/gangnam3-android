@@ -40,8 +40,7 @@ class SearchRecipesScreenViewModel(
     private fun observeSearch() {
         viewModelScope.launch {
             combine(
-                // 검색어도 _state에서 꺼내 씀
-                // 실제로 바뀔 때만 통과 → 빈 검색어는 바로, 입력 중일 때만 0.5초 대기
+                // 실제로 바뀔 때만 통과 -> 빈 검색어는 바로, 입력 중일 때만 0.5초 대기
                 _state
                     .map { it.query }
                     .distinctUntilChanged()
@@ -64,7 +63,7 @@ class SearchRecipesScreenViewModel(
                         query = query.ifEmpty { null },
                         rate = filter.rate,
                         category = if (filter.category == "All") null else filter.category,
-                        sort = if (filter.time == "All") null else filter.time.lowercase(), // "Newest" → "newest"
+                        sort = if (filter.time == "All") null else filter.time.lowercase(),
                     )
                 }
                 updateRecipes(result)
@@ -72,17 +71,14 @@ class SearchRecipesScreenViewModel(
         }
     }
 
-    // 값만 바꾸면 observeSearch에서 알아서 다시 불러옴
     fun onQueryChange(query: String) {
         _state.update { it.copy(query = query) }
     }
 
-    // 값만 바꾸면 observeSearch에서 알아서 다시 불러옴
     fun onFilterChange(filterSearchState: FilterSearchState) {
         _state.update { it.copy(filterSearchState = filterSearchState) }
     }
 
-    // 받아온 결과를 화면 상태에 반영
     private fun updateRecipes(result: Result<List<Recipe>, NetworkError>) {
         when (result) {
             is Result.Success -> _state.update {
