@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.data.model
+package com.suwonsmartapp.recipeapp.domain.model
 
 data class Procedure(
     val step: Int,

@@ -6,8 +6,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.suwonsmartapp.recipeapp.RecipeApplication
-import com.suwonsmartapp.recipeapp.data.model.Recipe
-import com.suwonsmartapp.recipeapp.data.repository.RecipeRepository
+import com.suwonsmartapp.recipeapp.core.Result
+import com.suwonsmartapp.recipeapp.domain.model.Recipe
+import com.suwonsmartapp.recipeapp.domain.repository.RecipeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +23,10 @@ class SavedRecipesViewModel(
 
     init {
         viewModelScope.launch {
-            _recipes.value = recipeRepository.getSavedRecipes()
+            when (val result = recipeRepository.getSavedRecipes()) {
+                is Result.Success -> _recipes.value = result.data
+                is Result.Error -> Unit
+            }
         }
     }
 
