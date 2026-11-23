@@ -3,6 +3,7 @@
 package com.suwonsmartapp.recipeapp.presentation.search_recipes
 
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
+import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
 import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +40,7 @@ class SearchRecipesScreenViewModelTest {
     fun `생성 직후에는 로딩 중이다`() = runTest {
         val viewModel = SearchRecipesScreenViewModel(repository)
 
-        assertThat(viewModel.state.value.isLoading).isTrue()
+        assertThat(viewModel.state.value.result).isEqualTo(SearchResult.Loading)
     }
 
     @Test
@@ -47,10 +48,7 @@ class SearchRecipesScreenViewModelTest {
         val viewModel = SearchRecipesScreenViewModel(repository)
         advanceUntilIdle()
 
-        val state = viewModel.state.value
-        assertThat(state.isLoading).isFalse()
-        assertThat(state.errorMessage).isNull()
-        assertThat(state.recipes).hasSize(10)
+        assertThat(viewModel.state.value.recipes()).hasSize(10)
     }
 
     @Test
@@ -70,7 +68,7 @@ class SearchRecipesScreenViewModelTest {
         viewModel.onQueryChange("chicken")
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.recipes.map { it.name })
+        assertThat(viewModel.state.value.recipes().map { it.name })
             .containsExactly(
                 "Spice roasted chicken with flavored rice",
                 "Spicy fried rice mix chicken bali",
@@ -85,7 +83,7 @@ class SearchRecipesScreenViewModelTest {
         viewModel.onQueryChange("  chicken  ")
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.recipes).hasSize(2)
+        assertThat(viewModel.state.value.recipes()).hasSize(2)
     }
 
     @Test
@@ -97,8 +95,7 @@ class SearchRecipesScreenViewModelTest {
         advanceTimeBy(400.milliseconds)
 
         // 아직 debounce 대기 중이라 이전 결과 그대로
-        assertThat(viewModel.state.value.isLoading).isFalse()
-        assertThat(viewModel.state.value.recipes).hasSize(10)
+        assertThat(viewModel.state.value.recipes()).hasSize(10)
     }
 
     @Test
@@ -111,7 +108,7 @@ class SearchRecipesScreenViewModelTest {
         viewModel.onQueryChange("sushi")
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.recipes.map { it.name })
+        assertThat(viewModel.state.value.recipes().map { it.name })
             .containsExactly("Sushi Platter")
     }
 
@@ -123,7 +120,7 @@ class SearchRecipesScreenViewModelTest {
         viewModel.onFilterChange(FilterSearchState(category = "French"))
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.recipes)
+        assertThat(viewModel.state.value.recipes())
             .hasSize(2)
             .allMatch { it.category == "French" }
     }
@@ -136,7 +133,7 @@ class SearchRecipesScreenViewModelTest {
         viewModel.onFilterChange(FilterSearchState(rate = 5))
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.recipes)
+        assertThat(viewModel.state.value.recipes())
             .hasSize(2)
             .allMatch { it.rating == 5.0 }
     }
@@ -149,7 +146,7 @@ class SearchRecipesScreenViewModelTest {
         viewModel.onFilterChange(FilterSearchState(time = "Newest"))
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.recipes.map { it.id })
+        assertThat(viewModel.state.value.recipes().map { it.id })
             .containsExactlyElementsOf(10L downTo 1L)
     }
 
@@ -162,7 +159,7 @@ class SearchRecipesScreenViewModelTest {
         viewModel.onFilterChange(FilterSearchState(category = "Chinese"))
         advanceUntilIdle()
 
-        assertThat(viewModel.state.value.recipes.map { it.name })
+        assertThat(viewModel.state.value.recipes().map { it.name })
             .containsExactly("Spicy fried rice mix chicken bali")
     }
 
@@ -177,7 +174,7 @@ class SearchRecipesScreenViewModelTest {
 
         val state = viewModel.state.value
         assertThat(state.query).isEqualTo("chicken")
-        assertThat(state.filterSearchState).isEqualTo(FilterSearchState(category = "French"))
+        assertThat(state.filter).isEqualTo(FilterSearchState(category = "French"))
     }
 
     @Test
@@ -188,8 +185,12 @@ class SearchRecipesScreenViewModelTest {
         val viewModel = SearchRecipesScreenViewModel(errorRepository)
         advanceUntilIdle()
 
-        val state = viewModel.state.value
-        assertThat(state.isLoading).isFalse()
-        assertThat(state.errorMessage).isEqualTo("서버 문제")
+        assertThat(viewModel.state.value.result).isEqualTo(SearchResult.Error("서버 문제"))
+    }
+
+    // Success일 때 레시피 목록을 꺼냄 (Success가 아니면 테스트 실패)
+    private fun SearchUiState.recipes(): List<Recipe> {
+        assertThat(result).isInstanceOf(SearchResult.Success::class.java)
+        return (result as SearchResult.Success).recipes
     }
 }

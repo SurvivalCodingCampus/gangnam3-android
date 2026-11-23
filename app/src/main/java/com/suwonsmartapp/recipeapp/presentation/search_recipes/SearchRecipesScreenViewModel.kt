@@ -28,8 +28,8 @@ import kotlinx.coroutines.launch
 class SearchRecipesScreenViewModel(
     private val recipeRepository: RecipeRepository,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(SearchRecipesState(recipes = emptyList()))
-    val state: StateFlow<SearchRecipesState> = _state.asStateFlow()
+    private val _state = MutableStateFlow(SearchUiState())
+    val state: StateFlow<SearchUiState> = _state.asStateFlow()
 
     init {
         observeSearch()
@@ -47,12 +47,12 @@ class SearchRecipesScreenViewModel(
                     .debounce { if (it.isBlank()) 0L else 500L },
                 // 필터는 _state에서 꺼내 씀 (실제로 바뀔 때만 통과)
                 _state
-                    .map { it.filterSearchState }
+                    .map { it.filter }
                     .distinctUntilChanged(),
             ) { query, filter ->
                 query.trim() to filter
             }.collectLatest { (query, filter) -> // 새 값이 오면 이전 요청은 자동 취소
-                _state.update { it.copy(isLoading = true, errorMessage = null) }
+                _state.update { it.copy(result = SearchResult.Loading) }
 
                 val result = if (query.isEmpty() && filter.isEmpty) {
                     // 조건이 없으면 최근 검색
@@ -75,20 +75,16 @@ class SearchRecipesScreenViewModel(
         _state.update { it.copy(query = query) }
     }
 
-    fun onFilterChange(filterSearchState: FilterSearchState) {
-        _state.update { it.copy(filterSearchState = filterSearchState) }
+    fun onFilterChange(filter: FilterSearchState) {
+        _state.update { it.copy(filter = filter) }
     }
 
     private fun updateRecipes(result: Result<List<Recipe>, NetworkError>) {
-        when (result) {
-            is Result.Success -> _state.update {
-                it.copy(isLoading = false, recipes = result.value)
-            }
-
-            is Result.Error -> _state.update {
-                it.copy(isLoading = false, errorMessage = result.error.toMessage())
-            }
+        val searchResult = when (result) {
+            is Result.Success -> SearchResult.Success(result.value)
+            is Result.Error -> SearchResult.Error(result.error.toMessage())
         }
+        _state.update { it.copy(result = searchResult) }
     }
 
     companion object {

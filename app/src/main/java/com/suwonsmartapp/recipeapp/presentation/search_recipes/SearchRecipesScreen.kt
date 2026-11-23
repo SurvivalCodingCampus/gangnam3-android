@@ -63,9 +63,9 @@ fun SearchRecipesScreenRoot(
     // 필터 버튼을 누르면 하단 시트 표시
     if (showFilterSheet) {
         FilterSearchBottomSheet(
-            initialState = state.filterSearchState,
-            onFilterClick = { filterSearchState ->
-                viewModel.onFilterChange(filterSearchState)
+            initialState = state.filter,
+            onFilterClick = { filter ->
+                viewModel.onFilterChange(filter)
                 showFilterSheet = false
             },
             onDismissRequest = { showFilterSheet = false },
@@ -76,7 +76,7 @@ fun SearchRecipesScreenRoot(
 // 화면만 그리는 Screen (상태 없음)
 @Composable
 fun SearchRecipesScreen(
-    state: SearchRecipesState,
+    state: SearchUiState,
     onQueryChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onFilterClick: () -> Unit,
@@ -158,9 +158,11 @@ fun SearchRecipesScreen(
                 color = AppColors.black1,
                 style = AppTextStyles.normalTextBold,
             )
-            if (isSearching) {
+            // 결과 개수는 검색 성공했을 때만
+            val result = state.result
+            if (isSearching && result is SearchResult.Success) {
                 Text(
-                    text = "${state.recipes.size} results",
+                    text = "${result.recipes.size} results",
                     color = AppColors.gray3,
                     style = AppTextStyles.smallerTextRegular,
                 )
@@ -168,26 +170,26 @@ fun SearchRecipesScreen(
         }
 
         // 본문
-        when {
-            state.isLoading -> Box(
+        when (val result = state.result) {
+            SearchResult.Loading -> Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
                 CircularProgressIndicator(color = AppColors.primary100)
             }
 
-            state.errorMessage != null -> Box(
+            is SearchResult.Error -> Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = state.errorMessage,
+                    text = result.message,
                     color = AppColors.gray3,
                     style = AppTextStyles.normalTextRegular,
                 )
             }
 
-            else -> RecipeGrid(recipes = state.recipes)
+            is SearchResult.Success -> RecipeGrid(recipes = result.recipes)
         }
     }
 }
@@ -233,7 +235,7 @@ private val previewRecipes = List(6) { index ->
 @Composable
 private fun SearchRecipesScreenPreview() {
     SearchRecipesScreen(
-        state = SearchRecipesState(isLoading = false, recipes = previewRecipes),
+        state = SearchUiState(result = SearchResult.Success(previewRecipes)),
         onQueryChange = {},
         onBackClick = {},
         onFilterClick = {},
@@ -246,10 +248,11 @@ private fun SearchRecipesScreenResultPreview() {
     var query by remember { mutableStateOf("ribs") }
 
     SearchRecipesScreen(
-        state = SearchRecipesState(
-            isLoading = false,
+        state = SearchUiState(
             query = query,
-            recipes = previewRecipes.filter { it.name.contains(query, ignoreCase = true) },
+            result = SearchResult.Success(
+                previewRecipes.filter { it.name.contains(query, ignoreCase = true) },
+            ),
         ),
         onQueryChange = { query = it },
         onBackClick = {},
@@ -261,10 +264,7 @@ private fun SearchRecipesScreenResultPreview() {
 @Composable
 private fun SearchRecipesScreenErrorPreview() {
     SearchRecipesScreen(
-        state = SearchRecipesState(
-            isLoading = false,
-            errorMessage = "서버 문제",
-            recipes = listOf()),
+        state = SearchUiState(result = SearchResult.Error("서버 문제")),
         onQueryChange = {},
         onBackClick = {},
         onFilterClick = {},
