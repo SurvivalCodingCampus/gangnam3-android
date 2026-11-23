@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.suwonsmartapp.recipeapp.presentation.saved_recipes.SavedRecipesRoot
+import com.suwonsmartapp.recipeapp.presentation.search_recipes.SearchRecipesRoot
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 //                }
 //            }
 
-            SavedRecipesRoot()
+            SearchRecipesRoot(onBackClick = ::finish)
         }
     }
 }

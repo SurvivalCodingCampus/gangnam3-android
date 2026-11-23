@@ -33,6 +33,9 @@ class SavedRecipesViewModelTest {
     )
 
     private val fakeRepository = object : RecipeRepository {
+        override suspend fun getRecipes(): Result<List<Recipe>, NetworkError> =
+            Result.Success(fakeRecipes)
+
         override suspend fun getSavedRecipes(): Result<List<Recipe>, NetworkError> =
             Result.Success(fakeRecipes)
     }
@@ -59,6 +62,9 @@ class SavedRecipesViewModelTest {
     @Test
     fun `레포지토리가 에러를 반환하면 레시피 목록은 비어 있다`() {
         val errorRepository = object : RecipeRepository {
+            override suspend fun getRecipes(): Result<List<Recipe>, NetworkError> =
+                Result.Error(NetworkError.UNKNOWN)
+
             override suspend fun getSavedRecipes(): Result<List<Recipe>, NetworkError> =
                 Result.Error(NetworkError.UNKNOWN)
         }

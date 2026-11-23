@@ -12,7 +12,7 @@ class RecipeRepositoryImpl(
     private val recipeDataSource: RecipeDataSource,
 ) : RecipeRepository {
 
-    override suspend fun getSavedRecipes(): Result<List<Recipe>, NetworkError> {
+    override suspend fun getRecipes(): Result<List<Recipe>, NetworkError> {
         return try {
             Result.Success(recipeDataSource.getRecipes().map { it.toModel() })
         } catch (e: CancellationException) {
@@ -21,4 +21,6 @@ class RecipeRepositoryImpl(
             Result.Error(NetworkError.UNKNOWN)
         }
     }
+
+    override suspend fun getSavedRecipes(): Result<List<Recipe>, NetworkError> = getRecipes()
 }
