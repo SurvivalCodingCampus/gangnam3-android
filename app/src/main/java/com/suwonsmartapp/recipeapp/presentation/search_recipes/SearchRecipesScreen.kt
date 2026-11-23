@@ -30,7 +30,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,6 +74,15 @@ fun SearchRecipesScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var isFilterSheetVisible by rememberSaveable { mutableStateOf(false) }
+
+    if (isFilterSheetVisible) {
+        FilterSearchBottomSheet(
+            onFilterClick = {},
+            onDismissRequest = { isFilterSheetVisible = false },
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -148,6 +160,7 @@ fun SearchRecipesScreen(
                     .size(size = 40.dp)
                     .clip(shape = RoundedCornerShape(size = 10.dp))
                     .background(color = AppColors.primary100)
+                    .clickable { isFilterSheetVisible = true }
                     .padding(all = 10.dp),
                 painter = painterResource(R.drawable.ic_setting),
                 contentDescription = stringResource(id = R.string.search_recipes_filter),
