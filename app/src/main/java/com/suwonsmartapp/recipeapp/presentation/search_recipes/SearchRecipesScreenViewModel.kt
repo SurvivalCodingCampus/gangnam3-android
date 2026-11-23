@@ -43,7 +43,7 @@ class SearchRecipesScreenViewModel(
                 // 검색어도 _state에서 꺼내 씀
                 // 실제로 바뀔 때만 통과 → 빈 검색어는 바로, 입력 중일 때만 0.5초 대기
                 _state
-                    .map { it.query.orEmpty() }
+                    .map { it.query }
                     .distinctUntilChanged()
                     .debounce { if (it.isBlank()) 0L else 500L },
                 // 필터는 _state에서 꺼내 씀 (실제로 바뀔 때만 통과)

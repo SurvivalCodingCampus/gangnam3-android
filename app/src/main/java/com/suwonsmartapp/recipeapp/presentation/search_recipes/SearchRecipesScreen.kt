@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
-import com.suwonsmartapp.recipeapp.presentation.component.bottomsheet.FilterSearchBottomSheet
 import com.suwonsmartapp.recipeapp.presentation.component.input.SearchField
 import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeThumbnail
 import com.suwonsmartapp.recipeapp.presentation.component.recipe.RecipeThumbnailStyle
@@ -84,7 +83,7 @@ fun SearchRecipesScreen(
     modifier: Modifier = Modifier,
 ) {
     // 검색어가 있으면 Search Result, 없으면 Recent Search
-    val isSearching = !state.query.isNullOrBlank()
+    val isSearching = state.query.isNotBlank()
 
     Column(
         modifier = modifier
@@ -124,7 +123,7 @@ fun SearchRecipesScreen(
         ) {
             SearchField(
                 modifier = Modifier.weight(1f),
-                value = state.query ?: "",
+                value = state.query,
                 onValueChange = onQueryChange,
             )
             Spacer(modifier = Modifier.width(20.dp))

@@ -6,7 +6,7 @@ import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 data class SearchRecipesState(
     val isLoading: Boolean = true,
     val errorMessage: String? = null,
-    val query: String? = null,
+    val query: String = "",
     val recipes: List<Recipe>,
     val filterSearchState: FilterSearchState = FilterSearchState(),
 )

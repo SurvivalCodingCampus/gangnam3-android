@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.presentation.component.bottomsheet
+package com.suwonsmartapp.recipeapp.presentation.search_recipes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.component.button.SmallButton
 import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
-import com.suwonsmartapp.recipeapp.presentation.search_recipes.FilterSearchState
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
