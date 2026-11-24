@@ -260,6 +260,17 @@ private fun SearchRecipesScreenResultPreview() {
     )
 }
 
+@Preview(showBackground = true, name = "Loading")
+@Composable
+private fun SearchRecipesScreenLoadingPreview() {
+    SearchRecipesScreen(
+        state = SearchUiState(result = SearchResult.Loading),
+        onQueryChange = {},
+        onBackClick = {},
+        onFilterClick = {},
+    )
+}
+
 @Preview(showBackground = true, name = "Error")
 @Composable
 private fun SearchRecipesScreenErrorPreview() {
