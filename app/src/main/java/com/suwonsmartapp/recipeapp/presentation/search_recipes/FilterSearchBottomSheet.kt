@@ -120,6 +120,7 @@ private fun FilterSearchContent(
                     text = stringResource(id = category.label),
                     isSelected = state.category == category,
                     onClick = { onStateChange(state.copy(category = category)) },
+                    icon = if (category == FilterCategory.DINNER) painterResource(R.drawable.star) else null,
                 )
             }
         }
