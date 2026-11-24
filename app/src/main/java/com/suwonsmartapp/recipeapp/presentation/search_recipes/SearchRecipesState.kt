@@ -7,4 +7,5 @@ data class SearchRecipesState(
     val filteredRecipes: List<Recipe> = emptyList(),
     val query: String = "",
     val isLoading: Boolean = false,
+    val filter: FilterSearchState = FilterSearchState(),
 )

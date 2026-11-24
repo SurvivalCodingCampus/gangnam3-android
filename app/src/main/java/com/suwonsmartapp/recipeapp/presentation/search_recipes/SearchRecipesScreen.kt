@@ -63,6 +63,7 @@ fun SearchRecipesRoot(
     SearchRecipesScreen(
         state = state,
         onQueryChange = viewModel::onQueryChange,
+        onFilterApply = viewModel::onFilterApply,
         onBackClick = onBackClick,
     )
 }
@@ -71,15 +72,18 @@ fun SearchRecipesRoot(
 fun SearchRecipesScreen(
     state: SearchRecipesState,
     onQueryChange: (String) -> Unit,
+    onFilterApply: (FilterSearchState) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var isFilterSheetVisible by rememberSaveable { mutableStateOf(false) }
+    val isSearching = state.query.isNotBlank() || state.filter != FilterSearchState()
 
     if (isFilterSheetVisible) {
         FilterSearchBottomSheet(
-            onFilterClick = {},
+            onFilterClick = onFilterApply,
             onDismissRequest = { isFilterSheetVisible = false },
+            initialState = state.filter,
         )
     }
 
@@ -172,16 +176,16 @@ fun SearchRecipesScreen(
             Text(
                 modifier = Modifier.weight(weight = 1f),
                 text = stringResource(
-                    id = if (state.query.isBlank()) {
-                        R.string.search_recipes_recent
-                    } else {
+                    id = if (isSearching) {
                         R.string.search_recipes_result
+                    } else {
+                        R.string.search_recipes_recent
                     },
                 ),
                 style = AppTextStyles.normalTextBold,
                 color = AppColors.black1,
             )
-            if (state.query.isNotBlank()) {
+            if (isSearching) {
                 Text(
                     text = pluralStringResource(
                         id = R.plurals.search_recipes_result_count,
@@ -315,6 +319,7 @@ private fun SearchRecipesScreenPreview() {
             filteredRecipes = recipes,
         ),
         onQueryChange = {},
+        onFilterApply = {},
         onBackClick = {},
     )
 }

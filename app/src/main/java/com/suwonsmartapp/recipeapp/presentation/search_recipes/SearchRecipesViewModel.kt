@@ -12,6 +12,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -29,15 +30,16 @@ class SearchRecipesViewModel(
     init {
         viewModelScope.launch {
             loadRecipes()
-            _state
-                .map { it.query.trim() }
-                .distinctUntilChanged()
-                .debounce(DEBOUNCE_MILLIS)
-                .collect { query ->
+            combine(
+                _state.map { it.query.trim() }.distinctUntilChanged().debounce(DEBOUNCE_MILLIS),
+                _state.map { it.filter }.distinctUntilChanged(),
+            ) { query, filter -> query to filter }
+                .collect { (query, filter) ->
                     _state.update { state ->
                         state.copy(
                             filteredRecipes = state.recipes.filter {
-                                it.name.contains(query, ignoreCase = true)
+                                it.name.contains(query, ignoreCase = true) &&
+                                    (filter.rate == null || it.rating.toInt() == filter.rate)
                             },
                         )
                     }
@@ -47,6 +49,10 @@ class SearchRecipesViewModel(
 
     fun onQueryChange(query: String) {
         _state.update { it.copy(query = query) }
+    }
+
+    fun onFilterApply(filter: FilterSearchState) {
+        _state.update { it.copy(filter = filter) }
     }
 
     private suspend fun loadRecipes() {

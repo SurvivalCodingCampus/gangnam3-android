@@ -37,16 +37,18 @@ fun FilterSearchBottomSheet(
     onFilterClick: (FilterSearchState) -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
+    initialState: FilterSearchState = FilterSearchState(),
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-    var filterState by remember { mutableStateOf(FilterSearchState()) }
+    var filterState by remember { mutableStateOf(initialState) }
 
     ModalBottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         containerColor = AppColors.white,
+        dragHandle = null,
     ) {
         FilterSearchContent(
             state = filterState,

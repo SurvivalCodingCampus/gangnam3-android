@@ -39,10 +39,20 @@ class SearchRecipesViewModelTest {
         ),
     )
 
-    private fun fakeRepository(loadMillis: Long = 0L) = object : RecipeRepository {
+    private val ratedRecipes = listOf(
+        fakeRecipes[0].copy(id = 1, rating = 4.0),
+        fakeRecipes[0].copy(id = 2, rating = 4.9),
+        fakeRecipes[1].copy(id = 3, rating = 5.0),
+        fakeRecipes[1].copy(id = 4, rating = 3.5),
+    )
+
+    private fun fakeRepository(
+        loadMillis: Long = 0L,
+        recipes: List<Recipe> = fakeRecipes,
+    ) = object : RecipeRepository {
         override suspend fun getRecipes(): Result<List<Recipe>, NetworkError> {
             delay(loadMillis)
-            return Result.Success(fakeRecipes)
+            return Result.Success(recipes)
         }
 
         override suspend fun getSavedRecipes(): Result<List<Recipe>, NetworkError> =
@@ -109,5 +119,50 @@ class SearchRecipesViewModelTest {
         advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
 
         assertEquals(fakeRecipes, viewModel.state.value.filteredRecipes)
+    }
+
+    @Test
+    fun `Rate 필터는 해당 점수대 레시피만 debounce 없이 즉시 표시한다`() = runTest {
+        val viewModel = SearchRecipesViewModel(fakeRepository(recipes = ratedRecipes))
+        advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
+
+        viewModel.onFilterApply(FilterSearchState(rate = 4))
+
+        assertEquals(listOf(ratedRecipes[0], ratedRecipes[1]), viewModel.state.value.filteredRecipes)
+    }
+
+    @Test
+    fun `Rate 5는 5점 레시피만 표시한다`() = runTest {
+        val viewModel = SearchRecipesViewModel(fakeRepository(recipes = ratedRecipes))
+        advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
+
+        viewModel.onFilterApply(FilterSearchState(rate = 5))
+
+        assertEquals(listOf(ratedRecipes[2]), viewModel.state.value.filteredRecipes)
+    }
+
+    @Test
+    fun `Rate 필터와 검색어를 함께 적용한다`() = runTest {
+        val viewModel = SearchRecipesViewModel(fakeRepository(recipes = ratedRecipes))
+
+        viewModel.onFilterApply(FilterSearchState(rate = 4))
+        viewModel.onQueryChange("chicken")
+        advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
+        assertEquals(emptyList<Recipe>(), viewModel.state.value.filteredRecipes)
+
+        viewModel.onQueryChange("ribs")
+        advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
+        assertEquals(listOf(ratedRecipes[0], ratedRecipes[1]), viewModel.state.value.filteredRecipes)
+    }
+
+    @Test
+    fun `Rate 선택을 해제하면 모든 레시피를 다시 표시한다`() = runTest {
+        val viewModel = SearchRecipesViewModel(fakeRepository(recipes = ratedRecipes))
+        advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
+
+        viewModel.onFilterApply(FilterSearchState(rate = 4))
+        viewModel.onFilterApply(FilterSearchState())
+
+        assertEquals(ratedRecipes, viewModel.state.value.filteredRecipes)
     }
 }
