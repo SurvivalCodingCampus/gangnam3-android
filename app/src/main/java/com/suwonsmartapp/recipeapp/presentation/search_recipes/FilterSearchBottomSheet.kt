@@ -31,15 +31,12 @@ import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
-private val times = listOf("All", "Newest", "Oldest", "Popularity")
-private val rates = listOf("5", "4", "3", "2", "1")
-private val categories = listOf(
-    "All", "Cereal", "Vegetables", "Dinner", "Chinese",
-    "Local Dish", "Fruit", "BreakFast", "Spanish", "Lunch",
-)
+private val times = FilterTime.entries
+private val rates = FilterRate.entries
+private val categories = FilterCategory.entries
 
 // 내가 좋아하는 카테고리 (별 표시)
-private val favoriteCategories = setOf("Dinner")
+private val favoriteCategories = setOf(FilterCategory.DINNER)
 
 @OptIn(ExperimentalMaterial3Api::class) // ModalBottomSheet가 실험적 API라 필요
 @Composable
@@ -87,22 +84,24 @@ private fun FilterSearchContent(
         // Time
         SectionTitle(text = "Time")
         Tabs(
-            labels = times,
-            selectedIndex = times.indexOf(filterState.time),
-            onValueChange = { index -> filterState = filterState.copy(time = times[index]) },
+            items = times,
+            selectedItem = filterState.time,
+            onValueChange = { filterState = filterState.copy(time = it) },
+            itemLabel = { it.label },
         )
         Spacer(modifier = Modifier.height(20.dp))
 
         // Rate (글자 + 별 아이콘을 slot으로 넣음)
         SectionTitle(text = "Rate")
         Tabs(
-            labels = rates,
-            selectedIndex = rates.indexOf(filterState.rate.toString()), // null이면 -1 → 선택 없음
-            onValueChange = { index -> filterState = filterState.copy(rate = rates[index].toInt()) },
+            items = rates,
+            selectedItem = filterState.rate, // null이면 선택 없음
+            onValueChange = { filterState = filterState.copy(rate = it) },
+            itemLabel = { it.value.toString() },
             horizontalArrangement = Arrangement.spacedBy(space = 15.dp),
-            tabContent = { label, contentColor ->
+            tabContent = { rate, contentColor ->
                 Text(
-                    text = label,
+                    text = rate.value.toString(),
                     color = contentColor,
                     style = AppTextStyles.smallerTextRegular,
                 )
@@ -110,7 +109,7 @@ private fun FilterSearchContent(
                 Icon(
                     modifier = Modifier.size(18.dp),
                     imageVector = Icons.Filled.Star,
-                    contentDescription = "별점 ${label}점",
+                    contentDescription = "별점 ${rate.value}점",
                     tint = contentColor,
                 )
             },
@@ -120,17 +119,18 @@ private fun FilterSearchContent(
         // Category (넘치면 다음 줄로)
         SectionTitle(text = "Category")
         Tabs(
-            labels = categories,
-            selectedIndex = categories.indexOf(filterState.category),
-            onValueChange = { index -> filterState = filterState.copy(category = categories[index]) },
-            tabContent = { label, contentColor ->
+            items = categories,
+            selectedItem = filterState.category,
+            onValueChange = { filterState = filterState.copy(category = it) },
+            itemLabel = { it.label },
+            tabContent = { category, contentColor ->
                 Text(
-                    text = label,
+                    text = category.label,
                     color = contentColor,
                     style = AppTextStyles.smallerTextRegular,
                 )
                 // 좋아하는 카테고리면 별 추가
-                if (label in favoriteCategories) {
+                if (category in favoriteCategories) {
                     Spacer(modifier = Modifier.width(5.dp))
                     Icon(
                         modifier = Modifier.size(18.dp),
@@ -172,9 +172,9 @@ private fun SectionTitle(text: String) {
 private fun FilterSearchContentPreview() {
     FilterSearchContent(
         initialState = FilterSearchState(
-            time = "Newest",
-            rate = 4,
-            category = "Local Dish",
+            time = FilterTime.NEWEST,
+            rate = FilterRate.FOUR,
+            category = FilterCategory.LOCAL_DISH,
         ),
         onFilterClick = {},
     )

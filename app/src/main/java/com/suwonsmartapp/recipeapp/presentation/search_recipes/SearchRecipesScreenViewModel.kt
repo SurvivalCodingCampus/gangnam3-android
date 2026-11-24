@@ -61,9 +61,9 @@ class SearchRecipesScreenViewModel(
                 } else {
                     recipeRepository.getRecipes(
                         query = query.ifEmpty { null },
-                        rate = filter.rate,
-                        category = if (filter.category == "All") null else filter.category,
-                        sort = if (filter.time == "All") null else filter.time.lowercase(),
+                        rate = filter.rate?.value,
+                        category = if (filter.category == FilterCategory.ALL) null else filter.category.label,
+                        sort = if (filter.time == FilterTime.ALL) null else filter.time.label.lowercase(),
                     )
                 }
                 updateRecipes(result)

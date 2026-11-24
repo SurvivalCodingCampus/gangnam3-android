@@ -117,12 +117,12 @@ class SearchRecipesScreenViewModelTest {
         val viewModel = SearchRecipesScreenViewModel(repository)
         advanceUntilIdle()
 
-        viewModel.onFilterChange(FilterSearchState(category = "French"))
+        viewModel.onFilterChange(FilterSearchState(category = FilterCategory.CHINESE))
         advanceUntilIdle()
 
         assertThat(viewModel.state.value.recipes())
-            .hasSize(2)
-            .allMatch { it.category == "French" }
+            .hasSize(1)
+            .allMatch { it.category == "Chinese" }
     }
 
     @Test
@@ -130,7 +130,7 @@ class SearchRecipesScreenViewModelTest {
         val viewModel = SearchRecipesScreenViewModel(repository)
         advanceUntilIdle()
 
-        viewModel.onFilterChange(FilterSearchState(rate = 5))
+        viewModel.onFilterChange(FilterSearchState(rate = FilterRate.FIVE))
         advanceUntilIdle()
 
         assertThat(viewModel.state.value.recipes())
@@ -143,7 +143,7 @@ class SearchRecipesScreenViewModelTest {
         val viewModel = SearchRecipesScreenViewModel(repository)
         advanceUntilIdle()
 
-        viewModel.onFilterChange(FilterSearchState(time = "Newest"))
+        viewModel.onFilterChange(FilterSearchState(time = FilterTime.NEWEST))
         advanceUntilIdle()
 
         assertThat(viewModel.state.value.recipes().map { it.id })
@@ -156,7 +156,7 @@ class SearchRecipesScreenViewModelTest {
         advanceUntilIdle()
 
         viewModel.onQueryChange("rice")
-        viewModel.onFilterChange(FilterSearchState(category = "Chinese"))
+        viewModel.onFilterChange(FilterSearchState(category = FilterCategory.CHINESE))
         advanceUntilIdle()
 
         assertThat(viewModel.state.value.recipes().map { it.name })
@@ -169,12 +169,12 @@ class SearchRecipesScreenViewModelTest {
         advanceUntilIdle()
 
         viewModel.onQueryChange("chicken")
-        viewModel.onFilterChange(FilterSearchState(category = "French"))
+        viewModel.onFilterChange(FilterSearchState(category = FilterCategory.CHINESE))
         advanceUntilIdle()
 
         val state = viewModel.state.value
         assertThat(state.query).isEqualTo("chicken")
-        assertThat(state.filter).isEqualTo(FilterSearchState(category = "French"))
+        assertThat(state.filter).isEqualTo(FilterSearchState(category = FilterCategory.CHINESE))
     }
 
     @Test
