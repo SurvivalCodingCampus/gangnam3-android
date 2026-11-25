@@ -10,10 +10,10 @@ import com.example.gangnam3.data.model.Recipe
 import com.example.gangnam3.data.repository.RecipeRepository
 import com.example.gangnam3.data.repository.RecipeRepositoryImpl
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
@@ -51,33 +51,33 @@ class SearchRecipesViewModel(
         observeSearchQuery()
     }
 
-    /** 저장소에서 전체 레시피를 읽어 원본 목록과 현재 검색 결과를 함께 갱신합니다. */
+    /** 저장소를 구독해 내용이 바뀔 때마다 원본 목록과 검색 결과를 함께 갱신합니다. */
     private fun loadAllRecipes() {
         viewModelScope.launch {
-            // 요청이 진행 중임을 표시해 화면이 결과 대신 로딩 표시를 보여주게 합니다.
             // 다시 시도할 때 이전 오류 문구가 남지 않도록 함께 지운다.
             _state.update { it.copy(isLoading = true, errorMessage = null) }
-            try {
-                val recipes = recipeRepository.getSavedRecipes()
-                // 로드 중 검색어가 바뀌었을 수 있으므로 완료 시점의 최신 상태를 기준으로 결과를 계산합니다.
-                _state.update { current ->
-                    current.copy(
-                        allRecipes = recipes,
-                        filteredRecipes = applyFilters(recipes, current.query, current.filter),
-                        isLoading = false
-                    )
+            recipeRepository.observeRecipes()
+                // catch는 코루틴 취소를 오류로 처리하지 않는다.
+                .catch { e ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            // 예외에 설명이 없을 때는 기본 문구를 쓴다.
+                            errorMessage = e.message ?: "레시피를 불러오지 못했습니다."
+                        )
+                    }
                 }
-            } catch (e: CancellationException) {
-                throw e // 코루틴 취소는 오류가 아니므로 다시 던진다.
-            } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        // 예외에 설명이 없을 때는 기본 문구를 쓴다.
-                        errorMessage = e.message ?: "레시피를 불러오지 못했습니다."
-                    )
+                .collect { recipes ->
+                    // 로드 중 검색어가 바뀌었을 수 있으므로 최신 상태를 기준으로 결과를 계산합니다.
+                    _state.update { current ->
+                        current.copy(
+                            allRecipes = recipes,
+                            filteredRecipes = applyFilters(recipes, current.query, current.filter),
+                            isLoading = false,
+                            errorMessage = null
+                        )
+                    }
                 }
-            }
         }
     }
 
@@ -135,7 +135,9 @@ class SearchRecipesViewModel(
         // 앞뒤 공백은 무시합니다. 빈 검색어는 모든 제목에 포함된 것으로 처리됩니다.
         val trimmed = query.trim()
         val matched = recipes.filter { recipe ->
-            recipe.title.contains(trimmed, ignoreCase = true) &&
+            // 제목이나 셰프 이름 중 하나에 검색어가 있으면 됩니다.
+            (recipe.title.contains(trimmed, ignoreCase = true) ||
+                recipe.chefName.contains(trimmed, ignoreCase = true)) &&
                 // 별점이 null이거나 카테고리가 All이면 해당 조건을 건너뜁니다.
                 (filter.selectedRate == null || recipe.rating >= filter.selectedRate) &&
                 (filter.selectedCategory == "All" ||

@@ -13,5 +13,9 @@ data class Recipe(
     // 홈 화면 카테고리 필터에 쓰는 분류. 지정하지 않으면 "All"이다.
     val category: String = "All",
     // 북마크 여부. 저장 목록용 모델이므로 기본값이 true다.
-    val isBookmarked: Boolean = true
+    val isBookmarked: Boolean = true,
+    // 실제 저장소(Room)의 id. 상세 화면을 열거나 북마크를 저장할 때 쓴다.
+    val sourceId: String = id.toString(),
+    // 사진이 없을 때 대신 보여줄 그림 문자
+    val emoji: String = ""
 )

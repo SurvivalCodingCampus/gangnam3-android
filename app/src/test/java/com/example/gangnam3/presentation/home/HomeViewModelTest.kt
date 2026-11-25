@@ -5,6 +5,7 @@ import com.example.gangnam3.data.repository.FakeRecipeRepository
 import com.example.gangnam3.data.repository.RecipeRepository
 import com.example.gangnam3.utils.MainDispatcherRule
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -75,6 +76,23 @@ class HomeViewModelTest {
 
         assertEquals(listOf(1), viewModel.ids())
         assertNull(viewModel.state.value.errorMessage)
+    }
+
+    @Test
+    fun `카테고리는 데이터에서 만들고 사라진 선택은 전체로 되돌린다`() = runTest {
+        // 값을 바꾸면 DB 변경처럼 다시 전달되는 저장소
+        val source = MutableStateFlow(recipes)
+        val viewModel = HomeViewModel(object : RecipeRepository {
+            override suspend fun getSavedRecipes() = source.value
+            override fun observeRecipes() = source
+        })
+        assertEquals(listOf("All", "Italian", "Indian"), viewModel.state.value.categories)
+        viewModel.onSelectCategory("Indian")
+
+        source.value = recipes.take(1)
+
+        assertEquals("All", viewModel.state.value.selectedCategory)
+        assertEquals(listOf(1), viewModel.ids())
     }
 
     @Test

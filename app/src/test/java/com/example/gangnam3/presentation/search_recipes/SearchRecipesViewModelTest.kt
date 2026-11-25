@@ -74,6 +74,16 @@ class SearchRecipesViewModelTest {
     private fun SearchRecipesViewModel.ids() = state.value.filteredRecipes.map { it.id }
 
     @Test
+    fun `셰프 이름으로도 검색된다`() = runTest {
+        val viewModel = SearchRecipesViewModel(repository)
+
+        viewModel.onQueryChange("nelly")
+        advanceTimeBy(301)
+
+        assertEquals(listOf(2), viewModel.ids())
+    }
+
+    @Test
     fun `별점 필터는 선택한 점수 이상만 남긴다`() = runTest {
         val viewModel = filterViewModel()
 

@@ -9,10 +9,10 @@ import com.example.gangnam3.data.datasource.MockRecipeDataSource
 import com.example.gangnam3.data.model.Recipe
 import com.example.gangnam3.data.repository.RecipeRepository
 import com.example.gangnam3.data.repository.RecipeRepositoryImpl
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -33,32 +33,38 @@ class HomeViewModel(
         loadRecipes()
     }
 
-    /** 목록을 불러와 현재 선택된 카테고리로 걸러 저장한다. */
+    /** 목록을 구독한다. 저장소의 내용이 바뀌면 현재 카테고리를 적용해 다시 표시한다. */
     private fun loadRecipes() {
         // ViewModel이 사라지면 자동으로 취소되는 코루틴
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessage = null) }
-            try {
-                // 저장소 함수 이름은 getSavedRecipes지만 여기서는 전체 목록의 원본으로 쓴다.
-                val recipes = recipeRepository.getSavedRecipes()
-                // update는 최신 상태(current)를 기준으로 바꾸므로, 로딩 중 선택한 카테고리도 반영된다.
-                _state.update { current ->
-                    current.copy(
-                        allRecipes = recipes,
-                        filteredRecipes = filterByCategory(recipes, current.selectedCategory),
-                        isLoading = false
-                    )
+            recipeRepository.observeRecipes()
+                // catch는 코루틴 취소를 오류로 처리하지 않는다.
+                .catch { e ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = e.message ?: "레시피를 불러오지 못했습니다."
+                        )
+                    }
                 }
-            } catch (e: CancellationException) {
-                throw e // 코루틴 취소는 오류가 아니므로 다시 던진다.
-            } catch (e: Exception) {
-                _state.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = e.message ?: "레시피를 불러오지 못했습니다."
-                    )
+                .collect { recipes ->
+                    // 최신 상태(current)를 기준으로 바꾸므로, 로딩 중 선택한 카테고리도 반영된다.
+                    _state.update { current ->
+                        // 실제 데이터에 있는 카테고리만 선택지로 보여준다.
+                        val categories = listOf("All") + recipes.map { it.category }.distinct().filter { it != "All" }
+                        // 고른 카테고리가 데이터에서 사라졌으면 전체로 되돌린다.
+                        val selected = current.selectedCategory.takeIf { it in categories } ?: "All"
+                        current.copy(
+                            categories = categories,
+                            selectedCategory = selected,
+                            allRecipes = recipes,
+                            filteredRecipes = filterByCategory(recipes, selected),
+                            isLoading = false,
+                            errorMessage = null
+                        )
+                    }
                 }
-            }
         }
     }
 
@@ -72,7 +78,7 @@ class HomeViewModel(
         }
     }
 
-    /** 해당 레시피의 북마크를 반전한다. 화면 상태만 바꾸며 저장소에는 기록하지 않는다. */
+    /** 해당 레시피의 북마크를 반전한다. 화면 상태만 바꾼다. 저장이 필요하면 Root의 onToggleBookmark를 쓴다. */
     fun onToggleBookmark(recipeId: Int) {
         _state.update { current ->
             val updatedAll = current.allRecipes.map { recipe ->

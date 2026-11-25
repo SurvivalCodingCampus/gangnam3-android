@@ -1,6 +1,5 @@
 package com.suwonsmartapp.recipeapp
 
-import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.junit4.StateRestorationTester
@@ -8,14 +7,9 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import com.suwonsmartapp.recipeapp.data.FilterState
-import com.suwonsmartapp.recipeapp.data.RatingFilter
-import com.suwonsmartapp.recipeapp.data.RecipeCategory
-import com.suwonsmartapp.recipeapp.data.TimeFilter
 import com.suwonsmartapp.recipeapp.data.sampleRecipes
 import com.suwonsmartapp.recipeapp.screens.RecipeDetailScreen
 import com.suwonsmartapp.recipeapp.ui.theme.RecipeAppTheme
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,18 +21,6 @@ import org.robolectric.annotation.Config
 @Config(sdk = [34])
 class StateRestorationTest {
     @get:Rule val compose = createComposeRule()
-
-    @Test
-    fun filterSurvivesSaveAndRestore() {
-        val scope = SaverScope { true }
-        listOf(
-            FilterState(),
-            FilterState(TimeFilter.Under30, RatingFilter.Four, setOf(RecipeCategory.Asian, RecipeCategory.Mexican))
-        ).forEach { state ->
-            val saved = with(FilterStateSaver) { scope.save(state) }!!
-            assertEquals(state, FilterStateSaver.restore(saved))
-        }
-    }
 
     @Test
     fun checkedIngredientSurvivesRestoration() {

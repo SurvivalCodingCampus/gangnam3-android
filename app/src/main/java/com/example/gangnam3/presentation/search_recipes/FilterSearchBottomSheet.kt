@@ -29,6 +29,7 @@ private val TextDark = Color(0xFF121212)
  * @param onApplyFilter 사용자가 적용 버튼을 눌렀을 때 확정된 필터 상태를 전달합니다.
  * @param modifier 바텀시트의 배치나 크기를 호출 측에서 조정할 때 사용합니다.
  * @param initialState 시트를 열 때 표시할 초기 선택값입니다. 값이 바뀌면 내부 선택도 다시 맞춥니다.
+ * @param categories 카테고리 선택지입니다. 지정하지 않으면 시안의 고정 목록을 씁니다.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -36,7 +37,8 @@ fun FilterSearchBottomSheet(
     onDismissRequest: () -> Unit,
     onApplyFilter: (FilterSearchState) -> Unit,
     modifier: Modifier = Modifier,
-    initialState: FilterSearchState = FilterSearchState()
+    initialState: FilterSearchState = FilterSearchState(),
+    categories: List<String> = FilterSearchState.categoryOptions
 ) {
     // 시트에서 사용자가 조작 중인 임시 필터입니다. remember의 키로 초기 상태를 사용해
     // 호출 측에서 다른 필터를 넘기면 내부 선택값도 새 값으로 초기화합니다.
@@ -54,6 +56,7 @@ fun FilterSearchBottomSheet(
     ) {
         FilterSearchSheetContent(
             filterState = filterState,
+            categories = categories,
             onTimeSelect = { time ->
                 filterState = filterState.copy(selectedTime = time)
             },
@@ -83,7 +86,8 @@ private fun FilterSearchSheetContent(
     onRateSelect: (Int) -> Unit,
     onCategorySelect: (String) -> Unit,
     onFilterClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    categories: List<String> = FilterSearchState.categoryOptions
 ) {
     // 세로로 항목을 쌓고, 시스템 내비게이션 영역과 겹치지 않도록 아래쪽 여백을 확보합니다.
     Column(
@@ -148,7 +152,7 @@ private fun FilterSearchSheetContent(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            FilterSearchState.categoryOptions.forEach { category ->
+            categories.forEach { category ->
                 // 명세의 시각 표현에 맞춰 Dinner 항목에만 별 아이콘을 표시합니다.
                 val isDinner = category == "Dinner"
                 FilterChipButton(

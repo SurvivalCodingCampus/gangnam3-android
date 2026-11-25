@@ -1,11 +1,14 @@
 package com.example.gangnam3.presentation.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Star
@@ -20,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,6 +48,7 @@ private val StarOrange = Color(0xFFFF9C00)
  * @param onSelectCategory 카테고리를 눌렀을 때의 콜백
  * @param onToggleBookmark 북마크를 눌렀을 때 레시피 id를 전달하는 콜백
  * @param onSearchClick 검색 영역이나 필터 버튼을 눌렀을 때의 콜백
+ * @param onRecipeClick 카드를 눌렀을 때의 콜백
  */
 @Composable
 fun HomeScreen(
@@ -51,7 +56,8 @@ fun HomeScreen(
     onSelectCategory: (String) -> Unit,
     onToggleBookmark: (Int) -> Unit,
     onSearchClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRecipeClick: (Recipe) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -59,6 +65,8 @@ fun HomeScreen(
             .background(Color.White)
             // 내용이 상태 표시줄과 겹치지 않도록 여백을 준다.
             .statusBarsPadding()
+            // 가로 화면처럼 높이가 부족해도 카드까지 볼 수 있게 한다.
+            .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -186,7 +194,8 @@ fun HomeScreen(
                 ) { recipe ->
                     HomeDishCard(
                         recipe = recipe,
-                        onBookmarkClick = { onToggleBookmark(recipe.id) }
+                        onBookmarkClick = { onToggleBookmark(recipe.id) },
+                        onClick = { onRecipeClick(recipe) }
                     )
                 }
             }
@@ -202,13 +211,15 @@ fun HomeScreen(
 fun HomeDishCard(
     recipe: Recipe,
     onBookmarkClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     // Box는 자식을 겹쳐 놓는다. 아래에 적은 요소일수록 앞쪽에 그려진다.
     Box(
         modifier = modifier
             .width(150.dp)
             .height(231.dp)
+            .clickable(onClick = onClick)
     ) {
         // 하단 회색 카드 본문
         Surface(
@@ -272,7 +283,7 @@ fun HomeDishCard(
                                 } else {
                                     Icons.Outlined.BookmarkBorder
                                 },
-                                contentDescription = "Bookmark",
+                                contentDescription = if (recipe.isBookmarked) "Remove bookmark" else "Bookmark",
                                 tint = if (recipe.isBookmarked) PrimaryGreen else GrayText,
                                 modifier = Modifier.size(14.dp)
                             )
@@ -283,20 +294,35 @@ fun HomeDishCard(
         }
 
         // 상단 돌출형 원형 음식 사진
-        AsyncImage(
-            model = recipe.imageUrl,
-            contentDescription = recipe.title,
-            contentScale = ContentScale.Crop,
-            // 불러오는 중이거나 실패했을 때 대신 보여줄 이미지
-            placeholder = painterResource(android.R.drawable.ic_menu_gallery),
-            error = painterResource(android.R.drawable.ic_menu_gallery),
-            modifier = Modifier
-                .size(110.dp)
-                .align(Alignment.TopCenter)
-                // 크기를 정한 뒤 원형으로 잘라낸다. Modifier는 적은 순서대로 적용된다.
-                .clip(CircleShape)
-                .background(Color.LightGray)
-        )
+        // 사진 주소가 없으면 그림 문자를 대신 보여준다.
+        if (recipe.imageUrl.isBlank() && recipe.emoji.isNotEmpty()) {
+            Box(
+                modifier = Modifier
+                    .size(110.dp)
+                    .align(Alignment.TopCenter)
+                    .clip(CircleShape)
+                    .background(Color(0xFFE5F2EF)),
+                contentAlignment = Alignment.Center
+            ) {
+                // 장식이므로 TalkBack에서는 읽지 않는다.
+                Text(recipe.emoji, fontSize = 48.sp, modifier = Modifier.clearAndSetSemantics { })
+            }
+        } else {
+            AsyncImage(
+                model = recipe.imageUrl,
+                contentDescription = recipe.title,
+                contentScale = ContentScale.Crop,
+                // 불러오는 중이거나 실패했을 때 대신 보여줄 이미지
+                placeholder = painterResource(android.R.drawable.ic_menu_gallery),
+                error = painterResource(android.R.drawable.ic_menu_gallery),
+                modifier = Modifier
+                    .size(110.dp)
+                    .align(Alignment.TopCenter)
+                    // 크기를 정한 뒤 원형으로 잘라낸다. Modifier는 적은 순서대로 적용된다.
+                    .clip(CircleShape)
+                    .background(Color.LightGray)
+            )
+        }
 
         // 우측 상단 별점 배지 (★ 4.5)
         Surface(
