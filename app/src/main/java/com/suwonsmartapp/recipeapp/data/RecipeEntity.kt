@@ -29,7 +29,6 @@ data class RecipeEntity(
     val thumbnailUrl: String? = null,
 )
 
-<<<<<<< HEAD
 /** 저장(북마크) 목록 — 레시피 삭제 시 함께 정리되도록 CASCADE FK. */
 @Entity(tableName = "saved_recipes", foreignKeys = [androidx.room.ForeignKey(
     entity = RecipeEntity::class,
@@ -39,10 +38,6 @@ data class RecipeEntity(
 data class SavedRecipeEntity(@PrimaryKey val recipeId: String)
 
 @Database(entities = [RecipeEntity::class, SavedRecipeEntity::class], version = 2, exportSchema = false)
-=======
-/** 로컬 DB 정의 — 버전 1, 스키마 export 비활성(스캐폴드; 시딩/마이그레이션 정책은 P1 게이트). */
-@Database(entities = [RecipeEntity::class], version = 1, exportSchema = false)
->>>>>>> recipe/student/01_박강원
 abstract class RecipeDatabase : androidx.room.RoomDatabase() {
     abstract fun recipeDao(): RecipeDao
 }

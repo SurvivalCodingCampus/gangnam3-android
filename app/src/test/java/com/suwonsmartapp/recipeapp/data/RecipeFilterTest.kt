@@ -23,6 +23,22 @@ class RecipeFilterTest {
     }
 
     @Test
+    fun `query ignores surrounding whitespace`() {
+        assertEquals(listOf("r5"), recipes.filter { it.matches(" miso ", FilterState()) }.map { it.id })
+    }
+
+    @Test
+    fun `share text lists ingredients and steps and omits empty sections`() {
+        val recipe = recipes.first()
+        val text = recipe.toShareText()
+        assertTrue(text.startsWith("${recipe.title} - ${recipe.chef}"))
+        assertTrue(text.contains("- Fresh Eggs 2 pcs"))
+        assertTrue(text.contains("4. ${recipe.steps.last()}"))
+        val bare = recipe.copy(description = "", ingredients = emptyList(), steps = emptyList()).toShareText()
+        assertEquals("${recipe.title} - ${recipe.chef}", bare)
+    }
+
+    @Test
     fun `Under15 excludes the 15 minute boundary`() {
         // r3(10)만 통과, r1(20)은 제외
         assertEquals(listOf("r3"), recipes.filter { it.matches("", FilterState(time = TimeFilter.Under15)) }.map { it.id })

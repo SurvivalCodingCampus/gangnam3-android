@@ -14,7 +14,7 @@ class CallbackTest {
     val composeTestRule = createComposeRule()
 
     @Test
-    fun `버튼 클릭 콜백이 호출되는지 테스트`() {
+    fun 버튼_클릭_콜백이_호출되는지_테스트() {
         var callbackExecuted = false
 
         composeTestRule.setContent {

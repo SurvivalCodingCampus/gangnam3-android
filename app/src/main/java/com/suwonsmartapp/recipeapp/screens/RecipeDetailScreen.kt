@@ -1,10 +1,6 @@
 package com.suwonsmartapp.recipeapp.screens
 
 import androidx.compose.foundation.background
-<<<<<<< HEAD
-=======
-import androidx.compose.foundation.clickable
->>>>>>> recipe/student/01_박강원
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-<<<<<<< HEAD
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -23,11 +18,6 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-=======
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
->>>>>>> recipe/student/01_박강원
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -46,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-<<<<<<< HEAD
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.heading
@@ -57,24 +46,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.suwonsmartapp.recipeapp.R
-=======
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import com.suwonsmartapp.recipeapp.R
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
->>>>>>> recipe/student/01_박강원
 import com.suwonsmartapp.recipeapp.data.Recipe
 import com.suwonsmartapp.recipeapp.data.formatRating
 import com.suwonsmartapp.recipeapp.data.formatReviews
 import com.suwonsmartapp.recipeapp.data.sampleRecipes
 import com.suwonsmartapp.recipeapp.ui.theme.RecipeAppTheme
-<<<<<<< HEAD
-=======
-import com.suwonsmartapp.recipeapp.ui.theme.RecipePrimary
-import com.suwonsmartapp.recipeapp.ui.theme.RecipeRed
->>>>>>> recipe/student/01_박강원
 import com.suwonsmartapp.recipeapp.ui.theme.RecipeStar
 
 /** 명세 §3.3 레시피 상세 — 히어로/평점/셰프(+팔로우 토글 데모)/재료·단계 탭/하단 CTA. */
@@ -91,19 +67,13 @@ fun RecipeDetailScreen(
     // 재료 체크 상태(데모용 로컬 상태 — 실제 앱은 저장 연동)
     val checkedIngredients = remember { mutableStateListOf<String>() }
     var following by remember { mutableStateOf(false) }
-<<<<<<< HEAD
     val colorScheme = MaterialTheme.colorScheme
 
     Column(modifier = Modifier.fillMaxSize().background(colorScheme.background)) {
-=======
-
-    Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
->>>>>>> recipe/student/01_박강원
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-<<<<<<< HEAD
             TextButton(onClick = onBack) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     BackArrow()
@@ -112,17 +82,11 @@ fun RecipeDetailScreen(
                 }
             }
             Spacer(Modifier.weight(1f))
-=======
-            TextButton(onClick = onBack) { Text(stringResource(R.string.detail_back)) }
-            Spacer(Modifier.weight(1f))
-            TextButton(onClick = onShare) { Text(stringResource(R.string.detail_share)) }
->>>>>>> recipe/student/01_박강원
             HeartToggle(
                 saved = saved,
                 onClick = { onToggleBookmark(recipe.id) },
                 modifier = Modifier.padding(end = 4.dp)
             )
-<<<<<<< HEAD
             TextButton(onClick = onShare) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     // 공유 이모지는 장식 — 라벨만 낭독.
@@ -274,117 +238,6 @@ fun RecipeDetailScreen(
                 }
                 Spacer(Modifier.height(16.dp))
             }
-=======
-        }
-        HorizontalDivider()
-        RecipeMedia(
-            emoji = recipe.emoji,
-            imageUrl = recipe.thumbnailUrl,
-            modifier = Modifier.fillMaxWidth().height(190.dp),
-            emojiSize = 72.sp,
-            tint = RecipePrimary.copy(alpha = 0.12f),
-            rounded = 20.dp
-        )
-        Spacer(Modifier.height(12.dp))
-        Text(
-            recipe.title,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Spacer(Modifier.height(6.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("⭐️", fontSize = 14.sp, color = RecipeStar)
-            Text(
-                " ${formatRating(recipe.rating)} (${formatReviews(recipe.reviews)} Reviews)",
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-        Spacer(Modifier.height(12.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(recipe.chef, fontSize = 15.sp, color = MaterialTheme.colorScheme.onBackground)
-            Spacer(Modifier.weight(1f))
-            OutlinedButton(onClick = { following = !following }) {
-                Text(if (following) stringResource(R.string.detail_following) else stringResource(R.string.detail_follow))
-            }
-        }
-        Spacer(Modifier.height(16.dp))
-        SegmentedTabs(
-            labels = listOf(
-                stringResource(R.string.detail_tab_ingredients, recipe.ingredients.size),
-                stringResource(R.string.detail_tab_instructions)
-            ),
-            selectedIndex = tab.ordinal,
-            onValueChange = { tab = DetailTab.entries[it] }
-        )
-        Spacer(Modifier.height(12.dp))
-        when (tab) {
-            DetailTab.Ingredients -> Column {
-                if (recipe.ingredients.isEmpty()) {
-                    Text(stringResource(R.string.detail_no_ingredients), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                recipe.ingredients.forEach { ingredient ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Checkbox(
-                            checked = ingredient.name in checkedIngredients,
-                            onCheckedChange = { checked ->
-                                if (checked) checkedIngredients.add(ingredient.name)
-                                else checkedIngredients.remove(ingredient.name)
-                            }
-                        )
-                        Text(ingredient.name, fontSize = 15.sp, modifier = Modifier.weight(1f))
-                        Text(
-                            ingredient.amount,
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-
-            DetailTab.Instructions -> {
-                if (recipe.steps.isEmpty()) {
-                    Text(stringResource(R.string.detail_no_steps), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-                recipe.steps.forEachIndexed { index, step ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            "${index + 1}.",
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = RecipePrimary
-                        )
-                        Text(
-                            step,
-                            fontSize = 15.sp,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-            }
-        }
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = onStartCooking,
-            modifier = Modifier.fillMaxWidth().height(52.dp),
-            shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = RecipePrimary,
-                contentColor = Color.White
-            )
-        ) {
-            Text(stringResource(R.string.detail_cta), fontSize = 16.sp)
->>>>>>> recipe/student/01_박강원
         }
     }
 }
@@ -402,12 +255,8 @@ private fun SegmentedTabs(
         modifier = Modifier
             .fillMaxWidth()
             .background(colorScheme.surfaceVariant, RoundedCornerShape(16.dp))
-<<<<<<< HEAD
             .padding(4.dp)
             .selectableGroup(),
-=======
-            .padding(4.dp),
->>>>>>> recipe/student/01_박강원
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         labels.forEachIndexed { index, label ->
@@ -415,36 +264,25 @@ private fun SegmentedTabs(
             Box(
                 modifier = Modifier
                     .weight(1f)
-<<<<<<< HEAD
                     // 44dp는 최소값 — 글자 확대 시 2줄이 되어도 잘리지 않게 성장 허용.
                     .heightIn(min = 44.dp)
-=======
-                    .height(44.dp)
->>>>>>> recipe/student/01_박강원
                     .background(
                         color = if (selected) colorScheme.primaryContainer else Color.Transparent,
                         shape = RoundedCornerShape(12.dp)
                     )
-<<<<<<< HEAD
                     .selectable(
                         selected = selected,
                         role = Role.Tab,
                         onClick = { onValueChange(index) }
                     )
                     .padding(vertical = 10.dp),
-=======
-                    .clickable { onValueChange(index) },
->>>>>>> recipe/student/01_박강원
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = label,
                     fontSize = 14.sp,
-<<<<<<< HEAD
                     lineHeight = 18.sp,
                     textAlign = TextAlign.Center,
-=======
->>>>>>> recipe/student/01_박강원
                     fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                     color = if (selected) colorScheme.onPrimaryContainer else colorScheme.onSurfaceVariant
                 )

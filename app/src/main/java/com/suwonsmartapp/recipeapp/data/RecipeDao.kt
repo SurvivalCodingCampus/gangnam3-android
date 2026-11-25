@@ -4,11 +4,8 @@ import androidx.room.Dao
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Insert
-<<<<<<< HEAD
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
-=======
->>>>>>> recipe/student/01_박강원
 
 /**
  * Recipes 테이블 접근 — 골격(조회 + 전체 교체).
@@ -16,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface RecipeDao {
-<<<<<<< HEAD
     @Query("SELECT * FROM recipes ORDER BY rowid")
     fun getAll(): List<RecipeEntity>
 
@@ -55,11 +51,5 @@ interface RecipeDao {
     fun clearBookmarks()
 
     @androidx.room.Upsert
-=======
-    @Query("SELECT * FROM recipes")
-    fun getAll(): List<RecipeEntity>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
->>>>>>> recipe/student/01_박강원
     fun upsertAll(entities: List<RecipeEntity>)
 }
