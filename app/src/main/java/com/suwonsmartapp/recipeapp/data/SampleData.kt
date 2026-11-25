@@ -142,5 +142,6 @@ val sampleRecipes: List<Recipe> = listOf(
 /** 데모 큐레이션 — Featured로 노출할 레시피 id(저장소 무관 계층). */
 val featuredRecipeIds: Set<String> = setOf("r1", "r2")
 
+// 미리 골라 둔 추천/신규 목록. 샘플 데이터 기준이며 DB 변경은 반영되지 않는다.
 val sampleFeatured: List<Recipe> = sampleRecipes.filter { it.id in featuredRecipeIds }
 val sampleNew: List<Recipe> = sampleRecipes.filter { it.isNew }

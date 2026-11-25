@@ -28,9 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,10 +62,11 @@ fun RecipeDetailScreen(
     onShare: () -> Unit,
     onStartCooking: () -> Unit = {}
 ) {
-    var tab by remember { mutableStateOf(DetailTab.Ingredients) }
-    // 재료 체크 상태(데모용 로컬 상태 — 실제 앱은 저장 연동)
-    val checkedIngredients = remember { mutableStateListOf<String>() }
-    var following by remember { mutableStateOf(false) }
+    // recipe.id를 키로 써서 다른 레시피를 열면 초기화되고, 회전 시에는 유지된다.
+    var tab by rememberSaveable(recipe.id) { mutableStateOf(DetailTab.Ingredients) }
+    // 재료 체크 상태(데모용 로컬 상태 — 실제 앱은 저장 연동). 이름이 같은 재료를 구분하도록 위치로 기억한다.
+    var checkedIngredients by rememberSaveable(recipe.id) { mutableStateOf(listOf<Int>()) }
+    var following by rememberSaveable(recipe.id) { mutableStateOf(false) }
     val colorScheme = MaterialTheme.colorScheme
 
     Column(modifier = Modifier.fillMaxSize().background(colorScheme.background)) {
@@ -82,6 +82,7 @@ fun RecipeDetailScreen(
                 }
             }
             Spacer(Modifier.weight(1f))
+            // 북마크 상태는 DB가 원본이므로 여기서는 변경 요청만 전달한다.
             HeartToggle(
                 saved = saved,
                 onClick = { onToggleBookmark(recipe.id) },
@@ -153,6 +154,7 @@ fun RecipeDetailScreen(
                     }
                 }
                 Spacer(Modifier.height(16.dp))
+                // 재료/조리 단계 전환 탭.
                 SegmentedTabs(
                     labels = listOf(
                         stringResource(R.string.detail_tab_ingredients, recipe.ingredients.size),
@@ -167,8 +169,8 @@ fun RecipeDetailScreen(
                         if (recipe.ingredients.isEmpty()) {
                             Text(stringResource(R.string.detail_no_ingredients), color = colorScheme.onSurfaceVariant)
                         }
-                        recipe.ingredients.forEach { ingredient ->
-                            val checked = ingredient.name in checkedIngredients
+                        recipe.ingredients.forEachIndexed { index, ingredient ->
+                            val checked = index in checkedIngredients
                             // 체크박스+재료명+계량을 한 행/한 포커스로 묶는다.
                             Row(
                                 modifier = Modifier
@@ -178,8 +180,9 @@ fun RecipeDetailScreen(
                                         value = checked,
                                         role = Role.Checkbox,
                                         onValueChange = { isChecked ->
-                                            if (isChecked) checkedIngredients.add(ingredient.name)
-                                            else checkedIngredients.remove(ingredient.name)
+                                            checkedIngredients =
+                                                if (isChecked) checkedIngredients + index
+                                                else checkedIngredients - index
                                         }
                                     )
                                     .padding(vertical = 4.dp),
@@ -242,8 +245,14 @@ fun RecipeDetailScreen(
     }
 }
 
+/** 탭 순서. ordinal을 선택 인덱스로 쓰므로 라벨 순서와 같아야 한다. */
 private enum class DetailTab { Ingredients, Instructions }
 
+/**
+ * 배경이 이어진 세그먼트 형태의 탭.
+ * @param selectedIndex 선택된 탭의 위치
+ * @param onValueChange 탭을 눌렀을 때 새 위치를 전달하는 콜백
+ */
 @Composable
 private fun SegmentedTabs(
     labels: List<String>,

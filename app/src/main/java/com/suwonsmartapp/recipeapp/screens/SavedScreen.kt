@@ -45,6 +45,7 @@ fun SavedScreen(
     onClearAll: () -> Unit,
     onOpenRecipe: (String) -> Unit = {}
 ) {
+    // 전체 목록에서 북마크한 레시피만 고른다. 순서는 원본 목록을 따른다.
     val saved = recipes.filter { it.id in bookmarks }
     Column(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         Row(
@@ -60,6 +61,7 @@ fun SavedScreen(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
+            // 지울 항목이 없으면 전체 삭제를 비활성화한다.
             TextButton(onClick = onClearAll, enabled = saved.isNotEmpty()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("🗑️", modifier = Modifier.clearAndSetSemantics { }, fontSize = 14.sp)
@@ -68,6 +70,7 @@ fun SavedScreen(
                 }
             }
         }
+        // 저장한 항목이 없으면 안내를, 있으면 목록을 보여준다.
         if (saved.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize().padding(32.dp),
@@ -106,6 +109,7 @@ fun SavedScreen(
     }
 }
 
+/** 저장 목록의 한 행. 행을 누르면 상세로, 하트를 누르면 북마크만 변경된다. */
 @Composable
 private fun SavedRow(recipe: Recipe, saved: Boolean, onToggle: () -> Unit, onOpen: () -> Unit) {
     val openLabel = stringResource(R.string.open_recipe, recipe.title)

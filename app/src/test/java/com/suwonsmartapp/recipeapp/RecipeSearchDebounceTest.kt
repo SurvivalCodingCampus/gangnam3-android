@@ -3,6 +3,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 
+/** 실행해서 출력으로 확인하는 예제(JUnit 테스트 아님). */
 fun main() = runBlocking {
     // 1. Dispatchers.IO에서 동작하며 로딩 메시지를 방출하는 Flow
     flow {

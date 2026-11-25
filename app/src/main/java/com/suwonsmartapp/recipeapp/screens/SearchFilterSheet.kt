@@ -54,10 +54,12 @@ fun SearchFilterSheet(
     onApply: (FilterState) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // 시트 안의 임시 선택값. Apply 전에는 실제 필터에 반영되지 않는다.
     var time by remember(state) { mutableStateOf(state.time) }
     var rating by remember(state) { mutableStateOf(state.rating) }
     var categories by remember(state) { mutableStateOf(state.categories) }
 
+    // 바깥을 누르거나 아래로 내리면 변경을 버리고 닫는다.
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         shape = RoundedTopCorners,
@@ -101,6 +103,7 @@ fun SearchFilterSheet(
                     modifier = Modifier.fillMaxWidth().selectableGroup(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    // 조리 시간 — 하나만 고르는 라디오 버튼.
                     TimeFilter.entries.forEach { option ->
                         Row(
                             modifier = Modifier.heightIn(min = 48.dp).selectable(
@@ -122,6 +125,7 @@ fun SearchFilterSheet(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // 최소 평점 — 하나만 고르는 칩.
                     RatingFilter.entries.forEach { option ->
                         FilterChip(
                             selected = option == rating,
@@ -137,6 +141,7 @@ fun SearchFilterSheet(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    // 카테고리 — 여러 개 선택 가능. 아무것도 고르지 않으면 전체이므로 All은 제외한다.
                     RecipeCategory.entries.filter { it != RecipeCategory.All }.forEach { category ->
                         FilterChip(
                             selected = categories.contains(category),
@@ -153,6 +158,7 @@ fun SearchFilterSheet(
                 }
                 Spacer(Modifier.height(16.dp))
                 Button(
+                    // 임시 선택값을 한 번에 확정해 호출자에게 전달한다.
                     onClick = { onApply(FilterState(time = time, rating = rating, categories = categories)) },
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()

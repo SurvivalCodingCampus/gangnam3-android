@@ -2,6 +2,7 @@
     <string name="app_name">RecipeApp</string>
     <string name="bookmark_save">북마크 저장</string>
     <string name="bookmark_remove">북마크 해제</string>
+    <string name="bookmark_error">북마크를 변경하지 못했습니다.</string>
     <string name="open_filter">필터 열기</string>
     <string name="open_profile">프로필 열기</string>
     <string name="open_recipe">레시피 상세 열기: %1$s</string>

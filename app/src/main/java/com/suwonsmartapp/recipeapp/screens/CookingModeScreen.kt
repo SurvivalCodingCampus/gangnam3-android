@@ -52,6 +52,7 @@ fun CookingModeScreen(
     onStepChange: (Int) -> Unit,
     onDone: () -> Unit
 ) {
+    // 호출자가 범위를 벗어난 값을 넘겨도 안전하도록 0~마지막 단계로 보정한다.
     val safeIndex = index.coerceIn(0, (steps.size - 1).coerceAtLeast(0))
     val colorScheme = MaterialTheme.colorScheme
 
@@ -66,6 +67,7 @@ fun CookingModeScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // 상단 닫기 버튼 — 완료와 똑같이 조리 모드를 종료한다.
             TextButton(onClick = onDone) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     BackArrow()
@@ -146,6 +148,7 @@ fun CookingModeScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Button(
+                // 첫 단계에서는 이전 버튼을 비활성화한다.
                 onClick = { if (safeIndex > 0) onStepChange(safeIndex - 1) },
                 enabled = safeIndex > 0,
                 shape = RoundedCornerShape(14.dp),
@@ -159,6 +162,7 @@ fun CookingModeScreen(
             ) { Text(stringResource(R.string.cooking_prev), fontSize = 15.sp) }
             Button(
                 onClick = {
+                    // 마지막 단계가 아니면 다음 단계로, 마지막이거나 단계가 없으면 종료한다.
                     if (steps.isNotEmpty() && safeIndex < steps.size - 1) onStepChange(safeIndex + 1)
                     else onDone()
                 },

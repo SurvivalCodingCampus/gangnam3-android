@@ -69,7 +69,9 @@ fun HomeScreen(
     onOpenRecipe: (String) -> Unit,
     onOpenProfile: () -> Unit
 ) {
+    // 검색어나 필터가 하나라도 있으면 추천 목록 대신 검색 결과를 보여준다.
     val filtering = query.isNotBlank() || filter != FilterState()
+    // 입력이 바뀔 때만 다시 계산한다.
     val results = remember(recipes, query, filter) {
         recipes.filter { it.matches(query, filter) }
     }
@@ -142,6 +144,7 @@ fun HomeScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
+            // key를 지정해 목록이 바뀌어도 각 행의 상태가 올바른 레시피를 따라가게 한다.
             items(results, key = { it.id }) { recipe ->
                 RecipeRow(recipe = recipe, bookmarks = bookmarks, onToggleBookmark = onToggleBookmark, onOpen = { onOpenRecipe(recipe.id) })
             }
@@ -178,6 +181,7 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }
+                // LazyColumn 안에 세로 스크롤 그리드를 중첩할 수 없어 2개씩 한 행으로 묶는다.
                 items(newRecipes.chunked(2)) { pair ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -190,6 +194,7 @@ fun HomeScreen(
                                 onOpen = { onOpenRecipe(recipe.id) }
                             )
                         }
+                        // 홀수 개일 때 마지막 카드가 가로 전체로 늘어나지 않도록 빈칸을 채운다.
                         if (pair.size == 1) Spacer(Modifier.weight(1f))
                     }
                 }
@@ -198,6 +203,7 @@ fun HomeScreen(
     }
 }
 
+/** 홈 칩은 단일 선택이다. All은 카테고리 조건을 비운다. */
 private fun FilterState.withCategory(category: RecipeCategory) = copy(
     categories = when (category) {
         RecipeCategory.All -> emptySet()
@@ -205,6 +211,7 @@ private fun FilterState.withCategory(category: RecipeCategory) = copy(
     }
 )
 
+/** 검색 입력창과 필터 열기 버튼. */
 @Composable
 private fun HomeSearchBar(
     query: String,
@@ -234,6 +241,7 @@ private fun HomeSearchBar(
     )
 }
 
+/** 가로로 스크롤되는 카테고리 선택 칩. */
 @Composable
 private fun HomeCategoryChips(
     filter: FilterState,
@@ -247,6 +255,7 @@ private fun HomeCategoryChips(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         RecipeCategory.entries.forEach { category ->
+            // All 칩은 선택된 카테고리가 하나도 없을 때 켜진 것으로 표시한다.
             val selected = if (category == RecipeCategory.All) {
                 filter.categories.isEmpty()
             } else {
@@ -261,6 +270,7 @@ private fun HomeCategoryChips(
     }
 }
 
+/** 가로 전체 폭 레시피 카드(추천·검색 결과 공용). */
 @Composable
 private fun RecipeRow(
     recipe: Recipe,
@@ -308,6 +318,7 @@ private fun RecipeRow(
     }
 }
 
+/** 2열로 배치하는 신규 레시피 카드. */
 @Composable
 private fun RecipeGridCard(recipe: Recipe, modifier: Modifier = Modifier, onOpen: () -> Unit) {
     val openLabel = stringResource(R.string.open_recipe, recipe.title)

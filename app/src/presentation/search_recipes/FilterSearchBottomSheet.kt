@@ -18,6 +18,14 @@ import androidx.compose.ui.unit.sp
 private val PrimaryGreen = Color(0xFF129575)
 private val TextDark = Color(0xFF121212)
 
+/**
+ * 검색 필터 바텀시트.
+ *
+ * 선택값을 시트 안에 임시로 보관하다가 Filter 버튼을 누르면 한 번에 전달한다.
+ * @param onDismissRequest 시트를 닫아 달라는 요청
+ * @param onApplyFilter 확정한 필터를 전달하는 콜백
+ * @param initialState 시트를 열 때 표시할 기존 필터
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun FilterSearchBottomSheet(
@@ -27,7 +35,9 @@ fun FilterSearchBottomSheet(
     initialState: FilterSearchState = FilterSearchState()
 ) {
     // 바텀시트 내부에서 관리하는 FilterSearchState
+    // initialState가 바뀌면 임시 선택값도 그 값으로 다시 시작한다.
     var filterState by remember(initialState) { mutableStateOf(initialState) }
+    // 중간 높이에서 멈추지 않고 바로 전체 높이로 펼친다.
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     ModalBottomSheet(
@@ -40,6 +50,7 @@ fun FilterSearchBottomSheet(
         FilterSearchSheetContent(
             filterState = filterState,
             onTimeSelect = { time ->
+                // copy로 해당 값만 바꾼 새 상태를 만들어 화면을 다시 그린다.
                 filterState = filterState.copy(selectedTime = time)
             },
             onRateSelect = { rate ->
@@ -51,6 +62,7 @@ fun FilterSearchBottomSheet(
                 filterState = filterState.copy(selectedCategory = category)
             },
             onFilterClick = {
+                // 선택값을 먼저 전달한 뒤 시트를 닫는다.
                 onApplyFilter(filterState)
                 onDismissRequest()
             }
@@ -58,6 +70,7 @@ fun FilterSearchBottomSheet(
     }
 }
 
+/** 시트의 내용(Stateless). 시트와 분리해 미리보기에서 따로 확인할 수 있다. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun FilterSearchSheetContent(
@@ -88,6 +101,7 @@ private fun FilterSearchSheetContent(
         // 1. Time 필터 섹션
         FilterSectionTitle(title = "Time")
         Spacer(modifier = Modifier.height(10.dp))
+        // 공간이 부족하면 다음 줄로 넘기는 배치
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -131,6 +145,7 @@ private fun FilterSearchSheetContent(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             FilterSearchState.categoryOptions.forEach { category ->
+                // 시안에 따라 Dinner 칩에만 별 아이콘을 붙인다.
                 val isDinner = category == "Dinner"
                 FilterChipButton(
                     text = category,
@@ -167,6 +182,7 @@ private fun FilterSearchSheetContent(
     }
 }
 
+/** Time, Rate, Category 구역의 제목. */
 @Composable
 private fun FilterSectionTitle(
     title: String,
@@ -181,6 +197,11 @@ private fun FilterSectionTitle(
     )
 }
 
+/**
+ * 필터 칩 버튼.
+ * @param selected 선택 여부. 배경색과 테두리를 결정한다.
+ * @param showStar 글자 뒤에 별 아이콘을 붙일지 여부
+ */
 @Composable
 private fun FilterChipButton(
     text: String,
@@ -189,6 +210,7 @@ private fun FilterChipButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // 선택되면 초록 배경에 흰 글자, 아니면 흰 배경에 초록 글자와 테두리를 쓴다.
     val containerColor = if (selected) PrimaryGreen else Color.White
     val contentColor = if (selected) Color.White else PrimaryGreen
     val borderStroke = if (selected) null else BorderStroke(1.dp, PrimaryGreen)
@@ -225,6 +247,7 @@ private fun FilterChipButton(
     }
 }
 
+/** 칩을 눌러 선택이 바뀌는 모습까지 확인하는 미리보기. */
 @Preview(showBackground = true)
 @Composable
 fun FilterSearchSheetContentPreview() {
@@ -237,3 +260,4 @@ fun FilterSearchSheetContentPreview() {
         onCategorySelect = { previewState = previewState.copy(selectedCategory = it) },
         onFilterClick = {}
     )
+}

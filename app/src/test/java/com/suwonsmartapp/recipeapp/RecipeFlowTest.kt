@@ -2,6 +2,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 
+/** 실행해서 출력으로 확인하는 예제(JUnit 테스트 아님). */
 fun main() = runBlocking {
     // 1부터 5까지 100ms 간격으로 방출하는 Flow 생성
     flow {

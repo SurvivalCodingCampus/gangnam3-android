@@ -153,7 +153,7 @@ fun SearchRecipesScreen(
                 ),
                 modifier = Modifier
                     .weight(1f)
-                    .height(46.dp)
+                    .heightIn(min = 56.dp) // 46dp 고정이면 입력 글자가 잘린다
             )
 
             Surface(
@@ -207,6 +207,18 @@ fun SearchRecipesScreen(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = PrimaryGreen)
+            }
+        // 오류 문구가 있으면 우선 표시하고, 없으면 빈 결과 안내를 표시한다.
+        } else if (state.errorMessage != null || state.filteredRecipes.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.errorMessage ?: "검색 결과가 없습니다.",
+                    fontSize = 14.sp,
+                    color = if (state.errorMessage != null) Color.Red else GrayText
+                )
             }
         } else {
             LazyVerticalGrid(
