@@ -33,35 +33,8 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.component.auth.SocialSignInSection
 import com.suwonsmartapp.recipeapp.presentation.component.button.BigButton
 import com.suwonsmartapp.recipeapp.presentation.component.input.InputField
-import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
-
-@Preview(showBackground = true)
-@Composable
-private fun SignUpScreenPreview() {
-    var name by rememberSaveable { mutableStateOf("") }
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var confirmPassword by rememberSaveable { mutableStateOf("") }
-    var isTermsAccepted by rememberSaveable { mutableStateOf(false) }
-
-    SignUpScreen(
-        name = name,
-        email = email,
-        password = password,
-        confirmPassword = confirmPassword,
-        isTermsAccepted = isTermsAccepted,
-        onNameChange = { name = it },
-        onEmailChange = { email = it },
-        onPasswordChange = { password = it },
-        onConfirmPasswordChange = { confirmPassword = it },
-        onTermsClick = { isTermsAccepted = !isTermsAccepted },
-        onSignUpClick = {},
-        onGoogleClick = {},
-        onFacebookClick = {},
-        onSignInClick = {},
-    )
-}
+import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
+import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
 @Composable
 fun SignUpScreen(
@@ -222,3 +195,31 @@ private fun TermsCheckBox(isChecked: Boolean) {
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun SignUpScreenPreview() {
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var isTermsAccepted by rememberSaveable { mutableStateOf(false) }
+
+    SignUpScreen(
+        name = name,
+        email = email,
+        password = password,
+        confirmPassword = confirmPassword,
+        isTermsAccepted = isTermsAccepted,
+        onNameChange = { name = it },
+        onEmailChange = { email = it },
+        onPasswordChange = { password = it },
+        onConfirmPasswordChange = { confirmPassword = it },
+        onTermsClick = { isTermsAccepted = !isTermsAccepted },
+        onSignUpClick = {},
+        onGoogleClick = {},
+        onFacebookClick = {},
+        onSignInClick = {},
+    )
+}
+

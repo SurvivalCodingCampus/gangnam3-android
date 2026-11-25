@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
 
 
-@Preview(showBackground = true)
 @Composable
 fun MyPhoto() {
     Image(
@@ -23,4 +22,10 @@ fun MyPhoto() {
         contentDescription = "아이유",
         contentScale = ContentScale.Crop,
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MyPhotoPreview() {
+    MyPhoto()
 }

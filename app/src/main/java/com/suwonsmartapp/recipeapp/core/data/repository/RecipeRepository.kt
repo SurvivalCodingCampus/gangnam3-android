@@ -1,11 +1,15 @@
 package com.suwonsmartapp.recipeapp.core.data.repository
 
-import com.suwonsmartapp.recipeapp.core.RecipeError
-import com.suwonsmartapp.recipeapp.core.Result
+import com.suwonsmartapp.recipeapp.core.network.NetworkError
+import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
-import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
-    fun getRecipe(id: Long): Flow<Result<Recipe, RecipeError>>
-    fun getRecipes(): Flow<Result<List<Recipe>, RecipeError>>
+    // 조건을 안 넘기면 전체 목록
+    suspend fun getRecipes(
+        query: String? = null,
+        rate: Int? = null,
+        category: String? = null,
+        sort: String? = null,
+    ): Result<List<Recipe>, NetworkError>
 }

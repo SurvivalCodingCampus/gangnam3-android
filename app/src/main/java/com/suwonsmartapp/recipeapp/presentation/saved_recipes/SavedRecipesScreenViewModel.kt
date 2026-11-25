@@ -7,44 +7,45 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.suwonsmartapp.recipeapp.RecipeApplication
-import com.suwonsmartapp.recipeapp.core.Result
+import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
+import com.suwonsmartapp.recipeapp.core.network.toMessage
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SavedRecipesScreenViewModel(
     private val recipeRepository: RecipeRepository,
 ) : ViewModel() {
-    private val _savedRecipes = MutableStateFlow<List<Recipe>>(emptyList())
-    val savedRecipes = _savedRecipes.asStateFlow()
+    private val _state = MutableStateFlow<SavedRecipesState>(SavedRecipesState.Loading)
+    val state: StateFlow<SavedRecipesState> = _state.asStateFlow()
+    private val _unbookmarkedIds = MutableStateFlow<Set<Long>>(emptySet())
+    val unbookmarkedIds: StateFlow<Set<Long>> = _unbookmarkedIds.asStateFlow()
 
     init {
         loadSavedRecipes()
     }
 
     private fun loadSavedRecipes() {
+        _state.value = SavedRecipesState.Loading
         viewModelScope.launch {
-            recipeRepository.getRecipes().collect { result ->
-                when (result) {
-                    is Result.Success -> _savedRecipes.value = result.value
-                    is Result.Error -> _savedRecipes.value = emptyList()
-                }
+            _state.value = when (val result = recipeRepository.getRecipes()) {
+                is Result.Success -> SavedRecipesState.Success(recipes = result.value)
+                is Result.Error -> SavedRecipesState.Error(result.error.toMessage())
             }
         }
     }
 
-    // 북마크 해제된 레시피 id 목록
-    private val _unbookmarkedIds = MutableStateFlow<Set<Long>>(emptySet())
-    val unbookmarkedIds = _unbookmarkedIds.asStateFlow()
-
     fun onBookmarkClick(recipe: Recipe) {
-        val ids = _unbookmarkedIds.value
-        _unbookmarkedIds.value = if (recipe.id in ids) {
-            ids - recipe.id // 새로운 인스턴스 생성
-        } else {
-            ids + recipe.id // 새로운 인스턴스 생성
+        _unbookmarkedIds.update { ids ->
+            if (recipe.id in ids) {
+                ids - recipe.id
+            } else {
+                ids + recipe.id
+            }
         }
     }
 

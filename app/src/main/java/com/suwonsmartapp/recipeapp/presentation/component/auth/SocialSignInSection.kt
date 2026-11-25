@@ -23,17 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
-import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
-
-@Preview(showBackground = true)
-@Composable
-private fun SocialSignInSectionPreview() {
-    SocialSignInSection(
-        onGoogleClick = {},
-        onFacebookClick = {},
-    )
-}
+import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
+import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
 // "Or Sign in With" 구분선 + 구글/페이스북 버튼 (Sign In, Sign Up 화면 공통)
 @Composable
@@ -114,3 +105,13 @@ private fun SocialButton(
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun SocialSignInSectionPreview() {
+    SocialSignInSection(
+        onGoogleClick = {},
+        onFacebookClick = {},
+    )
+}
+

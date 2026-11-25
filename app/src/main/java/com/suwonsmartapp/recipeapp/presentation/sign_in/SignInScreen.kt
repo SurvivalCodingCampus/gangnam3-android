@@ -23,27 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.component.auth.SocialSignInSection
 import com.suwonsmartapp.recipeapp.presentation.component.button.BigButton
 import com.suwonsmartapp.recipeapp.presentation.component.input.InputField
-import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
-
-@Preview(showBackground = true)
-@Composable
-private fun SignInScreenPreview() {
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-
-    SignInScreen(
-        email = email,
-        password = password,
-        onEmailChange = { email = it },
-        onPasswordChange = { password = it },
-        onForgotPasswordClick = {},
-        onSignInClick = {},
-        onGoogleClick = {},
-        onFacebookClick = {},
-        onSignUpClick = {},
-    )
-}
+import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
+import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
 @Composable
 fun SignInScreen(
@@ -153,3 +134,23 @@ fun SignInScreen(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun SignInScreenPreview() {
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+
+    SignInScreen(
+        email = email,
+        password = password,
+        onEmailChange = { email = it },
+        onPasswordChange = { password = it },
+        onForgotPasswordClick = {},
+        onSignInClick = {},
+        onGoogleClick = {},
+        onFacebookClick = {},
+        onSignUpClick = {},
+    )
+}
+

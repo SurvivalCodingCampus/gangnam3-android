@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">RecipeApp</string>
+
+    <string name="splash_background">Background Image</string>
+    <string name="splash_chef_hat">Chef Hat Image</string>
+    <string name="splash_header">100K+ Premium Recipe</string>
+    <string name="splash_content">Get\nCooking</string>
+    <string name="splash_content_description">Simple way to find Tasty Recipe</string>
+    <string name="splash_start_cooking">Start Cooking</string>
+    <string name="splash_arrow_forward">Arrow forward</string>
 </resources>

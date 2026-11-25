@@ -18,34 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
-
-@Preview(showBackground = true)
-@Composable
-private fun Filter0ButtonPreview() {
-    var selectedFilter by rememberSaveable { mutableIntStateOf(0) }
-
-    FilterButtons(
-        selectedFilter = selectedFilter,
-        onFilterClick = { index ->
-            selectedFilter = index
-        },
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun Filter2ButtonPreview() {
-    var selectedFilter by rememberSaveable { mutableIntStateOf(2) }
-
-    FilterButtons(
-        selectedFilter = selectedFilter,
-        onFilterClick = { index ->
-            selectedFilter = index
-        },
-    )
-}
+import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
+import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
 @Composable
 fun FilterButtons(
@@ -102,3 +76,30 @@ fun FilterButton(
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun Filter0ButtonPreview() {
+    var selectedFilter by rememberSaveable { mutableIntStateOf(0) }
+
+    FilterButtons(
+        selectedFilter = selectedFilter,
+        onFilterClick = { index ->
+            selectedFilter = index
+        },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Filter2ButtonPreview() {
+    var selectedFilter by rememberSaveable { mutableIntStateOf(2) }
+
+    FilterButtons(
+        selectedFilter = selectedFilter,
+        onFilterClick = { index ->
+            selectedFilter = index
+        },
+    )
+}
+

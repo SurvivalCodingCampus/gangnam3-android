@@ -1,4 +1,4 @@
-package com.suwonsmartapp.recipeapp.core
+package com.suwonsmartapp.recipeapp.core.network
 
 sealed interface Result<out D, out E> {
     data class Success<out D>(val value: D): Result<D, Nothing>

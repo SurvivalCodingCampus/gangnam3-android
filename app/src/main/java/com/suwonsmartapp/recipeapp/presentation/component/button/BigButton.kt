@@ -25,20 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
-
-@Preview(showBackground = true)
-@Composable
-fun BigButtonDefaultPreview() {
-    BigButtonContent(text = "Button", isPressed = false) {}
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BigButtonPressedPreview() {
-    BigButtonContent(text = "Button", isPressed = true) {}
-}
+import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
+import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
 @Composable
 fun BigButton(
@@ -105,3 +93,16 @@ private fun BigButtonContent(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun BigButtonDefaultPreview() {
+    BigButtonContent(text = "Button", isPressed = false) {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BigButtonPressedPreview() {
+    BigButtonContent(text = "Button", isPressed = true) {}
+}
+

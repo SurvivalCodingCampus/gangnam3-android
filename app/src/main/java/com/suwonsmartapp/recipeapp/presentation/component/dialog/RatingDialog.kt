@@ -27,66 +27,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.suwonsmartapp.recipeapp.ui.theme.AppColors
-import com.suwonsmartapp.recipeapp.ui.theme.AppTextStyles
+import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
+import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
 
 
-
-@Preview(showBackground = true, backgroundColor = 0xFFFFAD30)
-@Composable
-private fun Rating0DialogContentPreview() {
-    var selectedRating by rememberSaveable { mutableIntStateOf(0) }
-
-    RatingDialogContent(
-        title = "Rate recipe",
-        actionName = "Send",
-        rating = selectedRating,
-        onRatingChange = { rating ->
-            selectedRating = rating
-        },
-        onSendClick = { rating ->
-            println("별점: $rating")
-        },
-    )
-}
-
-@Preview(showBackground = true, backgroundColor = 0xFFFFAD30)
-@Composable
-private fun Rating3DialogContentPreview() {
-    var selectedRating by rememberSaveable { mutableIntStateOf(3) }
-
-    RatingDialogContent(
-        title = "Rate recipe",
-        actionName = "Send",
-        rating = selectedRating,
-        onRatingChange = { rating ->
-            selectedRating = rating
-        },
-        onSendClick = { rating ->
-            println("별점: $rating")
-        },
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RatingDialogPreview() {
-    var selectedRating by rememberSaveable { mutableIntStateOf(0) }
-
-    RatingDialog(
-        title = "Rate recipe",
-        actionName = "Send",
-        rating = selectedRating,
-        onRatingChange = { rating ->
-            selectedRating = rating
-        },
-        onSendClick = { rating ->
-            println("별점: $rating")
-        },
-        onDismissRequest = {},
-    )
-}
 
 @Composable
 fun RatingDialog(
@@ -172,3 +117,59 @@ private fun RatingDialogContent(
         )
     }
 }
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFAD30)
+@Composable
+private fun Rating0DialogContentPreview() {
+    var selectedRating by rememberSaveable { mutableIntStateOf(0) }
+
+    RatingDialogContent(
+        title = "Rate recipe",
+        actionName = "Send",
+        rating = selectedRating,
+        onRatingChange = { rating ->
+            selectedRating = rating
+        },
+        onSendClick = { rating ->
+            println("별점: $rating")
+        },
+    )
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFFFFAD30)
+@Composable
+private fun Rating3DialogContentPreview() {
+    var selectedRating by rememberSaveable { mutableIntStateOf(3) }
+
+    RatingDialogContent(
+        title = "Rate recipe",
+        actionName = "Send",
+        rating = selectedRating,
+        onRatingChange = { rating ->
+            selectedRating = rating
+        },
+        onSendClick = { rating ->
+            println("별점: $rating")
+        },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RatingDialogPreview() {
+    var selectedRating by rememberSaveable { mutableIntStateOf(0) }
+
+    RatingDialog(
+        title = "Rate recipe",
+        actionName = "Send",
+        rating = selectedRating,
+        onRatingChange = { rating ->
+            selectedRating = rating
+        },
+        onSendClick = { rating ->
+            println("별점: $rating")
+        },
+        onDismissRequest = {},
+    )
+}
+
