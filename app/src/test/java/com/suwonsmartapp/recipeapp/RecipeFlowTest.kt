@@ -11,6 +11,6 @@ fun main() = runBlocking {
         }
     }
         .filter { it % 2 == 0 } // 짝수 단계(2, 4)만 남기기
-        .map { "Step $X 완료".replace("X", "$it") } // 문자열 변환
+        .map { "Step $it 완료" } // 문자열 변환
         .collect { println(it) } // 결과 수집 및 출력
 }

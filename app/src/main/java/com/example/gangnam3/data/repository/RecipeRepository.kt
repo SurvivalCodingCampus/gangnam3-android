@@ -1,5 +1,6 @@
 package com.example.gangnam3.data.repository
 
+import com.example.gangnam3.data.datasource.RecipeDataSource
 import com.example.gangnam3.data.model.Recipe
 
 interface RecipeRepository {

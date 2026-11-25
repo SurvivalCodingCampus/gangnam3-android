@@ -63,11 +63,7 @@
 ## 2. 구현 진단 (기획 시점 스냅샷 — P0 이후 해소 항목은 §3·진행 로그 참조)
 
 - **스택/설정**: AGP 9.5.1, Kotlin 2.3.20(+compose 플러그인; 2026-11-15 정합 조정 — Coil 3.6.3의 stdlib 2.4.10 요구를 피해 3.4.0(2.3.10)으로, kapt는 AGP 9.5 built-in Kotlin 비호환·KSP 2.4.x 미출시로 KSP 2.3.14 채택), Compose BOM 2026.02.01, Material3, compileSdk 37 / minSdk 24 / targetSdk 37, edge-to-edge, `supportsRtl="true"`, `configuration-cache=true`. 테스트: JUnit 4 + compose ui-test 의존성 존재.
-<<<<<<< HEAD
 - **구현됨**: 브랜드 컬러/라이트(+다크 근사치) 테마, `MainActivity` + `AppRoot`(첫 실행 온보딩 게이트·탭·라우팅·필터 시트·Room 연결), 6개 화면, Room v2(빈 DB 시딩·북마크 영속화), 샘플 6레시피, 순수 함수 `Recipe.matches` + `formatRating`/`formatReviews`(로케일 무관), `RecipeFilterTest` 8건.
-=======
-- **구현됨**: 브랜드 컬러/라이트(+다크 근사치) 테마, `MainActivity` + `AppRoot`(탭·라우팅·필터 시트·북마크 로컬 상태), 5개 화면, 샘플 6레시피, 순수 함수 `Recipe.matches` + `formatRating`/`formatReviews`(로케일 무관), `RecipeFilterTest` 8건.
->>>>>>> recipe/student/01_박강원
 - **한계/격차(위 §1.2 외)**
   - 썸네일: (진단 시점) 이모지 플레이스홀더(`RecipeMedia`) — **P0.3(2026-11-14)에서 이미지 로더 배선 완료**.
   - 상태: (진단 시점) 북마크/팔로우/재료 체크가 컴포저블 로컬 상태 — 회전·재진입 시 소실(동료 주석에 "실제 앱은 상태 저장소/ViewModel로 승격" 명시). 북마크는 **P0.4(2026-11-14)에서 회전 생존(`rememberSaveable`)**; 팔로우/재료 체크 리프트·영구 저장은 P1 게이트(D5). 내비게이션 수동 `when`.
@@ -105,22 +101,14 @@
 1. **타이포**: Poppins(OFL) 자산 등록 + 라이선스 동봉 — **완료(2026-11-14)**: `assets/fonts/Poppins-{Regular,Medium,SemiBold,Bold}.ttf` + `OFL.txt`, `poppinsTypography` 구현 + 로드 실패 폴백, 테마 연결(컴파일 검증 완료).
 2. **조리 모드 화면**: 상세 CTA 연동, 스텝별 전체화면(진행 표시/인덱스, 단계 이미지 슬롯(플레이스홀더 허용), 완료 시 복귀). 명세에 독립 화면 없음 → 와이어프레임 수준 our own 결정, §4 D-기록. **구현 완료(2026-11-14)**, 컴파일 검증.
 3. **이미지 로더 배선**: **완료(2026-11-14)** — `io.coil-kt.coil3:coil-compose` + `coil-network-okhttp`(좌표 `3.4.0`으로 정합 조정: 3.6.3의 stdlib 2.4.10 요구가 KSP 2.4.x 미출시·kapt 비호환 조합과 충돌 — 중앙 저장소 메타데이터/POM/jar로 좌표·패키지 `coil3.compose` 검증). 비-null `thumbnailUrl` → `coil3.compose.AsyncImage`(로딩/실패/성공은 로더 처리), 빈/공백 URL→null 정규화 후 기존 이모지/틴트 자리표시 유지. 샘플 데이터에 URL이 없어 시각적 변화 0 — 실제 URL 채움은 **D2 확정('서버 제공', 2026-11-15)**에 따른 데이터 확충 시점.
-<<<<<<< HEAD
 4. **상태 승격**: 북마크 회전 생존 — **완료(2026-11-14, rememberSaveable)** → **Room 영속화 완료(2026-11-15, §5.2)**; 팔로우/재료 체크 리프트 + 영구 저장 여부는 P1 게이트(D5)로 유지.
-=======
-4. **상태 승격**: 북마크 회전 생존 — **완료(2026-11-14, rememberSaveable)**; 팔로우/재료 체크 리프트 + 영구 저장 여부는 P1 게이트(D5)로 유지.
->>>>>>> recipe/student/01_박강원
 5. **문자열 리소스화**: 하드코딩 텍스트 → `strings.xml`(다국어 대비) — **완료(2026-11-14)**, 7개 화면 이관, 컴파일 검증.
 6. **테스트/접근성 보강**: 기존 순수 로직 테스트 **8+1 통과(2026-11-14, failures=0)**. 화면 테스트 경로는 **androidTest/에뮬레이터·실기기**로 확정(로컬 검증 2026-11-15 — `emulator`·`system-images/android-34/google_apis/x86_64`·사용자 AVD `wemarket_test`·`/dev/kvm`·`platform-tools/adb` 존재, 다운로드 불필요; 디스크 여유 563M로 신규 설치 비권장). 기존 `androidTest/com/example/gangnam3` 3종은 자체 컴포저블 테스트(앱 클래스 무관, 실행 시 최종 판정). 실행: 에뮬레이터/기기 부팅 후 `./gradlew :app:connectedDebugAndroidTest`. 터치 타깃 1차 코드 점검 완료(홈 프로필 아바타 40→48dp 히트영역·라벨) + 대화형 요소 콘텐츠 설명 부여(검색 필터·레시피 행) — 잔여: 글리프 심볼 컨트롤·대비·빈 상태 세부 육안 점검(아래 P2).
 
 ### P1 — 데이터 레이어
 - **P1-α(2026-11-14): 저장소 인터페이스 스켈레톤** — `RecipeRepository.recipes()` + 샘플 구현체(`SampleRecipeRepository`); AppRoot·Home·Saved 호출부 전환(컴파일·단위 테스트 검증). 검색/필터(`Recipe.matches`)·정렬 등 순수 로직과 데모 큐레이션(`sampleFeatured`/`sampleNew`)은 저장소 무관 계층으로 유지. 네트워크/로컬(Room 등) 구현체와 모델↔테이블 매핑 확정(§1.3)은 **D4 게이트 유지**.
-<<<<<<< HEAD
 - **P1-β(2026-11-15): Room 골격 구현** — `RecipeEntity`(recipes 테이블)·`RecipeDao`·`RecipeDatabase`(v1)·`RoomRecipeRepository`(org.json 직렬화, `Context` 필요) — **Room 2.8.5 + KSP 2.3.14 / Kotlin 2.3.20 / Coil 3.4.0** 정합 재컴파일·단위 테스트 성공. 기본값 교체(시딩/동기화 포함)는 당시 P1 게이트 유지.
 - **P1-γ(2026-11-15): Room 기본값 전환** — `saved_recipes` 테이블(v2)·`MIGRATION_1_2`·빈 DB 트랜잭션 시딩·Flow 관찰(`observeRecipes`/`observeBookmarks`)·IO 북마크 토글/전체 해제. `AppRoot`가 Room을 기본 저장소로 사용하고 첫 방출 전 로딩 인디케이터로 빈 목록을 가린다. 샘플 저장소는 시딩 원본·프리뷰/테스트 전용. 컴파일·단위 테스트·androidTest 컴파일 통과, 기기 실행은 미검증(§5.2).
-=======
-- **P1-β(2026-11-15): Room 골격 구현** — `RecipeEntity`(recipes 테이블)·`RecipeDao`·`RecipeDatabase`(v1)·`RoomRecipeRepository`(org.json 직렬화, `Context` 필요) — **Room 2.8.5 + KSP 2.3.14 / Kotlin 2.3.20 / Coil 3.4.0** 정합 재컴파일·단위 테스트 성공. 기본값 교체(시딩/동기화 포함)는 P1 게이트 유지.
->>>>>>> recipe/student/01_박강원
 - 결정 게이트: ① `Reviews`/`User_Follows` 테이블 신설 vs 집계값/클라이언트 상태 유지 ② 로컬 영속(Room) 여부 — 오프라인 요구·백업 정책 기준 ③ 샘플 데이터 규모/출처.
 
 ### P2 — 제품 완성도
@@ -142,11 +130,7 @@
 | D1 | Figma 원본 대조 | 접근 가능/불가 | **불가(미추출)** — 명세 기준 진행; 접근 시 §5 체크리스트로 대조 후 갱신 | 시각 정합성 | 기회 될 때 |
 | D2 | 이미지 소스·라이선스 | 실사진/스톡/직접 제작/앱·서버 제공 등 | **확정(2026-11-15): 서버 제공** — 로더 배선 완료(소스 무관, 2026-11-14); 실제 URL 채움은 데이터 확충 시(샘플 없어 현재 시각 변화 0). 라이선스 검증 의무는 유지 | 썸네일 렌더(실제 URL 채움) | 실제 데이터 확충 시 |
 | D3 | 계정/인증/셰프 권한 | 포함/제외 | **제외 가정**(현행 데모 유지) — `is_chef` 쓰기 권한 필요해지면 재검토 | 범위(P3 인접) | 백엔드/권한 기능 전 |
-<<<<<<< HEAD
 | D4 | 데이터 소유 | 로컬 앱 완결/백엔드 연동 | **확정(2026-11-15): 로컬+Room** — `RecipeRepository` 인터페이스(2026-11-14, P1-α)로 교체 경로 확보 + **Room 2.8.5/KSP 2.3.14 골격 구현(2026-11-15, P1-β)**; 기본값 교체·빈 DB 시딩 완료(2026-11-15, P1-γ), 서버 동기화만 미결 | P1/P3 | P3 진입 시 |
-=======
-| D4 | 데이터 소유 | 로컬 앱 완결/백엔드 연동 | **확정(2026-11-15): 로컬+Room** — `RecipeRepository` 인터페이스(2026-11-14, P1-α)로 교체 경로 확보 + **Room 2.8.5/KSP 2.3.14 골격 구현(2026-11-15, P1-β)**; 기본값 교체·시딩/동기화 정책 미결(P1 게이트) | P1/P3 | P3 진입 시 |
->>>>>>> recipe/student/01_박강원
 | D5 | 리뷰/팔로우 저장 전략 | 테이블 신설+집계 정합/집계값 유지+팔로우 클라이언트 | **확정(2026-11-15): 현행 유지(집계값+로컬 상태)** — 명세 상세 화면/필드 부재·집계값 존재·리뷰 기능 요구 미확인 근거; 리뷰 기능/실데이터 신호 시 재검토 | P1 | P1 |
 | D6 | 온보딩 카피 "10만 개 이상 검증된 레시피" | 유지/수정 | **유지**(데모) — 실제 데이터 규모와 정합성 점검은 데이터 확충 시 | 문구/신뢰 | 데이터 확충 시 |
 | D7 | 난이도/칼로리/인분 등 노출 | 노출/미노출 | **미노출 유지**(현행) | 화면/필터 | P2 이전 |
@@ -166,7 +150,6 @@
 
 ---
 
-<<<<<<< HEAD
 ## 5.1 UI/UX 재점검 및 구현 (2026-11-15)
 
 - **근거 범위**: 초기에는 Figma 링크가 앱 셸/메타데이터만 반환해 `figma_thumb.webp`(800×780)만 확인했다. 이후 헤드리스 Chrome으로 Design 페이지에 접근해 상위 프레임 24개의 node ID를 확보하고, 100% 배율·선택 테두리 검출로 375×812 프레임을 추출했다(§5.5). 구체 배치는 명세 v2.0을 정본으로 유지하되, Figma 실측값과 충돌하는 항목은 §5.5에 기록했다.
@@ -262,8 +245,6 @@
 - **한계**: **정적 이미지**다. 터치·스크롤·TalkBack 낭독·RTL 미러링·애니메이션은 검증하지 못했고, 서버 이미지 URL이 없어 실제 이미지 로딩도 미검증이다. 200%는 온보딩·상세 2장만 렌더했다.
 - **재생성**: `./gradlew :app:testDebugUnitTest --tests "com.suwonsmartapp.recipeapp.PreviewScreenshotTest"`.
 
-=======
->>>>>>> recipe/student/01_박강원
 ## 6. 진행 로그 (갱신 테이블)
 
 | 일자 | 항목 | 결과/상태 |
@@ -283,7 +264,6 @@
 | 2026-11-15 | D9 실행 | 브랜치 `student/01_박강원` 생성(master 미커밋 WIP 31건 동반 이동; 삭제 6건 동반)·계획서 copy→`docs/RecipeApp_Project_Plan.md`·원격 `recipe` 추가 후 push(사전 read-only로 main `04ae32a…` 확인) — ① 정본 운영 표기 확인 대기 |
 | 2026-11-14 | P0.6-점검 터치 타깃/a11y 1차 | 홈 프로필 아바타 히트영역 40→48dp(시각 원 유지)+`onClickLabel`; 스톡 M3 컴포넌트 높이 정합 확인 — 컴파일·단위 테스트 검증 |
 | 2026-11-15 | P0.6-점검 콘텐츠 설명 | 홈 검색창 필터("필터 열기")·레시피 행("레시피 상세 열기: <제목>") 클릭 라벨 추가; 프로필·하트 기존 라벨 확인, AsyncImage 장식 문서화 유지 — 컴파일·단위 테스트 검증 |
-<<<<<<< HEAD
 | 2026-11-15 | Room 계측 테스트 | in-memory Room으로 시딩 1회·도메인 매핑 왕복·북마크 재인스턴스 유지 3건 작성 — androidTest 컴파일 성공, 실행은 미검증(기기/KVM 부재) |
 | 2026-11-15 | P1-γ Room 기본값 | DB v2(`saved_recipes` CASCADE)·`MIGRATION_1_2`·빈 DB 트랜잭션 시딩·Flow 구독·북마크 영속화; AppRoot/Home/Saved Room 전환 — 컴파일·단위 테스트 9건·androidTest 컴파일 성공; 기기/에뮬레이터 실행은 KVM 권한 없음으로 미검증 |
 | 2026-11-15 | 온보딩 진입 연결 | `OnboardingScreen`을 AppRoot 첫 실행 게이트로 연결(SharedPreferences), 명세 인용 문구·전폭 CTA 보완; 온보딩 UI 테스트 1건 추가 — 컴파일·단위 테스트 9건·androidTest 컴파일 성공, 기기 미실행 |
@@ -291,8 +271,6 @@
 | 2026-11-15 | Figma 정밀 프레임 대조 | Design 페이지 24프레임 node ID 매핑·13화면 375×812 추출. 인사말 22sp·섹션 제목 18sp·Saved 제목 22sp·썸네일 80dp·상세 헤더 순서·필터 시트 흰 배경 보정. Figma·명세 충돌은 명세 우선으로 기록(§5.5) — 컴파일·단위 테스트 9건·androidTest 컴파일 성공, 기기 렌더 미검증 |
 | 2026-11-15 | 다크/RTL/글자 확대/TalkBack 점검 | 다크 색 역할 보완(보라 폴백 제거)·조리/버튼 하드코딩 색 제거·야간 windowBackground, RTL 화살표 미러링, 고정 높이→heightIn·상세 스크롤·온보딩/조리 스크롤·lineHeight 보정, 장식 이모지 semantics 제거·탭/체크박스 선택 상태·heading·liveRegion. Lint 정리 6건. 계측 테스트 3건 추가(총 12건) — 컴파일·단위 테스트 9건 통과, 기기 실행 미검증(§5.6) |
 | 2026-11-15 | 로컬 URL 프리뷰 | TCG 에뮬레이터는 `system_server` 반복 사망으로 중단 → Robolectric native graphics + Roborazzi로 실제 Compose를 375×812 PNG 12장(라이트 6·다크 4·200% 2) 렌더, 8000 포트 정적 갤러리로 서빙. 프리뷰 하네스에 `Surface`를 추가해 앱과 동일한 배경/콘텐츠 색 재현 — `PreviewScreenshotTest` 통과, 터치·TalkBack·RTL·애니메이션은 미검증(§5.7) |
-=======
->>>>>>> recipe/student/01_박강원
 
 ## 부록 B — 환경/빌드 점검
 
@@ -302,37 +280,20 @@
 - 2026-11-14: Coil 3.x 좌표 확인 — `app.cash.coil3`·2.x 트랙 가정은 중앙 저장소 메타데이터/POM 404로 폐기, 저장소 README(`coil-kt/coil`)의 `io.coil-kt.coil3:coil-compose:3.6.3` 좌표를 메타데이터·POM·jar로 검증(패키지 `coil3.compose`). 3.6.3의 stdlib 2.4.10 요구에 맞춰 툴체인 Kotlin 2.4.20 정렬(KGP·Compose 플러그인 동반). 재컴파일·단위 테스트 성공.
 - 2026-11-15: 의존성 재조정 — KSP 2.4.x 미출시(업스트림 최신 2.3.14, GitHub tags 확인)·AGP 9.5 "built-in Kotlin 지원과 kapt 비호환" → **KSP 경로**; Room 2.8.5 + KSP 2.3.14 코드젠·컴파일 검증. Coil 3.6.3(stdlib 2.4.10 요구)은 Kotlin 2.3.20과 충돌 → **Coil 3.4.0(stdlib 2.3.10)** 조정. gradle 초기 실행은 간헐적 FileHasher I/O 오류 재발(재시도/데몬 재시작으로 통과).
 - 2026-11-15: 환경 경고 — `/mnt/c` 사용량 100%(약 231/238G). 빌드는 통과했으나 용량 압박; 빌드 산출물·불필요 파일 정리는 사용자 판단(권한·대상 확인 필요).
-<<<<<<< HEAD
 - 2026-11-15: 화면 테스트 실행 시도 — AVD `wemarket_test`·시스템 이미지·`/dev/kvm`은 존재하나 현재 계정이 `kvm` 그룹에 속하지 않아 에뮬레이터가 하드웨어 가속을 얻지 못함(`This user doesn't have permissions to use KVM`). 소프트웨어 에뮬레이션은 현실적이지 않아 **기기 테스트 미실행**으로 기록.
 - 참고: 과거 모델은 이미지 입력 미지원이었으나 **현재 모델은 `figma_thumb.webp`를 직접 확인 가능**(2026-11-15). 정밀 Figma 프레임은 여전히 접근 불가.
-=======
-- 참고: 본 모델은 이 환경 툴에서 **이미지 입력 미지원** — Figma 썸네일(`figma_thumb.webp`) 등 시각 자료는 사용자가 직접 육안 확인 필요.
->>>>>>> recipe/student/01_박강원
 
 ---
 
 ## 부록 A — 현재 코드맵(요약)
 
 - `app/.../MainActivity.kt` — `RecipeAppTheme { AppRoot() }`
-<<<<<<< HEAD
 - `AppRoot.kt` — 탭/라우팅/필터 시트 오케스트레이션 + Room 저장소 연결(Flow/시딩/북마크)
 - `data/Recipe.kt` — `RecipeCategory`/`TimeFilter`/`RatingFilter`/`Recipe`/`FilterState` + 순수 함수 `matches`/`formatRating`/`formatReviews`
 - `data/RoomRecipeRepository.kt` — Room DB 싱글턴·마이그레이션·시딩·Flow·북마크 토글
 - `data/SampleData.kt` — 샘플 6레시피, `featuredRecipeIds`/`sampleFeatured`/`sampleNew`
-=======
-- `AppRoot.kt` — 탭/라우팅/필터 시트/북마크 로컬 상태 오케스트레이션
-- `data/Recipe.kt` — `RecipeCategory`/`TimeFilter`/`RatingFilter`/`Recipe`/`FilterState` + 순수 함수 `matches`/`formatRating`/`formatReviews`
-- `data/SampleData.kt` — 샘플 6레시피, `sampleFeatured`/`sampleNew`
->>>>>>> recipe/student/01_박강원
 - `screens/` — `OnboardingScreen`, `HomeScreen`, `RecipeDetailScreen`, `SavedScreen`, `SearchFilterSheet`, `SharedComponents`(`RecipeMedia`, `HeartToggle`), `CookingModeScreen`
 - `ui/theme/` — `Color.kt`(브랜드 토큰), `Theme.kt`(라이트/다크/다이나믹 옵션), `Type.kt`(기본 타이포)
 - `ui/` — 학습용 실험 파일군(Buttons/InputField/Tabs/UIExam 등, 내용 확인 범위 제한)
 - `test/` — `data/RecipeFilterTest`(8건), `ExampleUnitTest`; `androidTest/` — 예시 테스트들
 - 참고: 동일 클래스의 두 경로(예: `app/src/MainActivity.kt` vs `.../recipeapp/MainActivity.kt`)와 플러터 흔적 등 정리 필요.
-<<<<<<< HEAD
-=======
-
-## 부록 B — 환경/빌드 점검
-
-- 구현 턴마다 컴파일로 검증 예정. 1차 점검 결과·명령 로그는 채팅 보고에 기록하고, 필요 시 본 절 갱신.
->>>>>>> recipe/student/01_박강원

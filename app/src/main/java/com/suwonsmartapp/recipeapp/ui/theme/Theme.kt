@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
  */
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF5BC7A7),
-<<<<<<< HEAD
     onPrimary = Color(0xFF062019),
     primaryContainer = Color(0xFF0B4F40),
     onPrimaryContainer = Color(0xFFA9F2DC),
@@ -39,40 +38,26 @@ private val DarkColorScheme = darkColorScheme(
     surfaceContainerHigh = Color(0xFF242424),
     outline = Color(0xFF5A5A5A),
     outlineVariant = Color(0xFF3A3A3A)
-=======
-    secondary = Color(0xFFFFC266),
-    tertiary = Color(0xFFFF7A7A),
-    background = Color(0xFF121212),
-    surface = Color(0xFF1F1F1F),
-    onBackground = Color(0xFFEDEDED),
-    onSurface = Color(0xFFEDEDED)
->>>>>>> recipe/student/01_박강원
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = RecipePrimary,
     secondary = RecipeStar,
     tertiary = RecipeRed,
-<<<<<<< HEAD
     // 선택 상태(세그먼트 탭/칩/하단 탭 인디케이터)도 브랜드 색으로 고정 —
     // 미지정 시 M3 기본 보라색 컨테이너가 노출된다.
     primaryContainer = Color(0xFFD7F2E9),
     onPrimaryContainer = Color(0xFF0B4F40),
     secondaryContainer = Color(0xFFFFE7BF),
     onSecondaryContainer = Color(0xFF4A3200),
-=======
->>>>>>> recipe/student/01_박강원
     background = Color.White,
     onBackground = Color(0xFF121212),
     surface = RecipeSurface,
     onSurface = Color(0xFF292D32),
     surfaceVariant = RecipeSurfaceVariant,
-<<<<<<< HEAD
     onSurfaceVariant = Color(0xFF49454F),
     surfaceContainer = Color.White,
     surfaceContainerHigh = RecipeSurface,
-=======
->>>>>>> recipe/student/01_박강원
     outline = RecipeBorder
 )
 

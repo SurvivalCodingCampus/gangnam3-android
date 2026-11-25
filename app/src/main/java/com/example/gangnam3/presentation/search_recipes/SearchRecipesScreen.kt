@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.gangnam3.data.model.Recipe
+import java.util.Locale
 
 private val PrimaryGreen = Color(0xFF129575)
 private val RatingBadgeBg = Color(0xFFFFE1B3)
@@ -286,7 +287,7 @@ private fun SearchGridRecipeCard(
                         )
                         Spacer(modifier = Modifier.width(3.dp))
                         Text(
-                            text = String.format("%.1f", recipe.rating),
+                            text = String.format(Locale.US, "%.1f", recipe.rating),
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Medium,
                             color = Color(0xFF121212)

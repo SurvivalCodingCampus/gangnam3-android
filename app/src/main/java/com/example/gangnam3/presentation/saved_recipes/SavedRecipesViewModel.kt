@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gangnam3.data.model.Recipe
 import com.example.gangnam3.data.repository.RecipeRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,6 +40,8 @@ class SavedRecipesViewModel(
                         recipes = savedList
                     )
                 }
+            } catch (e: CancellationException) {
+                throw e // 코루틴 취소는 오류가 아니므로 다시 던진다.
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(

@@ -1,4 +1,4 @@
-package com.example.util
+package com.suwonsmartapp.recipeapp.ui
 
 class Counter {
 }

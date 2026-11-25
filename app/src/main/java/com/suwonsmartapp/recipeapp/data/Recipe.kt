@@ -62,15 +62,30 @@ data class FilterState(
 
 /** 검색·필터 매칭 — 순수 함수(전역 AND)라 단위 테스트 가능. */
 fun Recipe.matches(query: String, filter: FilterState): Boolean {
-    if (query.isNotBlank() &&
-        title.contains(query, ignoreCase = true).not() &&
-        chef.contains(query, ignoreCase = true).not()
+    val keyword = query.trim()
+    if (keyword.isNotEmpty() &&
+        title.contains(keyword, ignoreCase = true).not() &&
+        chef.contains(keyword, ignoreCase = true).not()
     ) {
         return false
     }
     return filter.time.matches(cookingMinutes) &&
         filter.rating.matches(rating) &&
         (filter.categories.isEmpty() || filter.categories.contains(category))
+}
+
+/** 공유용 텍스트 — 비어 있는 재료/단계 구역은 생략한다. */
+fun Recipe.toShareText(): String = buildString {
+    append(title).append(" - ").append(chef)
+    if (description.isNotBlank()) append("\n").append(description)
+    if (ingredients.isNotEmpty()) {
+        append("\n\n[재료]")
+        ingredients.forEach { append("\n- ").append(it.name).append(" ").append(it.amount) }
+    }
+    if (steps.isNotEmpty()) {
+        append("\n\n[조리 단계]")
+        steps.forEachIndexed { index, step -> append("\n").append(index + 1).append(". ").append(step) }
+    }
 }
 
 fun formatRating(rating: Double): String = "%.1f".format(Locale.US, rating)

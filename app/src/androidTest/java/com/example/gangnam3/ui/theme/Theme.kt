@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 
 private val CustomColorScheme = lightColorScheme(
     primary = Color(0xFF129575),
-    secondary = Color(0xFFFFFE9C00),
+    secondary = Color(0xFFFF9C00),
     surface = Color(0xFF121212),
     surfaceVariant = Color(0xFFD9D9D9)
 )
