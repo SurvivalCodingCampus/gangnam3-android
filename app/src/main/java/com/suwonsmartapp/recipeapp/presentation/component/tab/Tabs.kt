@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -39,6 +40,8 @@ fun <T> Tabs(
     itemLabel: (T) -> String, // 탭에 보일 글자
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(space = 10.dp),
+    showBorder: Boolean = true, // false면 테두리 없음
+    contentPadding: PaddingValues = PaddingValues(horizontal = 10.dp, vertical = 5.dp), // 탭 안쪽 여백
     // slot: 탭 안에 들어갈 내용 (기본은 글자만)
     tabContent: @Composable (item: T, contentColor: Color) -> Unit = { item, contentColor ->
         Text(
@@ -64,18 +67,24 @@ fun <T> Tabs(
             }
 
             val borderRadius = 10.dp
+            // 0.dp는 "가장 얇은 선(Hairline)"이라 그려짐 → 아예 border를 안 붙여야 함
+            val borderModifier = if (showBorder) {
+                Modifier.border(
+                    width = 1.dp,
+                    color = borderColor,
+                    shape = RoundedCornerShape(borderRadius),
+                )
+            } else {
+                Modifier
+            }
 
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(borderRadius))
                     .background(color = backgroundColor)
-                    .border(
-                        width = 1.dp,
-                        color = borderColor,
-                        shape = RoundedCornerShape(borderRadius),
-                    )
+                    .then(borderModifier)
                     .clickable { onValueChange(item) }
-                    .padding(horizontal = 10.dp, vertical = 5.dp),
+                    .padding(contentPadding),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 tabContent(item, contentColor)

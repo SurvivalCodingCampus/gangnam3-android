@@ -5,7 +5,6 @@ import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 // 홈 화면 전체 상태
 data class HomeUiState(
     val selectedCategory: HomeCategory = HomeCategory.ALL,
-    val bookmarkedIds: Set<Long> = emptySet(),
     // 화면에 들어오자마자 불러오므로 처음엔 Loading
     val result: HomeResult = HomeResult.Loading,
 )

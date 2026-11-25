@@ -3,6 +3,7 @@ package com.suwonsmartapp.recipeapp.presentation.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tune
@@ -42,6 +44,7 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.presentation.component.input.SearchField
 import com.suwonsmartapp.recipeapp.presentation.component.recipe.DishCard
+import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
@@ -54,14 +57,16 @@ fun HomeScreenRoot(
     viewModel: HomeScreenViewModel = viewModel(factory = HomeScreenViewModel.Factory),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val bookmarkedIds by viewModel.bookmarkedIds.collectAsStateWithLifecycle()
 
     HomeScreen(
         state = state,
+        bookmarkedIds = bookmarkedIds,
         userName = "Jega", // TODO: 로그인 유저 정보가 생기면 교체
         onSearchClick = {},
         onFilterClick = {},
-        onCategoryClick = { category -> viewModel.onCategoryClick(category) },
-        onBookmarkClick = { recipe -> viewModel.onBookmarkClick(recipe.id) },
+        onSelectCategory = { category -> viewModel.onSelectCategory(category) },
+        onBookmarkClick = { recipe -> viewModel.onBookmarkClick(recipe) },
     )
 }
 
@@ -69,10 +74,11 @@ fun HomeScreenRoot(
 @Composable
 fun HomeScreen(
     state: HomeUiState,
+    bookmarkedIds: Set<Long>,
     userName: String,
     onSearchClick: () -> Unit,
     onFilterClick: () -> Unit,
-    onCategoryClick: (HomeCategory) -> Unit,
+    onSelectCategory: (HomeCategory) -> Unit,
     onBookmarkClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -161,7 +167,7 @@ fun HomeScreen(
         // 카테고리 탭 (가로 스크롤)
         CategoryTabs(
             selectedCategory = state.selectedCategory,
-            onCategoryClick = onCategoryClick,
+            onSelectCategory = onSelectCategory,
         )
         Spacer(modifier = Modifier.height(25.dp))
 
@@ -191,7 +197,7 @@ fun HomeScreen(
 
             is HomeResult.Success -> DishRow(
                 recipes = result.recipes,
-                bookmarkedIds = state.bookmarkedIds,
+                bookmarkedIds = bookmarkedIds,
                 onBookmarkClick = onBookmarkClick,
             )
         }
@@ -201,33 +207,29 @@ fun HomeScreen(
 @Composable
 private fun CategoryTabs(
     selectedCategory: HomeCategory,
-    onCategoryClick: (HomeCategory) -> Unit,
+    onSelectCategory: (HomeCategory) -> Unit,
 ) {
-    // 탭 사이 간격 없음, 양 끝만 30 여백
-    // TODO: Tabs로 교체
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 30.dp),
-    ) {
-        items(HomeCategory.entries) { category ->
-            val isSelected = category == selectedCategory
-            val backgroundColor = if (isSelected) AppColors.primary100 else AppColors.white
-            val contentColor = if (isSelected) AppColors.white else AppColors.primary80
-
+    // 가로 스크롤 안에 넣으면 FlowRow가 줄바꿈 없이 한 줄로 그려짐
+    Tabs(
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .padding(horizontal = 30.dp),
+        items = HomeCategory.entries,
+        selectedItem = selectedCategory,
+        onValueChange = onSelectCategory,
+        itemLabel = { it.label },
+        // Figma: 탭 사이 간격 없음, 테두리 없음, 안쪽 여백 20/7
+        horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
+        showBorder = false,
+        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 7.dp),
+        tabContent = { category, contentColor ->
             Text(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(backgroundColor)
-                    .clickable { onCategoryClick(category) }
-                    .padding(
-                        horizontal = 20.dp,
-                        vertical = 7.dp,
-                    ),
                 text = category.label,
                 color = contentColor,
                 style = AppTextStyles.smallerTextBold,
             )
-        }
-    }
+        },
+    )
 }
 
 @Composable
@@ -294,18 +296,18 @@ private fun HomeScreenPreview() {
     var state by remember {
         mutableStateOf(HomeUiState(result = HomeResult.Success(previewRecipes)))
     }
+    var bookmarkedIds by remember { mutableStateOf(setOf(1L, 3L)) }
 
     HomeScreen(
         state = state,
+        bookmarkedIds = bookmarkedIds,
         userName = "Jega",
         onSearchClick = {},
         onFilterClick = {},
-        onCategoryClick = { state = state.copy(selectedCategory = it) },
+        onSelectCategory = { state = state.copy(selectedCategory = it) },
         onBookmarkClick = { recipe ->
-            val ids = state.bookmarkedIds
-            state = state.copy(
-                bookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id,
-            )
+            val ids = bookmarkedIds
+            bookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id
         },
     )
 }
@@ -315,10 +317,11 @@ private fun HomeScreenPreview() {
 private fun HomeScreenLoadingPreview() {
     HomeScreen(
         state = HomeUiState(result = HomeResult.Loading),
+        bookmarkedIds = emptySet(),
         userName = "Jega",
         onSearchClick = {},
         onFilterClick = {},
-        onCategoryClick = {},
+        onSelectCategory = {},
         onBookmarkClick = {},
     )
 }
@@ -328,10 +331,11 @@ private fun HomeScreenLoadingPreview() {
 private fun HomeScreenErrorPreview() {
     HomeScreen(
         state = HomeUiState(result = HomeResult.Error("서버 문제")),
+        bookmarkedIds = emptySet(),
         userName = "Jega",
         onSearchClick = {},
         onFilterClick = {},
-        onCategoryClick = {},
+        onSelectCategory = {},
         onBookmarkClick = {},
     )
 }

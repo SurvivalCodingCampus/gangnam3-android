@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.suwonsmartapp.recipeapp.RecipeApplication
+import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
 import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.network.toMessage
@@ -24,6 +25,8 @@ class HomeScreenViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUiState())
     val state: StateFlow<HomeUiState> = _state.asStateFlow()
+    private val _bookmarkedIds = MutableStateFlow<Set<Long>>(emptySet())
+    val bookmarkedIds: StateFlow<Set<Long>> = _bookmarkedIds.asStateFlow()
 
     init {
         observeCategory()
@@ -35,12 +38,11 @@ class HomeScreenViewModel(
             _state
                 .map { it.selectedCategory }
                 .distinctUntilChanged()
-                .collectLatest { category -> // 새 값이 오면 이전 요청은 자동 취소
+                .collectLatest {
                     _state.update { it.copy(result = HomeResult.Loading) }
 
-                    val result = recipeRepository.getRecipes(
-                        category = if (category == HomeCategory.ALL) null else category.label,
-                    )
+                    val result = recipeRepository.getRecipes()
+
                     val homeResult = when (result) {
                         is Result.Success -> HomeResult.Success(result.value)
                         is Result.Error -> HomeResult.Error(result.error.toMessage())
@@ -51,14 +53,17 @@ class HomeScreenViewModel(
         }
     }
 
-    fun onCategoryClick(category: HomeCategory) {
+    fun onSelectCategory(category: HomeCategory) {
         _state.update { it.copy(selectedCategory = category) }
     }
 
-    fun onBookmarkClick(recipeId: Long) {
-        _state.update { state ->
-            val ids = state.bookmarkedIds
-            state.copy(bookmarkedIds = if (recipeId in ids) ids - recipeId else ids + recipeId)
+    fun onBookmarkClick(recipe: Recipe) {
+        _bookmarkedIds.update { ids ->
+            if (recipe.id in ids) {
+                ids - recipe.id
+            } else {
+                ids + recipe.id
+            }
         }
     }
 
