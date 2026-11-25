@@ -84,6 +84,7 @@ class SearchRecipesScreenViewModel(
             is Result.Success -> SearchResult.Success(result.value)
             is Result.Error -> SearchResult.Error(result.error.toMessage())
         }
+
         _state.update { it.copy(result = searchResult) }
     }
 
