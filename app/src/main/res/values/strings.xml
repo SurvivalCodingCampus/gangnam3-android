@@ -35,6 +35,36 @@
 
     <string name="saved_recipes_title">Saved recipes</string>
 
+    <string name="search_recipes_title">Search recipes</string>
+    <string name="search_recipes_placeholder">Search recipe</string>
+    <string name="search_recipes_back">Back</string>
+    <string name="search_recipes_filter">Filter</string>
+    <string name="search_recipes_recent">Recent Search</string>
+    <string name="search_recipes_result">Search Result</string>
+    <plurals name="search_recipes_result_count">
+        <item quantity="one">%1$d result</item>
+        <item quantity="other">%1$d results</item>
+    </plurals>
+
+    <string name="filter_search_title">Filter Search</string>
+    <string name="filter_search_time">Time</string>
+    <string name="filter_search_rate">Rate</string>
+    <string name="filter_search_category">Category</string>
+    <string name="filter_search_button">Filter</string>
+    <string name="filter_search_all">All</string>
+    <string name="filter_time_newest">Newest</string>
+    <string name="filter_time_oldest">Oldest</string>
+    <string name="filter_time_popularity">Popularity</string>
+    <string name="filter_category_cereal">Cereal</string>
+    <string name="filter_category_vegetables">Vegetables</string>
+    <string name="filter_category_dinner">Dinner</string>
+    <string name="filter_category_chinese">Chinese</string>
+    <string name="filter_category_local_dish">Local Dish</string>
+    <string name="filter_category_fruit">Fruit</string>
+    <string name="filter_category_breakfast">Breakfast</string>
+    <string name="filter_category_spanish">Spanish</string>
+    <string name="filter_category_lunch">Lunch</string>
+
     <string name="splash_background">Background Image</string>
     <string name="splash_chef_hat">Chef Hat Image</string>
     <string name="splash_header">100K+ Premium Recipe</string>

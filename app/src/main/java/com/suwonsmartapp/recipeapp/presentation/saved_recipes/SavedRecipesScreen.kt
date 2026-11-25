@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suwonsmartapp.recipeapp.R
-import com.suwonsmartapp.recipeapp.data.model.Recipe
+import com.suwonsmartapp.recipeapp.domain.model.Recipe
 import com.suwonsmartapp.recipeapp.presentation.RecipeCard
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles

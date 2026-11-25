@@ -1,11 +1,11 @@
 package com.suwonsmartapp.recipeapp.data.data_source
 
-import com.suwonsmartapp.recipeapp.data.model.Recipe
+import com.suwonsmartapp.recipeapp.data.dto.RecipeDto
 
 class MockRecipeDataSourceImpl : RecipeDataSource {
 
-    override suspend fun getRecipes(): List<Recipe> = listOf(
-        Recipe(
+    override suspend fun getRecipes(): List<RecipeDto> = listOf(
+        RecipeDto(
             1,
             "Indian",
             "Traditional spare ribs baked",
@@ -14,7 +14,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "20 min",
             4.0
         ),
-        Recipe(
+        RecipeDto(
             2,
             "Asian",
             "Spice roasted chicken with flavored rice",
@@ -23,7 +23,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "20 min",
             4.0
         ),
-        Recipe(
+        RecipeDto(
             3,
             "Chinese",
             "Spicy fried rice mix chicken bali",
@@ -32,7 +32,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "20 min",
             4.0
         ),
-        Recipe(
+        RecipeDto(
             4,
             "Japanese",
             "Ttekbokki",
@@ -41,7 +41,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "30 min",
             5.0
         ),
-        Recipe(
+        RecipeDto(
             5,
             "American",
             "Grilled salmon with avocado salsa",
@@ -50,7 +50,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "25 min",
             4.5
         ),
-        Recipe(
+        RecipeDto(
             6,
             "British",
             "Beef Wellington",
@@ -59,7 +59,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "45 min",
             5.0
         ),
-        Recipe(
+        RecipeDto(
             7,
             "Italian",
             "Classic Margherita Pizza",
@@ -68,7 +68,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "15 min",
             4.3
         ),
-        Recipe(
+        RecipeDto(
             8,
             "Japanese",
             "Sushi Platter",
@@ -77,7 +77,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "60 min",
             4.8
         ),
-        Recipe(
+        RecipeDto(
             9,
             "French",
             "French Onion Soup",
@@ -86,7 +86,7 @@ class MockRecipeDataSourceImpl : RecipeDataSource {
             "40 min",
             4.6
         ),
-        Recipe(
+        RecipeDto(
             10,
             "French",
             "Chocolate Lava Cake",

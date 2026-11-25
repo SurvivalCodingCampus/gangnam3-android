@@ -1,7 +1,9 @@
 package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
-import com.suwonsmartapp.recipeapp.data.model.Recipe
-import com.suwonsmartapp.recipeapp.data.repository.RecipeRepository
+import com.suwonsmartapp.recipeapp.core.NetworkError
+import com.suwonsmartapp.recipeapp.core.Result
+import com.suwonsmartapp.recipeapp.domain.model.Recipe
+import com.suwonsmartapp.recipeapp.domain.repository.RecipeRepository
 import com.suwonsmartapp.recipeapp.utils.MainDispatcherRule
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -31,7 +33,11 @@ class SavedRecipesViewModelTest {
     )
 
     private val fakeRepository = object : RecipeRepository {
-        override suspend fun getSavedRecipes(): List<Recipe> = fakeRecipes
+        override suspend fun getRecipes(): Result<List<Recipe>, NetworkError> =
+            Result.Success(fakeRecipes)
+
+        override suspend fun getSavedRecipes(): Result<List<Recipe>, NetworkError> =
+            Result.Success(fakeRecipes)
     }
 
     @get:Rule
@@ -51,5 +57,18 @@ class SavedRecipesViewModelTest {
     fun `ViewModel 생성 시 init 블록에서 저장된 레시피를 로드한다`() {
         val viewModel = SavedRecipesViewModel(fakeRepository)
         assertEquals(fakeRecipes, viewModel.recipes.value)
+    }
+
+    @Test
+    fun `레포지토리가 에러를 반환하면 레시피 목록은 비어 있다`() {
+        val errorRepository = object : RecipeRepository {
+            override suspend fun getRecipes(): Result<List<Recipe>, NetworkError> =
+                Result.Error(NetworkError.UNKNOWN)
+
+            override suspend fun getSavedRecipes(): Result<List<Recipe>, NetworkError> =
+                Result.Error(NetworkError.UNKNOWN)
+        }
+        val viewModel = SavedRecipesViewModel(errorRepository)
+        assertEquals(emptyList<Recipe>(), viewModel.recipes.value)
     }
 }
