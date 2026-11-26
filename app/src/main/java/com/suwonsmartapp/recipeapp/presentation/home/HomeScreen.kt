@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.R
+import com.suwonsmartapp.recipeapp.domain.model.Recipe
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
@@ -143,8 +144,20 @@ fun HomeScreen(
 @Preview(showBackground = true)
 @Composable
 private fun HomeScreenPreview() {
+    val recipe = Recipe(
+        id = 1,
+        category = "Indian",
+        name = "Classic Greek Salad",
+        imageUrl = "",
+        chef = "Chef John",
+        time = "15 Mins",
+        rating = 4.5,
+    )
     HomeScreen(
-        state = HomeState(selectedCategory = RecipeCategory.ITALIAN),
+        state = HomeState(
+            recipes = listOf(recipe, recipe.copy(id = 2, name = "Crunchy Nut Coleslaw", rating = 3.5)),
+            bookmarkedIds = setOf(1),
+        ),
         onSelectCategory = {},
         onBookmarkClick = {},
     )
