@@ -1,6 +1,5 @@
 package com.suwonsmartapp.recipeapp.presentation.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -40,8 +39,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
+import com.suwonsmartapp.recipeapp.core.data.model.User
 import com.suwonsmartapp.recipeapp.presentation.component.input.SearchField
 import com.suwonsmartapp.recipeapp.presentation.component.recipe.DishCard
 import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
@@ -58,12 +59,11 @@ fun HomeScreenRoot(
     viewModel: HomeScreenViewModel = viewModel(factory = HomeScreenViewModel.Factory),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val bookmarkedIds by viewModel.bookmarkedIds.collectAsStateWithLifecycle()
+    val unbookmarkedIds by viewModel.unbookmarkedIds.collectAsStateWithLifecycle()
 
     HomeScreen(
         state = state,
-        bookmarkedIds = bookmarkedIds,
-        userName = "Jega", // TODO: 로그인 유저 정보가 생기면 교체
+        unbookmarkedIds = unbookmarkedIds,
         onSearchClick = {},
         onFilterClick = {},
         onSelectCategory = { category -> viewModel.onSelectCategory(category) },
@@ -75,8 +75,7 @@ fun HomeScreenRoot(
 @Composable
 fun HomeScreen(
     state: HomeUiState,
-    bookmarkedIds: Set<Long>,
-    userName: String,
+    unbookmarkedIds: Set<Long>,
     onSearchClick: () -> Unit,
     onFilterClick: () -> Unit,
     onSelectCategory: (FilterCategory) -> Unit,
@@ -102,7 +101,7 @@ fun HomeScreen(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "Hello $userName",
+                    text = "Hello ${state.user?.name.orEmpty()}",
                     color = AppColors.black1,
                     style = AppTextStyles.largeTextBold,
                 )
@@ -113,14 +112,18 @@ fun HomeScreen(
                     style = AppTextStyles.smallerTextRegular,
                 )
             }
-            Image(
+            AsyncImage(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(AppColors.secondary40),
-                painter = painterResource(id = R.drawable.profile_avatar),
+                model = state.user?.profileUrl,
                 contentDescription = "프로필",
                 contentScale = ContentScale.Crop,
+                // 불러오는 중이거나 실패하면 기본 아바타
+                placeholder = painterResource(id = R.drawable.profile_avatar),
+                error = painterResource(id = R.drawable.profile_avatar),
+                fallback = painterResource(id = R.drawable.profile_avatar),
             )
         }
         Spacer(modifier = Modifier.height(30.dp))
@@ -198,7 +201,7 @@ fun HomeScreen(
 
             is HomeResult.Success -> DishRow(
                 recipes = result.recipes,
-                bookmarkedIds = bookmarkedIds,
+                unbookmarkedIds = unbookmarkedIds,
                 onBookmarkClick = onBookmarkClick,
             )
         }
@@ -235,7 +238,7 @@ private fun CategoryTabs(
 @Composable
 private fun DishRow(
     recipes: List<Recipe>,
-    bookmarkedIds: Set<Long>,
+    unbookmarkedIds: Set<Long>,
     onBookmarkClick: (Recipe) -> Unit,
 ) {
     if (recipes.isEmpty()) {
@@ -264,12 +267,17 @@ private fun DishRow(
         ) { recipe ->
             DishCard(
                 recipe = recipe,
-                isBookmarked = recipe.id in bookmarkedIds,
+                isBookmarked = recipe.id !in unbookmarkedIds,
                 onBookmarkClick = { onBookmarkClick(recipe) },
             )
         }
     }
 }
+
+private val previewUser = User(
+    name = "Jega",
+    profileUrl = "",
+)
 
 private val previewRecipes = listOf(
     "Classic Greek Salad" to 4.5,
@@ -294,20 +302,24 @@ private val previewRecipes = listOf(
 @Composable
 private fun HomeScreenPreview() {
     var state by remember {
-        mutableStateOf(HomeUiState(result = HomeResult.Success(previewRecipes)))
+        mutableStateOf(
+            HomeUiState(
+                user = previewUser,
+                result = HomeResult.Success(previewRecipes),
+            )
+        )
     }
-    var bookmarkedIds by remember { mutableStateOf(setOf(1L, 3L)) }
+    var unbookmarkedIds by remember { mutableStateOf(setOf(2L)) }
 
     HomeScreen(
         state = state,
-        bookmarkedIds = bookmarkedIds,
-        userName = "Jega",
+        unbookmarkedIds = unbookmarkedIds,
         onSearchClick = {},
         onFilterClick = {},
         onSelectCategory = { state = state.copy(selectedCategory = it) },
         onBookmarkClick = { recipe ->
-            val ids = bookmarkedIds
-            bookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id
+            val ids = unbookmarkedIds
+            unbookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id
         },
     )
 }
@@ -316,9 +328,8 @@ private fun HomeScreenPreview() {
 @Composable
 private fun HomeScreenLoadingPreview() {
     HomeScreen(
-        state = HomeUiState(result = HomeResult.Loading),
-        bookmarkedIds = emptySet(),
-        userName = "Jega",
+        state = HomeUiState(user = previewUser, result = HomeResult.Loading),
+        unbookmarkedIds = emptySet(),
         onSearchClick = {},
         onFilterClick = {},
         onSelectCategory = {},
@@ -330,9 +341,8 @@ private fun HomeScreenLoadingPreview() {
 @Composable
 private fun HomeScreenErrorPreview() {
     HomeScreen(
-        state = HomeUiState(result = HomeResult.Error("서버 문제")),
-        bookmarkedIds = emptySet(),
-        userName = "Jega",
+        state = HomeUiState(user = previewUser, result = HomeResult.Error("서버 문제")),
+        unbookmarkedIds = emptySet(),
         onSearchClick = {},
         onFilterClick = {},
         onSelectCategory = {},

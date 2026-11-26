@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -69,6 +70,9 @@ fun DishCard(
             model = recipe.image,
             contentDescription = recipe.name,
             contentScale = ContentScale.Crop,
+            // 로딩 중이거나 불러오기 실패하면 회색 원
+            placeholder = ColorPainter(AppColors.gray4),
+            error = ColorPainter(AppColors.gray4),
         )
 
         // 우측 별점

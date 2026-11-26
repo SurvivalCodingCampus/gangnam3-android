@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.suwonsmartapp.recipeapp.RecipeApplication
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.repository.BookmarkRepository
-import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
+import com.suwonsmartapp.recipeapp.core.data.repository.UserRepository
 import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.network.toMessage
 import com.suwonsmartapp.recipeapp.presentation.model.FilterCategory
@@ -23,25 +23,26 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(
-    private val recipeRepository: RecipeRepository,
     private val bookmarkRepository: BookmarkRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeUiState())
     val state: StateFlow<HomeUiState> = _state.asStateFlow()
-    private val _bookmarkedIds = MutableStateFlow<Set<Long>>(emptySet())
-    val bookmarkedIds: StateFlow<Set<Long>> = _bookmarkedIds.asStateFlow()
+    // 불러온 레시피는 전부 북마크된 상태 → 해제한 것만 저장
+    private val _unbookmarkedIds = MutableStateFlow<Set<Long>>(emptySet())
+    val unbookmarkedIds: StateFlow<Set<Long>> = _unbookmarkedIds.asStateFlow()
 
     init {
         observeCategory()
-        loadBookmarks()
+        loadUser()
     }
 
-    // 북마크한 레시피를 불러와서 북마크 표시에 쓸 id만 저장
-    private fun loadBookmarks() {
+    // 헤더에 보여줄 유저 이름, 프로필 사진
+    private fun loadUser() {
         viewModelScope.launch {
-            val result = bookmarkRepository.getBookmarkedRecipes()
+            val result = userRepository.getUser()
             if (result is Result.Success) {
-                _bookmarkedIds.value = result.value.map { it.id }.toSet()
+                _state.update { it.copy(user = result.value) }
             }
         }
     }
@@ -61,8 +62,8 @@ class HomeScreenViewModel(
                         category.label
                     }
 
-                    // ALL이면 카테고리 조건 없이 전체
-                    val result = recipeRepository.getRecipes(category = selectedCategory)
+                    // ALL이면 카테고리 조건 없이 북마크 전체
+                    val result = bookmarkRepository.getBookmarkedRecipes(category = selectedCategory)
 
                     val homeResult = when (result) {
                         is Result.Success -> HomeResult.Success(result.value)
@@ -79,7 +80,7 @@ class HomeScreenViewModel(
     }
 
     fun onBookmarkClick(recipe: Recipe) {
-        _bookmarkedIds.update { ids ->
+        _unbookmarkedIds.update { ids ->
             if (recipe.id in ids) {
                 ids - recipe.id
             } else {
@@ -93,8 +94,8 @@ class HomeScreenViewModel(
             initializer {
                 val application = this[APPLICATION_KEY] as RecipeApplication
                 HomeScreenViewModel(
-                    recipeRepository = application.recipeRepository,
                     bookmarkRepository = application.bookmarkRepository,
+                    userRepository = application.userRepository,
                 )
             }
         }

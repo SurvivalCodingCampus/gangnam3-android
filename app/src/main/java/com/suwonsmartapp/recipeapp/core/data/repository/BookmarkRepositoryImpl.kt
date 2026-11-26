@@ -15,10 +15,12 @@ import kotlin.time.Duration.Companion.seconds
 class BookmarkRepositoryImpl(
     private val dataSource: BookmarkDataSource,
 ) : BookmarkRepository {
-    override suspend fun getBookmarkedRecipes(): Result<List<Recipe>, NetworkError> {
+    override suspend fun getBookmarkedRecipes(
+        category: String?,
+    ): Result<List<Recipe>, NetworkError> {
         try {
             delay(1.seconds)
-            val response = dataSource.getBookmarkedRecipes()
+            val response = dataSource.getBookmarkedRecipes(category = category)
 
             when {
                 response.statusCode.isServerError() -> return Result.Error(NetworkError.SERVER_ERR)

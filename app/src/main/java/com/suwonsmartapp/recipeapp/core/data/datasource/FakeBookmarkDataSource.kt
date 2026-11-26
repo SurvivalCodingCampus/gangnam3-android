@@ -120,14 +120,23 @@ class FakeBookmarkDataSource(
         }
     """.trimIndent(),
 ) : BookmarkDataSource {
-    override suspend fun getBookmarkedRecipes(): Response<RecipesResponseDto> {
+    override suspend fun getBookmarkedRecipes(
+        category: String?,
+    ): Response<RecipesResponseDto> {
         if (!statusCode.isSuccess()) {
             return Response(statusCode = statusCode, body = null)
         }
 
+        val response = Json.decodeFromString<RecipesResponseDto>(bookmarksJson)
+
+        // 서버가 카테고리로 걸러서 내려주는 것처럼 흉내
+        val filteredRecipes = response.recipes.filter { recipe ->
+            category == null || recipe.category.equals(category, ignoreCase = true)
+        }
+
         return Response(
             statusCode = statusCode,
-            body = Json.decodeFromString<RecipesResponseDto>(bookmarksJson),
+            body = response.copy(recipes = filteredRecipes),
         )
     }
 }

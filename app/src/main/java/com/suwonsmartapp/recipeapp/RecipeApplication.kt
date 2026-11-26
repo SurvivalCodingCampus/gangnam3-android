@@ -4,11 +4,15 @@ import android.app.Application
 import com.suwonsmartapp.recipeapp.core.data.datasource.BookmarkDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeBookmarkDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
+import com.suwonsmartapp.recipeapp.core.data.datasource.FakeUserDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.RecipeDataSource
+import com.suwonsmartapp.recipeapp.core.data.datasource.UserDataSource
 import com.suwonsmartapp.recipeapp.core.data.repository.BookmarkRepository
 import com.suwonsmartapp.recipeapp.core.data.repository.BookmarkRepositoryImpl
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
+import com.suwonsmartapp.recipeapp.core.data.repository.UserRepository
+import com.suwonsmartapp.recipeapp.core.data.repository.UserRepositoryImpl
 
 class RecipeApplication : Application() {
     val recipeDataSource: RecipeDataSource by lazy {
@@ -25,6 +29,14 @@ class RecipeApplication : Application() {
 
     val bookmarkRepository: BookmarkRepository by lazy {
         BookmarkRepositoryImpl(bookmarkDataSource)
+    }
+
+    val userDataSource: UserDataSource by lazy {
+        FakeUserDataSource()
+    }
+
+    val userRepository: UserRepository by lazy {
+        UserRepositoryImpl(userDataSource)
     }
 
     override fun onCreate() {
