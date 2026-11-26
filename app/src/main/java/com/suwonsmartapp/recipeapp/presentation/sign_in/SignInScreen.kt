@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.component.auth.SocialSignInSection
-import com.suwonsmartapp.recipeapp.presentation.component.button.BigButton
+import com.suwonsmartapp.recipeapp.presentation.component.button.AppButton
 import com.suwonsmartapp.recipeapp.presentation.component.input.InputField
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
@@ -101,7 +101,7 @@ fun SignInScreen(
         )
 
         // 로그인 버튼
-        BigButton(
+        AppButton(
             text = "Sign In",
             onClick = onSignInClick,
         )

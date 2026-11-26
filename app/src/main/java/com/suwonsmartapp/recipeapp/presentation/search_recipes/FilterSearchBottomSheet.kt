@@ -26,7 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suwonsmartapp.recipeapp.presentation.component.button.SmallButton
+import com.suwonsmartapp.recipeapp.presentation.component.button.AppButton
+import com.suwonsmartapp.recipeapp.presentation.component.button.ButtonSize
 import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
 import com.suwonsmartapp.recipeapp.presentation.model.FilterCategory
 import com.suwonsmartapp.recipeapp.presentation.model.FilterRate
@@ -152,8 +153,9 @@ private fun FilterSearchContent(
                 .width(174.dp)
                 .align(Alignment.CenterHorizontally),
         ) {
-            SmallButton(
+            AppButton(
                 text = "Filter",
+                size = ButtonSize.Small,
                 onClick = { onFilterClick(filterState) },
             )
         }
