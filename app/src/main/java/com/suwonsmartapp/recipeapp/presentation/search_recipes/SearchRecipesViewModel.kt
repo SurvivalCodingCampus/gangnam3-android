@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 class SearchRecipesViewModel(
@@ -31,7 +32,7 @@ class SearchRecipesViewModel(
         viewModelScope.launch {
             loadRecipes()
             combine(
-                _state.map { it.query.trim() }.distinctUntilChanged().debounce(DEBOUNCE_MILLIS),
+                _state.map { it.query.trim() }.distinctUntilChanged().debounce(DEBOUNCE_MILLIS.milliseconds),
                 _state.map { it.filter }.distinctUntilChanged(),
             ) { query, filter -> query to filter }
                 .collect { (query, filter) ->
@@ -51,7 +52,7 @@ class SearchRecipesViewModel(
         _state.update { it.copy(query = query) }
     }
 
-    fun onFilterApply(filter: FilterSearchState) {
+    fun onFilterClick(filter: FilterSearchState) {
         _state.update { it.copy(filter = filter) }
     }
 

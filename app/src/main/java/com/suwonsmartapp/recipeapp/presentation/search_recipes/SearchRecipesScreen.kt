@@ -28,12 +28,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,7 +42,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.rememberAsyncImagePainter
 import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.domain.model.Recipe
@@ -55,37 +49,14 @@ import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
 @Composable
-fun SearchRecipesRoot(
-    onBackClick: () -> Unit,
-    viewModel: SearchRecipesViewModel = viewModel(factory = SearchRecipesViewModel.Factory),
-) {
-    val state by viewModel.state.collectAsState()
-    SearchRecipesScreen(
-        state = state,
-        onQueryChange = viewModel::onQueryChange,
-        onFilterApply = viewModel::onFilterApply,
-        onBackClick = onBackClick,
-    )
-}
-
-@Composable
 fun SearchRecipesScreen(
     state: SearchRecipesState,
     onQueryChange: (String) -> Unit,
-    onFilterApply: (FilterSearchState) -> Unit,
+    onFilterClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var isFilterSheetVisible by rememberSaveable { mutableStateOf(false) }
     val isSearching = state.query.isNotBlank() || state.filter != FilterSearchState()
-
-    if (isFilterSheetVisible) {
-        FilterSearchBottomSheet(
-            onFilterClick = onFilterApply,
-            onDismissRequest = { isFilterSheetVisible = false },
-            initialState = state.filter,
-        )
-    }
 
     Column(
         modifier = modifier
@@ -164,7 +135,7 @@ fun SearchRecipesScreen(
                     .size(size = 40.dp)
                     .clip(shape = RoundedCornerShape(size = 10.dp))
                     .background(color = AppColors.primary100)
-                    .clickable { isFilterSheetVisible = true }
+                    .clickable(onClick = onFilterClick)
                     .padding(all = 10.dp),
                 painter = painterResource(R.drawable.ic_setting),
                 contentDescription = stringResource(id = R.string.search_recipes_filter),
@@ -319,7 +290,7 @@ private fun SearchRecipesScreenPreview() {
             filteredRecipes = recipes,
         ),
         onQueryChange = {},
-        onFilterApply = {},
+        onFilterClick = {},
         onBackClick = {},
     )
 }

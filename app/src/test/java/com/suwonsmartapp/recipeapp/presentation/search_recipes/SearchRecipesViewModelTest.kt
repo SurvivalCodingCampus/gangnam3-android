@@ -126,7 +126,7 @@ class SearchRecipesViewModelTest {
         val viewModel = SearchRecipesViewModel(fakeRepository(recipes = ratedRecipes))
         advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
 
-        viewModel.onFilterApply(FilterSearchState(rate = 4))
+        viewModel.onFilterClick(FilterSearchState(rate = 4))
 
         assertEquals(listOf(ratedRecipes[0], ratedRecipes[1]), viewModel.state.value.filteredRecipes)
     }
@@ -136,7 +136,7 @@ class SearchRecipesViewModelTest {
         val viewModel = SearchRecipesViewModel(fakeRepository(recipes = ratedRecipes))
         advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
 
-        viewModel.onFilterApply(FilterSearchState(rate = 5))
+        viewModel.onFilterClick(FilterSearchState(rate = 5))
 
         assertEquals(listOf(ratedRecipes[2]), viewModel.state.value.filteredRecipes)
     }
@@ -145,7 +145,7 @@ class SearchRecipesViewModelTest {
     fun `Rate 필터와 검색어를 함께 적용한다`() = runTest {
         val viewModel = SearchRecipesViewModel(fakeRepository(recipes = ratedRecipes))
 
-        viewModel.onFilterApply(FilterSearchState(rate = 4))
+        viewModel.onFilterClick(FilterSearchState(rate = 4))
         viewModel.onQueryChange("chicken")
         advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
         assertEquals(emptyList<Recipe>(), viewModel.state.value.filteredRecipes)
@@ -160,8 +160,8 @@ class SearchRecipesViewModelTest {
         val viewModel = SearchRecipesViewModel(fakeRepository(recipes = ratedRecipes))
         advanceTimeBy(SearchRecipesViewModel.DEBOUNCE_MILLIS + 1)
 
-        viewModel.onFilterApply(FilterSearchState(rate = 4))
-        viewModel.onFilterApply(FilterSearchState())
+        viewModel.onFilterClick(FilterSearchState(rate = 4))
+        viewModel.onFilterClick(FilterSearchState())
 
         assertEquals(ratedRecipes, viewModel.state.value.filteredRecipes)
     }
