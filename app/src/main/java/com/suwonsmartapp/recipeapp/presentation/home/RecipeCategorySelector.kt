@@ -1,5 +1,6 @@
 package com.suwonsmartapp.recipeapp.presentation.home
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.ui.AppColors
 import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 
@@ -41,12 +43,21 @@ fun RecipeCategorySelector(
                     .background(color = if (isSelected) AppColors.primary100 else AppColors.transparent)
                     .clickable { onSelectCategory(category) }
                     .padding(horizontal = 20.dp, vertical = 7.dp),
-                text = stringResource(id = category.label),
+                text = stringResource(id = category.toLabelRes()),
                 style = AppTextStyles.smallerTextBold,
                 color = if (isSelected) AppColors.white else AppColors.primary80,
             )
         }
     }
+}
+
+@StringRes
+fun RecipeCategory.toLabelRes(): Int = when (this) {
+    RecipeCategory.ALL -> R.string.home_category_all
+    RecipeCategory.INDIAN -> R.string.home_category_indian
+    RecipeCategory.ITALIAN -> R.string.home_category_italian
+    RecipeCategory.ASIAN -> R.string.home_category_asian
+    RecipeCategory.CHINESE -> R.string.home_category_chinese
 }
 
 @Preview(showBackground = true)
