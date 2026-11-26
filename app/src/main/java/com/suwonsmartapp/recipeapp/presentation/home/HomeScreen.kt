@@ -3,6 +3,7 @@ package com.suwonsmartapp.recipeapp.presentation.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -117,6 +120,18 @@ fun HomeScreen(
             onSelectCategory = onSelectCategory,
             contentPadding = PaddingValues(horizontal = 30.dp),
         )
+        Spacer(modifier = Modifier.height(height = 15.dp))
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 30.dp),
+            horizontalArrangement = Arrangement.spacedBy(space = 15.dp),
+        ) {
+            items(
+                items = state.filteredRecipes,
+                key = { it.id },
+            ) { recipe ->
+                HomeRecipeCard(recipe = recipe)
+            }
+        }
     }
 }
 
