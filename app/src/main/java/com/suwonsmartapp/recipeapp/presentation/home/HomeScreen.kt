@@ -37,6 +37,7 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 fun HomeScreen(
     state: HomeState,
     onSelectCategory: (RecipeCategory) -> Unit,
+    onBookmarkClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -129,7 +130,11 @@ fun HomeScreen(
                 items = state.filteredRecipes,
                 key = { it.id },
             ) { recipe ->
-                HomeRecipeCard(recipe = recipe)
+                HomeRecipeCard(
+                    recipe = recipe,
+                    isBookmarked = recipe.id in state.bookmarkedIds,
+                    onBookmarkClick = { onBookmarkClick(recipe.id) },
+                )
             }
         }
     }
@@ -141,5 +146,6 @@ private fun HomeScreenPreview() {
     HomeScreen(
         state = HomeState(selectedCategory = RecipeCategory.ITALIAN),
         onSelectCategory = {},
+        onBookmarkClick = {},
     )
 }

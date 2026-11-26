@@ -8,6 +8,7 @@ data class HomeState(
     val userName: String = "Jega",
     val selectedCategory: RecipeCategory = RecipeCategory.ALL,
     val recipes: List<Recipe> = emptyList(),
+    val bookmarkedIds: Set<Int> = emptySet(),
 ) {
     val filteredRecipes: List<Recipe>
         get() = if (selectedCategory == RecipeCategory.ALL) {

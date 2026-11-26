@@ -61,4 +61,16 @@ class HomeViewModelTest {
 
         assertEquals(emptyList<Recipe>(), viewModel.state.value.filteredRecipes)
     }
+
+    @Test
+    fun `북마크를 클릭하면 활성과 비활성이 전환된다`() {
+        val viewModel = HomeViewModel(fakeRepository)
+        assertEquals(emptySet<Int>(), viewModel.state.value.bookmarkedIds)
+
+        viewModel.onBookmarkClick(indianRecipe.id)
+        assertEquals(setOf(indianRecipe.id), viewModel.state.value.bookmarkedIds)
+
+        viewModel.onBookmarkClick(indianRecipe.id)
+        assertEquals(emptySet<Int>(), viewModel.state.value.bookmarkedIds)
+    }
 }

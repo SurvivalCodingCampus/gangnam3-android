@@ -34,6 +34,13 @@ class HomeViewModel(
         _state.update { it.copy(selectedCategory = category) }
     }
 
+    fun onBookmarkClick(recipeId: Int) {
+        _state.update {
+            val ids = it.bookmarkedIds
+            it.copy(bookmarkedIds = if (recipeId in ids) ids - recipeId else ids + recipeId)
+        }
+    }
+
     companion object {
         val Factory = viewModelFactory {
             initializer {

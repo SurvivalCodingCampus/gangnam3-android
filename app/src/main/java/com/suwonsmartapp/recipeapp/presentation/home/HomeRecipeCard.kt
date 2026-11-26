@@ -2,6 +2,7 @@ package com.suwonsmartapp.recipeapp.presentation.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +40,8 @@ import com.suwonsmartapp.recipeapp.ui.AppTextStyles
 @Composable
 fun HomeRecipeCard(
     recipe: Recipe,
+    isBookmarked: Boolean,
+    onBookmarkClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -78,11 +85,13 @@ fun HomeRecipeCard(
                 modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
                     .size(size = 24.dp)
-                    .background(color = AppColors.white, shape = CircleShape)
+                    .clip(shape = CircleShape)
+                    .background(color = AppColors.white)
+                    .clickable(onClick = onBookmarkClick)
                     .padding(all = 4.dp),
                 painter = painterResource(id = R.drawable.bookmark),
                 contentDescription = stringResource(id = R.string.recipe_bookmark),
-                tint = AppColors.primary80,
+                tint = if (isBookmarked) AppColors.primary80 else AppColors.gray3,
             )
         }
         Image(
@@ -129,7 +138,10 @@ fun HomeRecipeCard(
 @Preview(showBackground = true)
 @Composable
 private fun HomeRecipeCardPreview() {
+    var isBookmarked by remember { mutableStateOf(false) }
     HomeRecipeCard(
+        isBookmarked = isBookmarked,
+        onBookmarkClick = { isBookmarked = !isBookmarked },
         recipe = Recipe(
             id = 1,
             category = "Indian",
