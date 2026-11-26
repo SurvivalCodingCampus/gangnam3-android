@@ -45,6 +45,7 @@ import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.presentation.component.input.SearchField
 import com.suwonsmartapp.recipeapp.presentation.component.recipe.DishCard
 import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
+import com.suwonsmartapp.recipeapp.presentation.model.FilterCategory
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
@@ -78,7 +79,7 @@ fun HomeScreen(
     userName: String,
     onSearchClick: () -> Unit,
     onFilterClick: () -> Unit,
-    onSelectCategory: (HomeCategory) -> Unit,
+    onSelectCategory: (FilterCategory) -> Unit,
     onBookmarkClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -206,19 +207,18 @@ fun HomeScreen(
 
 @Composable
 private fun CategoryTabs(
-    selectedCategory: HomeCategory,
-    onSelectCategory: (HomeCategory) -> Unit,
+    selectedCategory: FilterCategory,
+    onSelectCategory: (FilterCategory) -> Unit,
 ) {
     // 가로 스크롤 안에 넣으면 FlowRow가 줄바꿈 없이 한 줄로 그려짐
     Tabs(
         modifier = Modifier
             .horizontalScroll(rememberScrollState())
             .padding(horizontal = 30.dp),
-        items = HomeCategory.entries,
+        items = FilterCategory.entries,
         selectedItem = selectedCategory,
         onValueChange = onSelectCategory,
         itemLabel = { it.label },
-        // Figma: 탭 사이 간격 없음, 테두리 없음, 안쪽 여백 20/7
         horizontalArrangement = Arrangement.spacedBy(space = 0.dp),
         showBorder = false,
         contentPadding = PaddingValues(horizontal = 20.dp, vertical = 7.dp),

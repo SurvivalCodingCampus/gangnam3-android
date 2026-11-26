@@ -6,6 +6,9 @@ import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
 import com.suwonsmartapp.recipeapp.core.network.StatusCode
+import com.suwonsmartapp.recipeapp.presentation.model.FilterCategory
+import com.suwonsmartapp.recipeapp.presentation.model.FilterRate
+import com.suwonsmartapp.recipeapp.presentation.model.FilterTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

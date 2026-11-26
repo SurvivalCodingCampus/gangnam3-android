@@ -28,6 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.suwonsmartapp.recipeapp.presentation.component.button.SmallButton
 import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
+import com.suwonsmartapp.recipeapp.presentation.model.FilterCategory
+import com.suwonsmartapp.recipeapp.presentation.model.FilterRate
+import com.suwonsmartapp.recipeapp.presentation.model.FilterTime
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
