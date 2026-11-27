@@ -38,4 +38,16 @@
     <string name="filter_category_breakfast">Breakfast</string>
     <string name="filter_category_spanish">Spanish</string>
     <string name="filter_category_lunch">Lunch</string>
+
+    <string name="recipe_bookmark">Bookmark</string>
+    <string name="home_hello">Hello %1$s</string>
+    <string name="home_greeting">What are you cooking today?</string>
+    <string name="home_profile">Profile</string>
+    <string name="home_recipe_time">Time</string>
+    <string name="home_category_all">All</string>
+    <string name="home_category_indian">Indian</string>
+    <string name="home_category_italian">Italian</string>
+    <string name="home_category_asian">Asian</string>
+    <string name="home_category_chinese">Chinese</string>
+    <string name="home_recipe_minutes">%1$d Mins</string>
 </resources>

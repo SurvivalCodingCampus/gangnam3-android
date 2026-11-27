@@ -37,4 +37,7 @@ object AppColors {
 
     // Green
     val success = Color(0xFF31B057)
+
+    // Transparent
+    val transparent = Color.Transparent
 }
