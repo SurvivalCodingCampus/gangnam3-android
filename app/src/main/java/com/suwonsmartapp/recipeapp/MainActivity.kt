@@ -29,6 +29,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.lifecycleScope
 import com.suwonsmartapp.recipeapp.presentation.component.examples.CounterViewModel
 import com.suwonsmartapp.recipeapp.presentation.home.HomeRoot
+import com.suwonsmartapp.recipeapp.core.routing.NavigationRoot
 import com.suwonsmartapp.recipeapp.presentation.splash.SplashScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -40,8 +41,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-//            SplashScreen()
-            HomeRoot()
+            NavigationRoot()
         }
     }
 }

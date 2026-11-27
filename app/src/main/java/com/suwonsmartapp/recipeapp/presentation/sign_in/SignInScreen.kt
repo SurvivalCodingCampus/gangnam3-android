@@ -1,6 +1,8 @@
 package com.suwonsmartapp.recipeapp.presentation.sign_in
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -37,6 +40,7 @@ fun SignInScreen(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onSignUpClick: () -> Unit = {},
 ) {
     // 화면 진입 시 초기 포커스 일괄 해제 : 회색 배경 방지
     val focusManager = LocalFocusManager.current
@@ -127,7 +131,12 @@ fun SignInScreen(
                 color = AppColors.secondary100,
                 style = AppTextStyles.smallerTextBold.copy(
                     fontWeight = FontWeight.SemiBold,
-                )
+                ),
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = onSignUpClick,
+                ),
             )
         }
     }
