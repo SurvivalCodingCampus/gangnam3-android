@@ -39,7 +39,9 @@ fun SearchRecipesRoot(
 
     if (isFilterSheetVisible) {
         FilterSearchBottomSheet(
-            // 이전에 적용한 필터를 이어서 보여준다.
+            // 이전에 적용한 필터를 이어서 보여준다. 시트에서 고르던 임시 선택은
+            // Activity가 재생성된 뒤에도 FilterSearchBottomSheet 안의 rememberSaveable이 복원하고,
+            // 시트를 닫으면 그 저장값이 버려져 다시 열 때는 적용된 필터부터 시작한다.
             initialState = state.filter,
             // 실제 데이터에 있는 카테고리만 선택지로 보여준다.
             categories = listOf("All") + state.allRecipes.map { it.category }.distinct().filter { it != "All" },
