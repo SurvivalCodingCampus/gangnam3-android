@@ -53,6 +53,8 @@ fun RecipeCategorySelector(
             // 별도 상태 없이 전달받은 값과 비교해 선택 여부를 계산한다.
             val isSelected = category == selectedCategory
             Surface(
+                // 색상뿐 아니라 접근성 트리에도 선택 상태를 알려 TalkBack이 현재 카테고리를 읽게 한다.
+                selected = isSelected,
                 onClick = { onSelectCategory(category) },
                 shape = RoundedCornerShape(10.dp),
                 color = if (isSelected) CategoryGreen else Color.Transparent,
