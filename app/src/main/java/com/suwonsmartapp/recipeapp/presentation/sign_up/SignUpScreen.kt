@@ -36,6 +36,36 @@ import com.suwonsmartapp.recipeapp.presentation.component.input.InputField
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
+// 입력 상태를 가진 Root (ViewModel 붙이기 전까지 rememberSaveable로 보관)
+@Composable
+fun SignUpScreenRoot(
+    onSignUpClick: () -> Unit,
+    onSignInClick: () -> Unit,
+) {
+    var name by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var isTermsAccepted by rememberSaveable { mutableStateOf(false) }
+
+    SignUpScreen(
+        name = name,
+        email = email,
+        password = password,
+        confirmPassword = confirmPassword,
+        isTermsAccepted = isTermsAccepted,
+        onNameChange = { name = it },
+        onEmailChange = { email = it },
+        onPasswordChange = { password = it },
+        onConfirmPasswordChange = { confirmPassword = it },
+        onTermsClick = { isTermsAccepted = !isTermsAccepted },
+        onSignUpClick = onSignUpClick,
+        onGoogleClick = {},
+        onFacebookClick = {},
+        onSignInClick = onSignInClick,
+    )
+}
+
 @Composable
 fun SignUpScreen(
     name: String,

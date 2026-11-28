@@ -2,6 +2,7 @@ package com.suwonsmartapp.recipeapp.presentation.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,8 +32,22 @@ import com.suwonsmartapp.recipeapp.R
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 
+// 상태를 가진 Root (지금은 상태가 없어서 이벤트만 전달)
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
+fun SplashScreenRoot(
+    onStartClick: () -> Unit,
+) {
+    SplashScreen(
+        onStartClick = onStartClick,
+    )
+}
+
+// 화면만 그리는 Screen (상태 없음)
+@Composable
+fun SplashScreen(
+    onStartClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -85,6 +100,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
                         color = AppColors.primary100,
                         shape = RoundedCornerShape(size = 10.dp),
                     )
+                    .clickable(onClick = onStartClick)
                     .padding(vertical = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -109,5 +125,5 @@ fun SplashScreen(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen()
+    SplashScreen(onStartClick = {})
 }
