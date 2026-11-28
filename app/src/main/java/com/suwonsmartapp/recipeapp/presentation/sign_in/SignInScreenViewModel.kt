@@ -47,8 +47,8 @@ class SignInScreenViewModel(
                 }
 
                 is Result.Error -> {
-                    // 401 → 계정 틀림, 나머지는 공용 에러 문구
-                    val message = if (result.error == NetworkError.CLIENT_ERR) {
+                    // 401 → 계정 틀림, 나머지는 각 에러에 맞는 공용 문구
+                    val message = if (result.error == NetworkError.UNAUTHORIZED_ERR) {
                         "Email or password is incorrect"
                     } else {
                         result.error.toMessage()

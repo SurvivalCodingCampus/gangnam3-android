@@ -194,3 +194,21 @@ private fun SignInScreenPreview() {
     )
 }
 
+
+// 비밀번호 틀렸을 때 (에러 문구 표시)
+@Preview(showBackground = true)
+@Composable
+private fun SignInScreenErrorPreview() {
+    SignInScreen(
+        email = "qwer",
+        password = "0000",
+        errorMessage = "Email or password is incorrect",
+        onEmailChange = {},
+        onPasswordChange = {},
+        onForgotPasswordClick = {},
+        onSignInClick = {},
+        onGoogleClick = {},
+        onFacebookClick = {},
+        onSignUpClick = {},
+    )
+}

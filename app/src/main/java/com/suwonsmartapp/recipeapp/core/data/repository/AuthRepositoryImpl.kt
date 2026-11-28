@@ -6,6 +6,7 @@ import com.suwonsmartapp.recipeapp.core.data.mapper.toModel
 import com.suwonsmartapp.recipeapp.core.data.model.Auth
 import com.suwonsmartapp.recipeapp.core.network.NetworkError
 import com.suwonsmartapp.recipeapp.core.network.Result
+import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.serialization.SerializationException
@@ -21,6 +22,8 @@ class AuthRepositoryImpl(
 
             when {
                 response.statusCode.isServerError() -> return Result.Error(NetworkError.SERVER_ERR)
+                // 401만 계정 틀림으로 따로 구분
+                response.statusCode == StatusCode.Unauthorized -> return Result.Error(NetworkError.UNAUTHORIZED_ERR)
                 response.statusCode.isClientError() -> return Result.Error(NetworkError.CLIENT_ERR)
             }
 

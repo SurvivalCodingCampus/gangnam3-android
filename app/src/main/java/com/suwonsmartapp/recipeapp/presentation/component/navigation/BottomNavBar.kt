@@ -117,7 +117,10 @@ private fun NavItem(
 }
 
 // 가운데가 움푹 파인 배경 모양 (Figma: Nav Bar/Bg)
-// 숫자는 Figma 좌표(dp)를 가운데(centerX) 기준으로 옮긴 값
+// 숫자는 Figma SVG path 좌표(dp)를 옮긴 값
+// - x: 곡선 가운데(x=188)를 centerX로 두려고 188을 뺌 (예: 133.125 - 188 = -54.875)
+// - y: SVG는 윗선이 y=8에서 시작해서 8을 뺌 (예: 49 - 8 = 41)
+// - 오른쪽 곡선은 왼쪽 곡선의 x 부호만 바꾼 좌우 대칭
 private object NavBarShape : Shape {
     override fun createOutline(
         size: Size,
