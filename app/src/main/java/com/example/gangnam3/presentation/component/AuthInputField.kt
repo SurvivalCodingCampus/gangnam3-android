@@ -18,6 +18,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+// 인증 화면에서 함께 쓰는 색상
 val PrimaryGreen = Color(0xFF129575)
 val SecondaryOrange = Color(0xFFFF9C00)
 val GrayBorder = Color(0xFFD9D9D9)
@@ -43,6 +44,7 @@ fun AuthInputField(
             color = Color(0xFF121212)
         )
         Spacer(modifier = Modifier.height(6.dp))
+        // 입력값은 호출자가 소유한다. 여기서는 표시하고 변경을 알리기만 한다.
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
@@ -51,6 +53,7 @@ fun AuthInputField(
             },
             singleLine = true,
             shape = RoundedCornerShape(10.dp),
+            // 비밀번호 입력에서 글자를 점으로 가릴 때 사용한다.
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
@@ -97,6 +100,7 @@ fun PrimaryActionButton(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.width(12.dp))
+            // 화살표는 장식이므로 contentDescription을 비워 중복 낭독을 막는다.
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,

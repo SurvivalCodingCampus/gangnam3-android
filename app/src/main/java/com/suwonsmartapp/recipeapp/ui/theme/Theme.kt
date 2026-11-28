@@ -40,6 +40,7 @@ private val DarkColorScheme = darkColorScheme(
     outlineVariant = Color(0xFF3A3A3A)
 )
 
+// 라이트 모드 색상.
 private val LightColorScheme = lightColorScheme(
     primary = RecipePrimary,
     secondary = RecipeStar,
@@ -61,6 +62,11 @@ private val LightColorScheme = lightColorScheme(
     outline = RecipeBorder
 )
 
+/**
+ * 앱 공통 테마. 색상과 글꼴을 하위 모든 화면에 제공한다.
+ * @param darkTheme 다크 모드 사용 여부(기본값은 시스템 설정)
+ * @param dynamicColor Android 12 이상의 배경화면 기반 색상 사용 여부
+ */
 @Composable
 fun RecipeAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

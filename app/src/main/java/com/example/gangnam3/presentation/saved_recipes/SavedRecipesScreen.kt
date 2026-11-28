@@ -35,11 +35,13 @@ private val PrimaryGreen = Color(0xFF129575)
 private val RatingBadgeBg = Color(0xFFFFE1B3)
 private val StarOrange = Color(0xFFFF9C00)
 
+/** ViewModel과 화면을 연결한다. 화면 자체는 ViewModel을 몰라 미리보기와 테스트가 쉽다. */
 @Composable
 fun SavedRecipesRoute(
     viewModel: SavedRecipesViewModel,
     modifier: Modifier = Modifier
 ) {
+    // 화면이 보이지 않을 때는 수집을 멈춰 자원을 아낀다.
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SavedRecipesScreen(
@@ -49,6 +51,7 @@ fun SavedRecipesRoute(
     )
 }
 
+/** 저장 목록 화면(Stateless). 상태에 따라 로딩·오류·빈 목록·목록 중 하나를 그린다. */
 @Composable
 fun SavedRecipesScreen(
     uiState: SavedRecipesUiState,
@@ -77,6 +80,7 @@ fun SavedRecipesScreen(
         }
 
         when {
+            // 위에서부터 먼저 맞는 상태 하나만 표시한다.
             uiState.isLoading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -101,6 +105,16 @@ fun SavedRecipesScreen(
                 }
             }
 
+            // 불러오기는 성공했지만 저장한 레시피가 없는 경우
+            uiState.recipes.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "저장한 레시피가 없습니다.", fontSize = 14.sp, color = Color.Gray)
+                }
+            }
+
             else -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -122,6 +136,7 @@ fun SavedRecipesScreen(
     }
 }
 
+/** 사진 위에 제목, 셰프, 조리 시간, 북마크 버튼을 겹쳐 보여주는 카드. */
 @Composable
 fun SavedRecipeCard(
     recipe: Recipe,

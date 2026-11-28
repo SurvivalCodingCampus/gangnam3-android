@@ -2,11 +2,16 @@ package com.example.gangnam3.presentation.search_recipes
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +22,26 @@ import androidx.compose.ui.unit.sp
 
 private val PrimaryGreen = Color(0xFF129575)
 private val TextDark = Color(0xFF121212)
+
+/** 별점을 선택하지 않은 상태(null)를 저장할 때 쓰는 값. Bundle에는 null을 그대로 담을 수 없다. */
+private const val NoRateSavedValue = -1
+
+/**
+ * 시트에서 조작 중인 임시 필터를 Activity 재생성 후에도 되살리는 Saver입니다.
+ * Bundle에 담을 수 있는 문자열·정수 세 값만 기록합니다.
+ */
+private val FilterSearchStateSaver: Saver<FilterSearchState, Any> = listSaver(
+    save = { state ->
+        listOf(state.selectedTime, state.selectedRate ?: NoRateSavedValue, state.selectedCategory)
+    },
+    restore = { saved ->
+        FilterSearchState(
+            selectedTime = saved[0] as String,
+            selectedRate = (saved[1] as Int).takeIf { rate -> rate != NoRateSavedValue },
+            selectedCategory = saved[2] as String
+        )
+    }
+)
 
 /**
  * 시간, 별점, 카테고리 조건을 고른 뒤 한 번에 적용하는 모달 바텀시트입니다.
@@ -29,6 +54,7 @@ private val TextDark = Color(0xFF121212)
  * @param onApplyFilter 사용자가 적용 버튼을 눌렀을 때 확정된 필터 상태를 전달합니다.
  * @param modifier 바텀시트의 배치나 크기를 호출 측에서 조정할 때 사용합니다.
  * @param initialState 시트를 열 때 표시할 초기 선택값입니다. 값이 바뀌면 내부 선택도 다시 맞춥니다.
+ * @param categories 카테고리 선택지입니다. 지정하지 않으면 시안의 고정 목록을 씁니다.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -36,11 +62,16 @@ fun FilterSearchBottomSheet(
     onDismissRequest: () -> Unit,
     onApplyFilter: (FilterSearchState) -> Unit,
     modifier: Modifier = Modifier,
-    initialState: FilterSearchState = FilterSearchState()
+    initialState: FilterSearchState = FilterSearchState(),
+    categories: List<String> = FilterSearchState.categoryOptions
 ) {
-    // 시트에서 사용자가 조작 중인 임시 필터입니다. remember의 키로 초기 상태를 사용해
+    // 시트에서 사용자가 조작 중인 임시 필터입니다. rememberSaveable의 키로 초기 상태를 사용해
     // 호출 측에서 다른 필터를 넘기면 내부 선택값도 새 값으로 초기화합니다.
-    var filterState by remember(initialState) { mutableStateOf(initialState) }
+    // 저장 가능한 상태로 보관하므로 화면을 회전해도 조작 중이던 선택이 유지되고,
+    // 시트를 닫아 컴포지션에서 사라지면 저장값도 버려져 다시 열 때는 적용된 필터부터 시작합니다.
+    var filterState by rememberSaveable(initialState, stateSaver = FilterSearchStateSaver) {
+        mutableStateOf(initialState)
+    }
 
     // 일부만 펼쳐진 상태를 건너뛰어 시트를 열 때 필터 항목을 모두 볼 수 있게 합니다.
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -54,6 +85,7 @@ fun FilterSearchBottomSheet(
     ) {
         FilterSearchSheetContent(
             filterState = filterState,
+            categories = categories,
             onTimeSelect = { time ->
                 filterState = filterState.copy(selectedTime = time)
             },
@@ -83,7 +115,8 @@ private fun FilterSearchSheetContent(
     onRateSelect: (Int) -> Unit,
     onCategorySelect: (String) -> Unit,
     onFilterClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    categories: List<String> = FilterSearchState.categoryOptions
 ) {
     // 세로로 항목을 쌓고, 시스템 내비게이션 영역과 겹치지 않도록 아래쪽 여백을 확보합니다.
     Column(
@@ -91,6 +124,8 @@ private fun FilterSearchSheetContent(
             .fillMaxWidth()
             .navigationBarsPadding()
             .padding(horizontal = 24.dp, vertical = 8.dp)
+            // 카테고리가 많아 화면 높이를 넘겨도 마지막 항목과 Filter 버튼까지 스크롤로 닿을 수 있게 합니다.
+            .verticalScroll(rememberScrollState())
     ) {
         // 시트의 목적을 나타내는 제목입니다. 가운데 정렬해 필터 구역과 시각적으로 구분합니다.
         Text(
@@ -148,7 +183,7 @@ private fun FilterSearchSheetContent(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            FilterSearchState.categoryOptions.forEach { category ->
+            categories.forEach { category ->
                 // 명세의 시각 표현에 맞춰 Dinner 항목에만 별 아이콘을 표시합니다.
                 val isDinner = category == "Dinner"
                 FilterChipButton(

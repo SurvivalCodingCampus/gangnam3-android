@@ -10,12 +10,14 @@ import org.junit.Assert.assertFalse
 import org.junit.Rule
 import org.junit.Test
 
+/** 저장 화면 ViewModel의 로드·북마크·오류 회복을 검증한다. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class SavedRecipesViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
+    /** 서버 대신 항상 같은 두 건을 돌려주는 가짜 저장소 */
     private class FakeRecipeRepository : RecipeRepository {
         override suspend fun getSavedRecipes(): List<Recipe> {
             return listOf(
@@ -61,5 +63,36 @@ class SavedRecipesViewModelTest {
 
         val toggledRecipe = viewModel.uiState.value.recipes.first { it.id == 1 }
         assertFalse(toggledRecipe.isBookmarked)
+    }
+
+    @Test
+    fun `로드에 실패하면 오류가 표시되고 다시 로드하면 회복된다`() = runTest {
+        // 첫 호출만 실패하는 저장소로 재시도 흐름을 재현한다.
+        val flaky = object : RecipeRepository {
+            var calls = 0
+            override suspend fun getSavedRecipes(): List<Recipe> =
+                if (calls++ == 0) error("연결 실패") else emptyList()
+        }
+        val viewModel = SavedRecipesViewModel(recipeRepository = flaky)
+        assertEquals("연결 실패", viewModel.uiState.value.errorMessage)
+        assertFalse(viewModel.uiState.value.isLoading)
+
+        viewModel.loadSavedRecipes()
+
+        assertEquals(null, viewModel.uiState.value.errorMessage)
+    }
+
+    @Test
+    fun `북마크하지 않은 레시피는 저장 목록에서 제외된다`() = runTest {
+        val repository = object : RecipeRepository {
+            override suspend fun getSavedRecipes() = listOf(
+                Recipe(1, "저장함", "A", "20 min", 4.0, "", isBookmarked = true),
+                Recipe(2, "저장 안 함", "B", "20 min", 4.0, "", isBookmarked = false)
+            )
+        }
+
+        val state = SavedRecipesViewModel(repository).uiState.value
+
+        assertEquals(listOf(1), state.recipes.map { it.id })
     }
 }

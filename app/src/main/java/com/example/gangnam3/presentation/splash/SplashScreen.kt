@@ -27,6 +27,11 @@ private val PrimaryGreen = Color(0xFF129575)
 private const val SPLASH_BACKGROUND_IMAGE_URL =
     "https://cdn.pixabay.com/photo/2017/02/15/10/57/salad-2068220_1280.jpg"
 
+/**
+ * 배경 사진 위에 시작 버튼을 보여주는 첫 화면.
+ * @param onStartCookingClick 시작 버튼을 눌렀을 때의 동작
+ * @param backgroundImageUrl 배경 이미지 주소
+ */
 @Composable
 fun SplashScreen(
     onStartCookingClick: () -> Unit,
@@ -70,6 +75,7 @@ fun SplashScreen(
                 .padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // weight 비율로 남는 높이를 나눠 화면 크기가 달라도 배치를 유지한다.
             Spacer(modifier = Modifier.weight(1.1f))
 
             // 상단 브랜딩 아이콘 & 문구 ("100K+ Premium Recipe")

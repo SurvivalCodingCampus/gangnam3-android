@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gangnam3.presentation.component.*
 
+/** 회원가입 화면(Stateless). 입력값 검증과 실제 가입 처리는 호출자가 담당한다. */
 @Composable
 fun SignUpScreen(
     name: String,
@@ -47,6 +48,7 @@ fun SignUpScreen(
     onSignInClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // 키보드의 다음 버튼으로 다음 입력칸에 포커스를 옮긴다.
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -146,6 +148,7 @@ fun SignUpScreen(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .padding(start = 4.dp)
+                // 상자와 문구 어디를 눌러도 동의 상태가 반대로 바뀐다.
                 .clickable { onTermsAcceptedChange(!isTermsAccepted) }
         ) {
             Surface(
@@ -218,6 +221,7 @@ fun SignUpScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SignUpScreenPreview() {
+    // 미리보기에서만 쓰는 임시 상태
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }

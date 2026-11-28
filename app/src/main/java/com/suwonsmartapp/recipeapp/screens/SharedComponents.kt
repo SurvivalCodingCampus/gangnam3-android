@@ -48,7 +48,9 @@ fun RecipeMedia(
     tint: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
     rounded: Dp = 16.dp
 ) {
+    // 빈 문자열이나 공백 URL은 이미지가 없는 것으로 처리한다.
     val url = imageUrl?.trim()?.takeIf { it.isNotBlank() }
+    // url을 키로 사용해 이미지 주소가 바뀌면 로딩 상태를 초기화한다.
     var loading by remember(url) { mutableStateOf(url != null) }
     var loaded by remember(url) { mutableStateOf(false) }
     Box(
@@ -58,6 +60,7 @@ fun RecipeMedia(
             .background(tint),
         contentAlignment = Alignment.Center
     ) {
+        // 이미지가 준비될 때까지, 또는 실패했을 때 이모지를 대신 보여준다.
         if (!loaded && emoji.isNotEmpty()) Text(text = emoji, fontSize = emojiSize,
             modifier = Modifier.clearAndSetSemantics { })
         if (url != null) {
@@ -105,6 +108,7 @@ fun HeartToggle(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // 현재 상태에서 누르면 일어날 동작을 읽어 준다.
     val label = stringResource(if (saved) R.string.bookmark_remove else R.string.bookmark_save)
     IconToggleButton(
         checked = saved,

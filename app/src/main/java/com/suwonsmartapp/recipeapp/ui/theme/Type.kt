@@ -35,6 +35,7 @@ fun poppinsTypography(context: Context): Typography {
         poppinsFont(context, "Poppins-SemiBold.ttf", FontWeight.SemiBold),
         poppinsFont(context, "Poppins-Bold.ttf", FontWeight.Bold),
     )
+    // 글꼴을 하나도 읽지 못했으면 시스템 기본 글꼴을 쓴다.
     if (fonts.isEmpty()) return base
     val family = FontFamily(*fonts.toTypedArray())
     return Typography(
@@ -56,6 +57,7 @@ fun poppinsTypography(context: Context): Typography {
     )
 }
 
+/** assets 글꼴을 읽는다. 실패하면 예외 대신 null을 돌려준다. */
 private fun poppinsFont(context: Context, asset: String, weight: FontWeight): Font? =
     runCatching { Font("fonts/$asset", context.assets, weight = weight, style = FontStyle.Normal) }
         .getOrNull()

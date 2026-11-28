@@ -23,6 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gangnam3.presentation.component.*
 
+/**
+ * 로그인 화면(Stateless). 입력값과 동작을 모두 호출자에게서 전달받는다.
+ * 실제 인증은 하지 않으며 버튼을 누르면 콜백만 호출한다.
+ */
 @Composable
 fun SignInScreen(
     email: String,
@@ -36,6 +40,7 @@ fun SignInScreen(
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // 키보드의 다음/완료 버튼으로 입력칸 포커스를 이동하거나 해제한다.
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -159,6 +164,7 @@ fun SignInScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SignInScreenPreview() {
+    // 미리보기에서만 쓰는 임시 상태
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 

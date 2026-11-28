@@ -85,6 +85,7 @@ fun OnboardingScreen(onStart: () -> Unit) {
             )
             Spacer(Modifier.height(24.dp))
             Button(
+                // 온보딩 완료 저장과 홈 이동은 호출자(AppRoot)가 처리한다.
                 onClick = onStart,
                 modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                 shape = RoundedCornerShape(14.dp),

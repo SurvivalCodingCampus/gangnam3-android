@@ -2,6 +2,7 @@ package com.example.gangnam3.presentation.search_recipes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -9,9 +10,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Tune
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,13 +50,15 @@ private val GrayText = Color(0xFFA9A9A9)
  * @param onBackClick 호출 측에서 검색 화면을 닫도록 알리는 콜백입니다.
  * @param onFilterClick 호출 측에서 필터 바텀시트를 열도록 알리는 콜백입니다.
  * @param modifier 검색 화면의 바깥 배치를 조정하는 수정자입니다.
+ * @param onRecipeClick 검색 결과를 눌렀을 때 호출하는 콜백입니다.
  */
 @Composable
 fun SearchRecipesRoute(
     viewModel: SearchRecipesViewModel,
     onBackClick: () -> Unit,
     onFilterClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRecipeClick: (Recipe) -> Unit = {}
 ) {
     // 화면이 백그라운드로 가면 불필요한 상태 수집을 멈추고, 다시 활성화되면 최신 상태를 받습니다.
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -65,7 +69,8 @@ fun SearchRecipesRoute(
         onQueryChange = viewModel::onQueryChange,
         onBackClick = onBackClick,
         onFilterClick = onFilterClick,
-        modifier = modifier
+        modifier = modifier,
+        onRecipeClick = onRecipeClick
     )
 }
 
@@ -75,7 +80,8 @@ fun SearchRecipesScreen(
     onQueryChange: (String) -> Unit,
     onBackClick: () -> Unit,
     onFilterClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRecipeClick: (Recipe) -> Unit = {}
 ) {
     // 검색어가 비어 있지 않으면 최근 검색 안내 대신 결과 제목과 결과 수를 보여줍니다.
     val hasQuery = state.query.isNotBlank()
@@ -148,12 +154,16 @@ fun SearchRecipesScreen(
                 singleLine = true,
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
+                    // 배경이 항상 흰색이므로 다크 모드에서도 글자를 어둡게 고정한다.
+                    focusedTextColor = Color(0xFF121212),
+                    unfocusedTextColor = Color(0xFF121212),
+                    cursorColor = PrimaryGreen,
                     unfocusedBorderColor = GrayBorder,
                     focusedBorderColor = PrimaryGreen
                 ),
                 modifier = Modifier
                     .weight(1f)
-                    .height(46.dp)
+                    .heightIn(min = 56.dp) // 46dp 고정이면 입력 글자가 잘린다
             )
 
             Surface(
@@ -208,6 +218,18 @@ fun SearchRecipesScreen(
             ) {
                 CircularProgressIndicator(color = PrimaryGreen)
             }
+        // 오류 문구가 있으면 우선 표시하고, 없으면 빈 결과 안내를 표시한다.
+        } else if (state.errorMessage != null || state.filteredRecipes.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = state.errorMessage ?: "검색 결과가 없습니다.",
+                    fontSize = 14.sp,
+                    color = if (state.errorMessage != null) Color.Red else GrayText
+                )
+            }
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -219,7 +241,7 @@ fun SearchRecipesScreen(
                     items = state.filteredRecipes,
                     key = { it.id }
                 ) { recipe ->
-                    SearchGridRecipeCard(recipe = recipe)
+                    SearchGridRecipeCard(recipe = recipe, onClick = { onRecipeClick(recipe) })
                 }
             }
         }
@@ -229,6 +251,7 @@ fun SearchRecipesScreen(
 @Composable
 private fun SearchGridRecipeCard(
     recipe: Recipe,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // 카드 한 장 안에 이미지, 어두운 그라데이션, 별점, 제목과 작성자 정보를 겹쳐 표시합니다.
@@ -237,6 +260,7 @@ private fun SearchGridRecipeCard(
             .fillMaxWidth()
             .aspectRatio(1f)
             .border(0.5.dp, Color(0xFFEEEEEE), RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick)
     ) {
         Surface(
             shape = RoundedCornerShape(12.dp),
@@ -244,14 +268,25 @@ private fun SearchGridRecipeCard(
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 // Coil이 이미지 URL을 비동기로 불러오며, 로딩 또는 실패 시 기본 갤러리 아이콘을 표시합니다.
-                AsyncImage(
-                    model = recipe.imageUrl,
-                    contentDescription = recipe.title,
-                    contentScale = ContentScale.Crop,
-                    placeholder = painterResource(android.R.drawable.ic_menu_gallery),
-                    error = painterResource(android.R.drawable.ic_menu_gallery),
-                    modifier = Modifier.fillMaxSize()
-                )
+                // 사진 주소가 없으면 그림 문자를 대신 보여준다.
+                if (recipe.imageUrl.isBlank() && recipe.emoji.isNotEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize().background(Color(0xFFE5F2EF)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // 장식이므로 TalkBack에서는 읽지 않는다.
+                        Text(recipe.emoji, fontSize = 56.sp, modifier = Modifier.clearAndSetSemantics { })
+                    }
+                } else {
+                    AsyncImage(
+                        model = recipe.imageUrl,
+                        contentDescription = recipe.title,
+                        contentScale = ContentScale.Crop,
+                        placeholder = painterResource(android.R.drawable.ic_menu_gallery),
+                        error = painterResource(android.R.drawable.ic_menu_gallery),
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
 
                 Box(
                     // 사진 위의 글자가 밝은 이미지에서도 읽히도록 아래쪽을 어둡게 덮습니다.
