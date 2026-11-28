@@ -2,6 +2,7 @@ package com.suwonsmartapp.recipeapp.presentation.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,10 @@ fun SplashScreenPreview() {
 }
 
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
+fun SplashScreen(
+    modifier: Modifier = Modifier,
+    onStartCookingClick: () -> Unit = {},
+) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -91,6 +95,7 @@ fun SplashScreen(modifier: Modifier = Modifier) {
                         color = AppColors.primary100,
                         shape = RoundedCornerShape(size = 10.dp),
                     )
+                    .clickable(onClick = onStartCookingClick)
                     .padding(vertical = 15.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,

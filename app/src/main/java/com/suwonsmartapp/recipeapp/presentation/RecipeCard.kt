@@ -154,7 +154,7 @@ fun RecipeCard(
                         .background(color = AppColors.white)
                         .clickable(onClick = onBookmarkClick)
                         .padding(all = 4.dp),
-                    painter = painterResource(id = R.drawable.bookmark),
+                    painter = painterResource(id = R.drawable.ic_bookmark_inactive),
                     contentDescription = stringResource(R.string.recipe_bookmark),
                     tint = if (isBookmarked) AppColors.primary80 else AppColors.gray4,
                 )
