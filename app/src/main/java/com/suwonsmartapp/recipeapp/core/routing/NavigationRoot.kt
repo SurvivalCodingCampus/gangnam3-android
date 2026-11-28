@@ -27,7 +27,11 @@ fun NavigationRoot(
             rememberViewModelStoreNavEntryDecorator(),
         ),
         backStack = topLevelBackStack,
-        onBack = { topLevelBackStack.removeLastOrNull() },
+        onBack = {
+            if (topLevelBackStack.size > 1) {
+                topLevelBackStack.removeLastOrNull()
+            }
+        },
         entryProvider = entryProvider {
             entry<Route.Splash> {
                 SplashScreenRoot(
