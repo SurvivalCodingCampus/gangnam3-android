@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -43,6 +46,8 @@ import coil3.compose.AsyncImage
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.model.User
 import com.suwonsmartapp.recipeapp.presentation.component.input.SearchField
+import com.suwonsmartapp.recipeapp.presentation.component.navigation.BottomNavBar
+import com.suwonsmartapp.recipeapp.presentation.component.navigation.NavTab
 import com.suwonsmartapp.recipeapp.presentation.component.recipe.DishCard
 import com.suwonsmartapp.recipeapp.presentation.component.tab.Tabs
 import com.suwonsmartapp.recipeapp.presentation.model.FilterCategory
@@ -68,6 +73,8 @@ fun HomeScreenRoot(
         onFilterClick = {},
         onSelectCategory = { category -> viewModel.onSelectCategory(category) },
         onBookmarkClick = { recipe -> viewModel.onBookmarkClick(recipe) },
+        onTabClick = {},
+        onAddClick = {},
     )
 }
 
@@ -80,132 +87,148 @@ fun HomeScreen(
     onFilterClick: () -> Unit,
     onSelectCategory: (FilterCategory) -> Unit,
     onBookmarkClick: (Recipe) -> Unit,
+    onTabClick: (NavTab) -> Unit,
+    onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.white)
-            .safeDrawingPadding(),
+            .background(AppColors.white),
     ) {
-        // 헤더 (인사말 + 프로필)
-        Row(
+        // 화면 내용 (시스템 하단바 여백은 네비바가 챙기므로 여기선 빼줌)
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = 20.dp,
-                    start = 30.dp,
-                    end = 30.dp,
-                ),
-            verticalAlignment = Alignment.CenterVertically,
+                .weight(1f)
+                .consumeWindowInsets(WindowInsets.navigationBars)
+                .safeDrawingPadding(),
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Hello ${state.user?.name.orEmpty()}",
-                    color = AppColors.black1,
-                    style = AppTextStyles.largeTextBold,
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    text = "What are you cooking today?",
-                    color = AppColors.gray3,
-                    style = AppTextStyles.smallerTextRegular,
+            // 헤더 (인사말 + 프로필)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 20.dp,
+                        start = 30.dp,
+                        end = 30.dp,
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Hello ${state.user?.name.orEmpty()}",
+                        color = AppColors.black1,
+                        style = AppTextStyles.largeTextBold,
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(
+                        text = "What are you cooking today?",
+                        color = AppColors.gray3,
+                        style = AppTextStyles.smallerTextRegular,
+                    )
+                }
+                AsyncImage(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(AppColors.gray4),
+                    model = state.user?.profileUrl,
+                    contentDescription = "프로필",
+                    contentScale = ContentScale.Crop,
+                    // 불러오는 중이거나 실패하거나 유저가 없으면 회색
+                    placeholder = ColorPainter(AppColors.gray4),
+                    error = ColorPainter(AppColors.gray4),
+                    fallback = ColorPainter(AppColors.gray4),
                 )
             }
-            AsyncImage(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(AppColors.gray4),
-                model = state.user?.profileUrl,
-                contentDescription = "프로필",
-                contentScale = ContentScale.Crop,
-                // 불러오는 중이거나 실패하거나 유저가 없으면 회색
-                placeholder = ColorPainter(AppColors.gray4),
-                error = ColorPainter(AppColors.gray4),
-                fallback = ColorPainter(AppColors.gray4),
-            )
-        }
-        Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-        // 검색창 + 필터 버튼
-        // 검색창 + 필터 버튼ㅇ
-        Row(
-            modifier = Modifier.padding(horizontal = 30.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            // 홈에서는 입력하지 않고 검색 화면으로 이동만 함
-            Box(modifier = Modifier.weight(1f)) {
-                SearchField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = "",
-                    onValueChange = {},
-                )
+            // 검색창 + 필터 버튼
+            // 검색창 + 필터 버튼ㅇ
+            Row(
+                modifier = Modifier.padding(horizontal = 30.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // 홈에서는 입력하지 않고 검색 화면으로 이동만 함
+                Box(modifier = Modifier.weight(1f)) {
+                    SearchField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = "",
+                        onValueChange = {},
+                    )
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .clip(RoundedCornerShape(10.dp))
+                            .clickable(onClick = onSearchClick),
+                    )
+                }
+                Spacer(modifier = Modifier.width(20.dp))
                 Box(
                     modifier = Modifier
-                        .matchParentSize()
-                        .clip(RoundedCornerShape(10.dp))
-                        .clickable(onClick = onSearchClick),
-                )
-            }
-            Spacer(modifier = Modifier.width(20.dp))
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(
-                        color = AppColors.primary100,
-                        shape = RoundedCornerShape(10.dp),
+                        .size(40.dp)
+                        .background(
+                            color = AppColors.primary100,
+                            shape = RoundedCornerShape(10.dp),
+                        )
+                        .clickable(onClick = onFilterClick),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp),
+                        imageVector = Icons.Filled.Tune,
+                        contentDescription = "필터",
+                        tint = AppColors.white,
                     )
-                    .clickable(onClick = onFilterClick),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    modifier = Modifier.size(20.dp),
-                    imageVector = Icons.Filled.Tune,
-                    contentDescription = "필터",
-                    tint = AppColors.white,
-                )
+                }
             }
-        }
-        Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
-        // 카테고리 탭 (가로 스크롤)
-        CategoryTabs(
-            selectedCategory = state.selectedCategory,
-            onSelectCategory = onSelectCategory,
-        )
-        Spacer(modifier = Modifier.height(25.dp))
-
-        // 요리 카드 목록
-        when (val result = state.result) {
-            HomeResult.Loading -> Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(DishRowHeight),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator(color = AppColors.primary100)
-            }
-
-            is HomeResult.Error -> Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(DishRowHeight),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = result.message,
-                    color = AppColors.gray3,
-                    style = AppTextStyles.normalTextRegular,
-                )
-            }
-
-            is HomeResult.Success -> DishRow(
-                recipes = result.recipes,
-                unbookmarkedIds = unbookmarkedIds,
-                onBookmarkClick = onBookmarkClick,
+            // 카테고리 탭 (가로 스크롤)
+            CategoryTabs(
+                selectedCategory = state.selectedCategory,
+                onSelectCategory = onSelectCategory,
             )
+            Spacer(modifier = Modifier.height(25.dp))
+
+            // 요리 카드 목록
+            when (val result = state.result) {
+                HomeResult.Loading -> Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(DishRowHeight),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator(color = AppColors.primary100)
+                }
+
+                is HomeResult.Error -> Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(DishRowHeight),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = result.message,
+                        color = AppColors.gray3,
+                        style = AppTextStyles.normalTextRegular,
+                    )
+                }
+
+                is HomeResult.Success -> DishRow(
+                    recipes = result.recipes,
+                    unbookmarkedIds = unbookmarkedIds,
+                    onBookmarkClick = onBookmarkClick,
+                )
+            }
         }
+
+        // 하단 네비바 (홈 화면이라 HOME 선택)
+        BottomNavBar(
+            selectedTab = NavTab.HOME,
+            onTabClick = onTabClick,
+            onAddClick = onAddClick,
+        )
     }
 }
 
@@ -322,6 +345,8 @@ private fun HomeScreenPreview() {
             val ids = unbookmarkedIds
             unbookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id
         },
+        onTabClick = {},
+        onAddClick = {},
     )
 }
 
@@ -335,6 +360,8 @@ private fun HomeScreenLoadingPreview() {
         onFilterClick = {},
         onSelectCategory = {},
         onBookmarkClick = {},
+        onTabClick = {},
+        onAddClick = {},
     )
 }
 
@@ -348,5 +375,7 @@ private fun HomeScreenErrorPreview() {
         onFilterClick = {},
         onSelectCategory = {},
         onBookmarkClick = {},
+        onTabClick = {},
+        onAddClick = {},
     )
 }
