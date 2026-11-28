@@ -1,12 +1,16 @@
 package com.suwonsmartapp.recipeapp
 
 import android.app.Application
+import com.suwonsmartapp.recipeapp.core.data.datasource.AuthDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.BookmarkDataSource
+import com.suwonsmartapp.recipeapp.core.data.datasource.FakeAuthDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeBookmarkDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.FakeUserDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.RecipeDataSource
 import com.suwonsmartapp.recipeapp.core.data.datasource.UserDataSource
+import com.suwonsmartapp.recipeapp.core.data.repository.AuthRepository
+import com.suwonsmartapp.recipeapp.core.data.repository.AuthRepositoryImpl
 import com.suwonsmartapp.recipeapp.core.data.repository.BookmarkRepository
 import com.suwonsmartapp.recipeapp.core.data.repository.BookmarkRepositoryImpl
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
@@ -37,6 +41,14 @@ class RecipeApplication : Application() {
 
     val userRepository: UserRepository by lazy {
         UserRepositoryImpl(userDataSource)
+    }
+
+    val authDataSource: AuthDataSource by lazy {
+        FakeAuthDataSource()
+    }
+
+    val authRepository: AuthRepository by lazy {
+        AuthRepositoryImpl(authDataSource)
     }
 
     override fun onCreate() {
