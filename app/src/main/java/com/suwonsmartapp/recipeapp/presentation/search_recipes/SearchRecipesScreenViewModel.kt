@@ -13,6 +13,8 @@ import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
 import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
 import com.suwonsmartapp.recipeapp.core.network.toMessage
+import com.suwonsmartapp.recipeapp.presentation.model.FilterCategory
+import com.suwonsmartapp.recipeapp.presentation.model.FilterTime
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -84,6 +86,7 @@ class SearchRecipesScreenViewModel(
             is Result.Success -> SearchResult.Success(result.value)
             is Result.Error -> SearchResult.Error(result.error.toMessage())
         }
+
         _state.update { it.copy(result = searchResult) }
     }
 

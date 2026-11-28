@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.suwonsmartapp.recipeapp.RecipeApplication
 import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.data.model.Recipe
-import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepository
+import com.suwonsmartapp.recipeapp.core.data.repository.BookmarkRepository
 import com.suwonsmartapp.recipeapp.core.network.toMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SavedRecipesScreenViewModel(
-    private val recipeRepository: RecipeRepository,
+    private val bookmarkRepository: BookmarkRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow<SavedRecipesState>(SavedRecipesState.Loading)
     val state: StateFlow<SavedRecipesState> = _state.asStateFlow()
@@ -32,7 +32,7 @@ class SavedRecipesScreenViewModel(
     private fun loadSavedRecipes() {
         _state.value = SavedRecipesState.Loading
         viewModelScope.launch {
-            _state.value = when (val result = recipeRepository.getRecipes()) {
+            _state.value = when (val result = bookmarkRepository.getBookmarkedRecipes()) {
                 is Result.Success -> SavedRecipesState.Success(recipes = result.value)
                 is Result.Error -> SavedRecipesState.Error(result.error.toMessage())
             }
@@ -52,10 +52,10 @@ class SavedRecipesScreenViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val recipeRepository = (this[APPLICATION_KEY] as RecipeApplication)
-                    .recipeRepository
+                val bookmarkRepository = (this[APPLICATION_KEY] as RecipeApplication)
+                    .bookmarkRepository
                 SavedRecipesScreenViewModel(
-                    recipeRepository = recipeRepository
+                    bookmarkRepository = bookmarkRepository
                 )
             }
         }

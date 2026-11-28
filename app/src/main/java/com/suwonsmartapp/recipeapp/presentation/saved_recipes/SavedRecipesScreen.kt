@@ -1,6 +1,7 @@
 package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
 // ViewModel과 연결하는 Root (상태를 가진 쪽)
 @Composable
 fun SavedRecipesScreenRoot(
+    onRecipeClick: (Long) -> Unit,
     viewModel: SavedRecipesScreenViewModel
         = viewModel(factory = SavedRecipesScreenViewModel.Factory),
 ) {
@@ -46,6 +48,7 @@ fun SavedRecipesScreenRoot(
         state = state,
         unbookmarkedIds = unbookmarkedIds,
         onBookmarkClick = { recipe -> viewModel.onBookmarkClick(recipe) },
+        onRecipeClick = { recipe -> onRecipeClick(recipe.id) },
     )
 }
 
@@ -55,6 +58,7 @@ fun SavedRecipesScreen(
     state: SavedRecipesState,
     unbookmarkedIds: Set<Long>,
     onBookmarkClick: (Recipe) -> Unit,
+    onRecipeClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -98,6 +102,7 @@ fun SavedRecipesScreen(
                 recipes = state.recipes,
                 unbookmarkedIds = unbookmarkedIds,
                 onBookmarkClick = onBookmarkClick,
+                onRecipeClick = onRecipeClick,
             )
         }
     }
@@ -108,6 +113,7 @@ private fun SavedRecipeList(
     recipes: List<Recipe>,
     unbookmarkedIds: Set<Long>,
     onBookmarkClick: (Recipe) -> Unit,
+    onRecipeClick: (Recipe) -> Unit,
 ) {
     // 저장된 레시피 목록
     LazyColumn(
@@ -126,7 +132,8 @@ private fun SavedRecipeList(
                 recipe = recipe,
                 modifier = Modifier
                     .width(315.dp)
-                    .height(150.dp),
+                    .height(150.dp)
+                    .clickable { onRecipeClick(recipe) },
             ) {
                 // 우측하단: 시간, 북마크
                 RecipeTimeBookmark(
@@ -146,6 +153,7 @@ private fun SavedRecipesScreenLoadingPreview() {
         state = SavedRecipesState.Loading,
         unbookmarkedIds = emptySet(),
         onBookmarkClick = {},
+        onRecipeClick = {},
     )
 }
 
@@ -156,6 +164,7 @@ private fun SavedRecipesScreenErrorPreview() {
         state = SavedRecipesState.Error("서버 문제"),
         unbookmarkedIds = emptySet(),
         onBookmarkClick = {},
+        onRecipeClick = {},
     )
 }
 
@@ -183,5 +192,6 @@ private fun SavedRecipesScreenSuccessPreview() {
             val ids = unbookmarkedIds
             unbookmarkedIds = if (recipe.id in ids) ids - recipe.id else ids + recipe.id
         },
+        onRecipeClick = {},
     )
 }

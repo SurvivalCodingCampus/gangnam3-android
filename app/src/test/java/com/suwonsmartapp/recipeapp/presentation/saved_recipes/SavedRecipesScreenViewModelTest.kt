@@ -2,8 +2,8 @@
 
 package com.suwonsmartapp.recipeapp.presentation.saved_recipes
 
-import com.suwonsmartapp.recipeapp.core.data.datasource.FakeRecipeDataSource
-import com.suwonsmartapp.recipeapp.core.data.repository.RecipeRepositoryImpl
+import com.suwonsmartapp.recipeapp.core.data.datasource.FakeBookmarkDataSource
+import com.suwonsmartapp.recipeapp.core.data.repository.BookmarkRepositoryImpl
 import com.suwonsmartapp.recipeapp.core.network.Result
 import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SavedRecipesScreenViewModelTest {
-    private val repository = RecipeRepositoryImpl(FakeRecipeDataSource())
+    private val repository = BookmarkRepositoryImpl(FakeBookmarkDataSource())
 
     @BeforeEach
     fun setUp() {
@@ -36,7 +36,7 @@ class SavedRecipesScreenViewModelTest {
 
     // ViewModel을 만들고 로딩이 끝날 때까지 시간을 넘김
     private fun TestScope.loadedViewModel(
-        repository: RecipeRepositoryImpl = this@SavedRecipesScreenViewModelTest.repository,
+        repository: BookmarkRepositoryImpl = this@SavedRecipesScreenViewModelTest.repository,
     ): SavedRecipesScreenViewModel {
         val viewModel = SavedRecipesScreenViewModel(repository)
         advanceUntilIdle()
@@ -54,17 +54,17 @@ class SavedRecipesScreenViewModelTest {
     }
 
     @Test
-    fun `생성되면 저장된 레시피 10개를 불러온다`() = runTest {
+    fun `생성되면 저장된 레시피 3개를 불러온다`() = runTest {
         val viewModel = loadedViewModel()
 
-        assertThat(viewModel.success().recipes).hasSize(10)
+        assertThat(viewModel.success().recipes).hasSize(3)
     }
 
     @Test
     fun `불러온 레시피가 Repository 데이터와 같다`() = runTest {
         val viewModel = loadedViewModel()
 
-        val expected = (repository.getRecipes() as Result.Success).value
+        val expected = (repository.getBookmarkedRecipes() as Result.Success).value
         assertThat(viewModel.success().recipes).isEqualTo(expected)
     }
 
@@ -83,7 +83,7 @@ class SavedRecipesScreenViewModelTest {
 
         viewModel.onBookmarkClick(target)
 
-        assertThat(viewModel.success().recipes).hasSize(10)
+        assertThat(viewModel.success().recipes).hasSize(3)
         assertThat(viewModel.unbookmarkedIds.value).containsExactly(target.id)
     }
 
@@ -100,8 +100,8 @@ class SavedRecipesScreenViewModelTest {
 
     @Test
     fun `Repository가 실패하면 Error 상태가 된다`() = runTest {
-        val errorRepository = RecipeRepositoryImpl(
-            FakeRecipeDataSource(statusCode = StatusCode.InternalServerError)
+        val errorRepository = BookmarkRepositoryImpl(
+            FakeBookmarkDataSource(statusCode = StatusCode.InternalServerError)
         )
         val viewModel = loadedViewModel(errorRepository)
 

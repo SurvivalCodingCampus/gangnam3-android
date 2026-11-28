@@ -20,16 +20,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suwonsmartapp.recipeapp.presentation.component.auth.SocialSignInSection
-import com.suwonsmartapp.recipeapp.presentation.component.button.BigButton
+import com.suwonsmartapp.recipeapp.presentation.component.button.AppButton
 import com.suwonsmartapp.recipeapp.presentation.component.input.InputField
 import com.suwonsmartapp.recipeapp.presentation.theme.AppColors
 import com.suwonsmartapp.recipeapp.presentation.theme.AppTextStyles
+
+// ViewModel과 연결하는 Root (상태를 가진 쪽)
+@Composable
+fun SignInScreenRoot(
+    onSignInSuccess: () -> Unit,
+    onSignUpClick: () -> Unit,
+    viewModel: SignInScreenViewModel = viewModel(factory = SignInScreenViewModel.Factory),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    SignInScreen(
+        email = state.email,
+        password = state.password,
+        errorMessage = state.errorMessage,
+        onEmailChange = { viewModel.onEmailChange(it) },
+        onPasswordChange = { viewModel.onPasswordChange(it) },
+        onForgotPasswordClick = {},
+        onSignInClick = { viewModel.signIn(onSuccess = onSignInSuccess) },
+        onGoogleClick = {},
+        onFacebookClick = {},
+        onSignUpClick = onSignUpClick,
+    )
+}
 
 @Composable
 fun SignInScreen(
     email: String,
     password: String,
+    errorMessage: String?,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onForgotPasswordClick: () -> Unit,
@@ -86,6 +112,19 @@ fun SignInScreen(
             )
         }
 
+        // 로그인 실패 문구
+        if (errorMessage != null) {
+            Text(
+                modifier = Modifier.padding(
+                    top = 10.dp,
+                    start = 10.dp,
+                ),
+                text = errorMessage,
+                color = AppColors.warning,
+                style = AppTextStyles.smallerTextRegular,
+            )
+        }
+
         // 비밀번호 찾기
         Text(
             modifier = Modifier
@@ -101,7 +140,7 @@ fun SignInScreen(
         )
 
         // 로그인 버튼
-        BigButton(
+        AppButton(
             text = "Sign In",
             onClick = onSignInClick,
         )
@@ -144,6 +183,7 @@ private fun SignInScreenPreview() {
     SignInScreen(
         email = email,
         password = password,
+        errorMessage = null,
         onEmailChange = { email = it },
         onPasswordChange = { password = it },
         onForgotPasswordClick = {},
