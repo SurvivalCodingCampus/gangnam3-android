@@ -2,10 +2,14 @@ package com.suwonsmartapp.recipeapp.core.routing
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.suwonsmartapp.recipeapp.core.extension.clearAndNavigate
 import com.suwonsmartapp.recipeapp.core.extension.replace
+import com.suwonsmartapp.recipeapp.presentation.home.HomeScreenRoot
 import com.suwonsmartapp.recipeapp.presentation.sign_in.SignInScreenRoot
 import com.suwonsmartapp.recipeapp.presentation.sign_up.SignUpScreenRoot
 import com.suwonsmartapp.recipeapp.presentation.splash.SplashScreenRoot
@@ -17,11 +21,11 @@ fun NavigationRoot(
     val topLevelBackStack = rememberNavBackStack(Route.Splash)
 
     NavDisplay(
-//        modifier = modifier,
-//        entryDecorators = listOf(
-//            rememberSaveableStateHolderNavEntryDecorator(),
-//            rememberViewModelStoreNavEntryDecorator(),
-//        ),
+        modifier = modifier,
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator(),
+        ),
         backStack = topLevelBackStack,
         onBack = { topLevelBackStack.removeLastOrNull() },
         entryProvider = entryProvider {
@@ -32,7 +36,7 @@ fun NavigationRoot(
             }
             entry<Route.SignIn> {
                 SignInScreenRoot(
-                    onSignInClick = { topLevelBackStack.replace(Route.Main) },
+                    onSignInSuccess = { topLevelBackStack.clearAndNavigate(Route.Main) },
                     onSignUpClick = { topLevelBackStack.replace(Route.SignUp) },
                 )
             }
@@ -41,6 +45,9 @@ fun NavigationRoot(
                     onSignUpClick = { topLevelBackStack.replace(Route.Main) },
                     onSignInClick = { topLevelBackStack.replace(Route.SignIn) },
                 )
+            }
+            entry<Route.Main> {
+                HomeScreenRoot()
             }
         },
     )

@@ -10,3 +10,9 @@ fun NavBackStack<NavKey>.replace(route: Route) {
         this[lastIndex] = route
     }
 }
+
+// 이전 스택을 모두 지우고 이동 (뒤로가기 시 앱 종료)
+fun NavBackStack<NavKey>.clearAndNavigate(route: Route) {
+    clear()
+    add(route)
+}
