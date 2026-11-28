@@ -1,0 +1,296 @@
+<title>NavBarShape 그리기</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday learning, a course student studying their own code
+   IDEA the Android Studio preview + Figma pen tool: the path being drawn step by step
+   PICTURE the nav bar outline drawn live, pen moving, Bézier control handles and de Casteljau construction
+   COLOUR the app's own palette: white ground, ink, primary green #129575, secondary orange #FF9C00 for control points
+   TYPE Poppins (the app's font) for headings + Inter text + JetBrains Mono code
+   LAYOUT title top, figure full width with transport controls under it; then explanation beside the code; then coordinate table and 2nd vs 3rd order playground */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#0e1513);--ink:light-dark(#121816,#e6eeeb);--mut:light-dark(#5f6b67,#97a6a1);--line:light-dark(#e3e8e6,#24302c);--panel:light-dark(#f6faf9,#141e1b);--g:#129575;--gs:light-dark(#dbebe7,#173a31);--o:light-dark(#e08600,#ffa61a);--q:light-dark(#d4245a,#ff6a95)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;overflow-x:clip;margin:0}
+.band{padding-block:clamp(22px,3.5vw,48px);padding-left:max(5vw,16px,env(safe-area-inset-left,0px));padding-right:max(5vw,16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font:700 clamp(30px,4.4vw,46px)/1.08 Poppins,sans-serif;letter-spacing:-.02em;margin:0 0 8px}
+h2{font:600 24px/1.2 Poppins,sans-serif;letter-spacing:-.01em;margin:0 0 10px}
+p{margin:0 0 12px;max-width:68ch}
+.lede{color:var(--mut);font-size:17px}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:14px}
+.figbox{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-top:18px;overflow:hidden}
+.fig{position:relative;height:clamp(300px,42vw,460px)}
+.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+svg text{font:13px Inter,sans-serif;paint-order:stroke;stroke:var(--panel);stroke-width:4px;fill:var(--ink)}
+.bar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px 14px;border-top:1px solid var(--line);background:var(--bg)}
+button{font:600 15px Inter,sans-serif;min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--g)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+button.pri{background:var(--g);border-color:var(--g);color:#fff}
+.rng{display:flex;align-items:center;gap:8px;flex:1 1 220px}
+.rng label{white-space:nowrap;font-size:14px;color:var(--mut)}
+.rng output{font:600 14px "JetBrains Mono",monospace;white-space:nowrap;width:4.5em}
+input[type=range]{flex:1;accent-color:var(--g);height:28px}
+.tg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.tg label{display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+.tg input{accent-color:var(--g);width:18px;height:18px}
+.two{display:grid;gap:24px;margin-top:26px}
+@media(min-width:780px){.two{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}}
+.stepno{font:600 14px Inter,sans-serif;color:var(--g)}
+.stepttl{font:600 22px/1.25 Poppins,sans-serif;margin:2px 0 10px}
+.pts{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin-top:10px}
+.pts dt{font-weight:600}.pts dd{margin:0;font-family:"JetBrains Mono",monospace}
+.code{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 0;overflow-x:auto}
+.code pre{margin:0;font:13.5px/1.55 "JetBrains Mono",monospace}
+.ln{display:block;padding:0 16px;border-left:3px solid transparent;white-space:pre}
+.ln.done{color:var(--ink)}.ln.todo{color:var(--mut);opacity:.6}
+.ln.cur{background:var(--gs);border-left-color:var(--g)}
+.cm{color:var(--mut)}
+.key{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--mut);padding:10px 14px 0}
+.key i{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;font-size:14px;width:100%}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-weight:600;color:var(--mut)}
+td.n{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums}
+.alt{background:var(--panel)}
+.play{display:grid;gap:18px;margin-top:14px}
+@media(min-width:720px){.play{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:14px}
+.card h3{font:600 17px Poppins,sans-serif;margin:0 0 4px}
+.card svg{width:100%;height:auto;display:block;touch-action:none}
+.card svg text{stroke:var(--panel)}
+.hint{font-size:14px;color:var(--mut);margin:6px 0 0}
+.h{cursor:grab}
+@media(max-width:600px){table{font-size:13px}th,td{padding:6px 5px}}
+</style>
+
+<section class="band"><div class="wrap">
+  <h1>네비바 가운데 홈은 이렇게 그려져</h1>
+  <p class="lede"><code>NavBarShape</code>의 <code>Path</code>가 한 줄씩 실행되면서 모양이 만들어지는 과정을 보여줘. 주황 점은 베지어 조절점이야. 재생하면 3차 베지어 곡선 위의 점이 어떻게 계산되는지(드 카스텔조 방식)도 같이 보여.</p>
+
+  <div class="figbox">
+    <div class="fig" id="fig"><svg id="main" aria-label="NavBarShape 경로"></svg></div>
+    <div class="key">
+      <span><i style="background:var(--g)"></i>그려진 경로</span>
+      <span><i style="background:var(--o)"></i>조절점</span>
+      <span><i style="background:var(--ink)"></i>시작점·끝점·펜</span>
+      <span><i style="background:var(--q)"></i>2차로 바꾼 경우</span>
+    </div>
+    <div class="bar">
+      <button id="prev" aria-label="이전 단계">◀ 이전</button>
+      <button id="playb" class="pri">▶ 재생</button>
+      <button id="next" aria-label="다음 단계">다음 ▶</button>
+      <div class="rng"><label for="step">단계</label><input id="step" type="range" min="0" max="10" step="1" value="4"><output id="stepo">4/10</output></div>
+      <div class="rng"><label for="t">t</label><input id="t" type="range" min="0" max="1" step="0.01" value="0.55"><output id="to">0.55</output></div>
+    </div>
+    <div class="bar">
+      <div class="tg">
+        <label><input type="checkbox" id="zoom" checked>홈 부분 확대</label>
+        <label><input type="checkbox" id="hand" checked>조절점 핸들</label>
+        <label><input type="checkbox" id="cast" checked>t 지점 계산선</label>
+        <label><input type="checkbox" id="fab" checked>+ 버튼 위치</label>
+        <label><input type="checkbox" id="quad">2차로 바꾸면?</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="two">
+    <div>
+      <div class="stepno" id="sno"></div>
+      <div class="stepttl" id="sttl"></div>
+      <div id="sdesc"></div>
+      <dl class="pts" id="spts"></dl>
+    </div>
+    <div class="code"><pre id="code"></pre></div>
+  </div>
+</div></section>
+
+<section class="band" style="border-top:1px solid var(--line)"><div class="wrap">
+  <h2>Figma 숫자를 코드 숫자로 바꾸기</h2>
+  <p>Figma SVG에는 그림자 자리로 사방 8px 여백이 있어서 먼저 8을 빼. 그다음 홈 바닥의 x(188)를 0으로 맞춰서 <code>centerX</code> 기준으로 바꿔. 오른쪽 반은 x 부호만 바꾸면 돼.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>점</th><th>Figma SVG (x, y)</th><th>8 빼기</th><th>코드 (centerX 기준, dp)</th></tr></thead>
+    <tbody id="tbl"></tbody>
+  </table></div>
+</div></section>
+
+<section class="band" style="border-top:1px solid var(--line)"><div class="wrap">
+  <h2>직접 움직여 봐: 2차 vs 3차</h2>
+  <p>주황 점을 끌어 봐. 화살표는 곡선이 출발하는 방향과 도착하는 방향이야. 2차는 두 화살표가 같은 점 하나를 가리켜서 따로 못 정해. 3차는 출발 방향과 도착 방향을 따로 정할 수 있어.</p>
+  <div class="play">
+    <div class="card"><h3>2차 · quadraticTo</h3><svg id="pq" viewBox="0 0 320 210"></svg><p class="hint">조절점 1개: 출발·도착 방향이 같이 바뀜</p></div>
+    <div class="card"><h3>3차 · cubicTo</h3><svg id="pc" viewBox="0 0 320 210"></svg><p class="hint">조절점 2개: 출발은 C1, 도착은 C2가 정함</p></div>
+  </div>
+</div></section>
+
+<script>
+{
+const W=375,H=106,CX=W/2;
+const r=n=>Math.round(n*1000)/1000;
+const fx=n=>(n<0?'−':'')+Math.abs(r(n));
+// 경로 데이터 (코드와 같은 값, x는 centerX 기준 상대값이면 rel:true)
+const segs=[
+ {k:'M',p:[[0,0]],ttl:'moveTo: 펜을 왼쪽 위에 둠',d:'선은 안 그려. 펜만 (0, 0)으로 옮겨. 여기가 모양의 출발점이자 마지막에 돌아올 점이야.',code:['moveTo(0f, 0f)']},
+ {k:'L',p:[[CX-54.875,0]],ttl:'lineTo: 홈 시작 직전까지 직선',d:'가운데에서 왼쪽으로 54.875dp 떨어진 곳까지 수평선을 그어. 여기서 곡선이 시작돼.',code:['lineTo(centerX - 54.875f * d, 0f)']},
+ {k:'C',p:[[CX-45.128,0],[CX-36.871,7.144],[CX-32.855,16.025]],ttl:'cubicTo ①: 평평한 선에서 휘어 내려가기',d:'C1이 시작점과 같은 높이(y=0)에 있어서 곡선이 수평으로 출발해. 앞 직선과 방향이 같으니까 꺾이지 않고 이어져.',code:['// 왼쪽 곡선 (위 → 아래)','cubicTo(','    centerX - 45.128f * d, 0f,','    centerX - 36.871f * d, 7.144f * d,','    centerX - 32.855f * d, 16.025f * d,',')']},
+ {k:'C',p:[[CX-27.656,27.525],[CX-17.772,41],[CX,41]],ttl:'cubicTo ②: 바닥까지',d:'이음매에서 앞 곡선의 C2, 이음점, 이 곡선의 C1이 한 줄로 서 있어서 매끈하게 이어져. C2가 바닥 높이(y=41)에 있어서 바닥에 수평으로 도착해.',code:['cubicTo(','    centerX - 27.656f * d, 27.525f * d,','    centerX - 17.772f * d, 41f * d,','    centerX, 41f * d,',')']},
+ {k:'C',p:[[CX+17.772,41],[CX+27.656,27.525],[CX+32.855,16.025]],ttl:'cubicTo ③: 바닥에서 올라가기',d:'②를 좌우로 뒤집은 거야. 숫자는 같고 x 부호만 +로 바뀌어. 바닥에서 수평으로 출발해서 위로 올라가.',code:['// 오른쪽 곡선 (아래 → 위)','cubicTo(','    centerX + 17.772f * d, 41f * d,','    centerX + 27.656f * d, 27.525f * d,','    centerX + 32.855f * d, 16.025f * d,',')']},
+ {k:'C',p:[[CX+36.871,7.144],[CX+45.128,0],[CX+54.875,0]],ttl:'cubicTo ④: 다시 평평하게',d:'①을 뒤집은 거야. C2가 y=0에 있어서 위쪽 선에 수평으로 도착해.',code:['cubicTo(','    centerX + 36.871f * d, 7.144f * d,','    centerX + 45.128f * d, 0f,','    centerX + 54.875f * d, 0f,',')']},
+ {k:'L',p:[[W,0]],ttl:'lineTo: 오른쪽 끝까지',d:'size.width까지 수평선. 화면 폭이 달라도 오른쪽 끝에 딱 맞아.',code:['lineTo(size.width, 0f)']},
+ {k:'L',p:[[W,H]],ttl:'lineTo: 오른쪽 아래로',d:'size.height까지 내려가. 실제 높이는 아이콘 영역과 시스템 하단바 여백에 따라 달라져. 여기 106은 Figma 예시 높이야.',code:['lineTo(size.width, size.height)']},
+ {k:'L',p:[[0,H]],ttl:'lineTo: 왼쪽 아래로',d:'바닥을 따라 왼쪽 끝까지.',code:['lineTo(0f, size.height)']},
+ {k:'Z',p:[[0,0]],ttl:'close(): 닫고 모양 완성',d:'출발점까지 선을 이어서 닫아. 이 Path를 Outline.Generic(path)로 감싸서 돌려주면 .shadow()와 .background()가 이 모양대로 그려져.',code:['close()']},
+];
+const intro={ttl:'Path() 만들기',d:'빈 Path가 생겼고 아직 아무것도 안 그렸어. 다음 단계부터 한 줄씩 실행돼. d는 dp를 px로 바꾸는 값(density)이고, 아래 좌표는 모두 dp야.'};
+// 각 세그먼트의 시작점 계산
+let pen=[0,0];segs.forEach(s=>{s.p0=pen.slice();pen=s.p[s.p.length-1];});
+
+const $=id=>document.getElementById(id);
+const S={step:4,t:.55};
+const lerp=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+function split(P,t){const[a,b,c,e]=P;const ab=lerp(a,b,t),bc=lerp(b,c,t),ce=lerp(c,e,t),abc=lerp(ab,bc,t),bce=lerp(bc,ce,t),p=lerp(abc,bce,t);return{L1:[ab,bc,ce],L2:[abc,bce],p,left:[a,ab,abc,p]};}
+const quadQ=s=>{const[a]=[s.p0],[b,c,e]=s.p;return[(3*(b[0]+c[0])-(a[0]+e[0]))/4,(3*(b[1]+c[1])-(a[1]+e[1]))/4];};
+const ang=v=>Math.atan2(v[1],v[0])*180/Math.PI;
+
+// 코드 패널
+const codeLines=[['h','private object NavBarShape : Shape {'],['h','    override fun createOutline(size, layoutDirection, density): Outline {'],['h','        val d = density.density      // dp → px'],['h','        val centerX = size.width / 2'],['i','        val path = Path().apply {']];
+segs.forEach((s,i)=>s.code.forEach(c=>codeLines.push([i,'            '+c])));
+codeLines.push(['h','        }'],['h','        return Outline.Generic(path)'],['h','    }'],['h','}']);
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+$('code').innerHTML=codeLines.map(([i,t])=>{const c=t.trim().startsWith('//')?' cm':'';return `<span class="ln${c}" data-i="${i}">${esc(t)}</span>`;}).join('');
+
+// 메인 그림
+const svg=$('main'),fig=$('fig');
+function draw(){
+  const Wp=fig.clientWidth,Hp=fig.clientHeight;if(!Wp)return;
+  const zoom=$('zoom').checked;
+  const v=zoom?{x0:CX-74,y0:-20,x1:CX+74,y1:52}:{x0:-14,y0:-22,x1:W+14,y1:H+8};
+  const pad=24,k=Math.min((Wp-pad*2)/(v.x1-v.x0),(Hp-pad*2)/(v.y1-v.y0));
+  const ox=(Wp-(v.x1-v.x0)*k)/2-v.x0*k,oy=(Hp-(v.y1-v.y0)*k)/2-v.y0*k;
+  const X=x=>ox+x*k,Y=y=>oy+y*k,P=p=>X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1);
+  const lab=p=>`(${fx(p[0]-CX)}, ${fx(p[1])})`;
+  let o='';
+  // 기준선
+  o+=`<line x1="${X(v.x0)}" x2="${X(v.x1)}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--line)" stroke-width="1"/>`;
+  o+=`<line x1="${X(CX)}" x2="${X(CX)}" y1="${Y(v.y0)}" y2="${Y(v.y1)}" stroke="var(--mut)" stroke-dasharray="4 5" opacity=".5"/>`;
+  o+=`<text x="${X(CX)+6}" y="${Y(v.y0)+16}" fill="var(--mut)">centerX</text>`;
+  o+=`<text x="${X(v.x0)+4}" y="${Y(0)-6}" fill="var(--mut)">y = 0</text>`;
+  if(zoom)o+=`<line x1="${X(v.x0)}" x2="${X(v.x1)}" y1="${Y(41)}" y2="${Y(41)}" stroke="var(--line)" stroke-dasharray="3 4"/><text x="${X(v.x0)+4}" y="${Y(41)-6}" fill="var(--mut)">y = 41</text>`;
+  // + 버튼
+  if($('fab').checked)o+=`<circle cx="${X(CX)}" cy="${Y(10)}" r="${24*k}" fill="var(--g)" opacity=".13" stroke="var(--g)" stroke-dasharray="5 4"/><text x="${X(CX)}" y="${Y(10)+5}" text-anchor="middle" fill="var(--g)" style="font-weight:600">+ 버튼 (48dp)</text>`;
+  // 경로 만들기
+  const n=S.step;let d='',penp=null,cur=null;
+  for(let i=0;i<n;i++){
+    const s=segs[i],full=i<n-1,t=full?1:S.t;
+    if(s.k==='M'){d+=`M${P(s.p[0])}`;penp=s.p[0];}
+    else if(s.k==='L'||s.k==='Z'){const e=lerp(s.p0,s.p[0],t);d+=`L${P(e)}`;penp=e;}
+    else{if(t>=1){d+=`C${P(s.p[0])} ${P(s.p[1])} ${P(s.p[2])}`;penp=s.p[2];}else{const sp=split([s.p0,...s.p],t);const l=sp.left;d+=`C${P(l[1])} ${P(l[2])} ${P(l[3])}`;penp=sp.p;}}
+    if(!full)cur=s;
+  }
+  const closed=n===10&&S.t>=1;
+  if(closed)d+='Z';
+  // 2차 비교
+  if($('quad').checked){
+    let q=`M${P(segs[2].p0)}`;segs.slice(2,6).forEach(s=>{q+=`Q${P(quadQ(s))} ${P(s.p[2])}`;});
+    o+=`<path d="${q}" fill="none" stroke="var(--q)" stroke-width="2.5" stroke-dasharray="7 5"/>`;
+    segs.slice(2,6).forEach(s=>{const Q=quadQ(s);o+=`<line x1="${X(s.p0[0])}" y1="${Y(s.p0[1])}" x2="${X(Q[0])}" y2="${Y(Q[1])}" stroke="var(--q)" opacity=".5"/><line x1="${X(Q[0])}" y1="${Y(Q[1])}" x2="${X(s.p[2][0])}" y2="${Y(s.p[2][1])}" stroke="var(--q)" opacity=".5"/><rect x="${X(Q[0])-4}" y="${Y(Q[1])-4}" width="8" height="8" fill="var(--q)"/>`;});
+    // 이음매 꺾임 각도
+    const qs=segs.slice(2,6);
+    const joins=[[null,qs[0]],[qs[0],qs[1]],[qs[1],qs[2]],[qs[2],qs[3]],[qs[3],null]];
+    joins.forEach(([a,b],ji)=>{const p=a?a.p[2]:b.p0;const ain=a?ang([p[0]-quadQ(a)[0],p[1]-quadQ(a)[1]]):0;const bout=b?ang([quadQ(b)[0]-p[0],quadQ(b)[1]-p[1]]):0;let df=Math.abs(ain-bout);if(df>180)df=360-df;if(df>.5&&zoom){const dy=ji===2?22:-12;o+=`<text x="${X(p[0])}" y="${Y(p[1])+dy}" text-anchor="middle" fill="var(--q)" style="font-weight:600">꺾임 ${df.toFixed(1)}°</text>`;}});
+  }
+  o+=`<path d="${d}" fill="${closed?'var(--gs)':'none'}" stroke="var(--g)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
+  // 핸들
+  if($('hand').checked){
+    for(let i=0;i<n;i++){const s=segs[i];if(s.k!=='C')continue;const isCur=s===cur;const op=isCur?1:.55;
+      o+=`<g opacity="${op}"><line x1="${X(s.p0[0])}" y1="${Y(s.p0[1])}" x2="${X(s.p[0][0])}" y2="${Y(s.p[0][1])}" stroke="var(--o)" stroke-width="1.5"/><line x1="${X(s.p[2][0])}" y1="${Y(s.p[2][1])}" x2="${X(s.p[1][0])}" y2="${Y(s.p[1][1])}" stroke="var(--o)" stroke-width="1.5"/>`;
+      [s.p[0],s.p[1]].forEach((c,ci)=>{o+=`<circle cx="${X(c[0])}" cy="${Y(c[1])}" r="6" fill="var(--panel)" stroke="var(--o)" stroke-width="2.5"/>`;if(isCur&&zoom)o+=`<text x="${X(c[0])+(ci?10:-10)}" y="${Y(c[1])+(ci?18:-12)}" text-anchor="${ci?'start':'end'}" fill="var(--o)" style="font-weight:600">C${ci+1} ${lab(c)}</text>`;});
+      o+=`</g>`;
+    }
+  }
+  // 드 카스텔조
+  if(cur&&cur.k==='C'&&$('cast').checked&&S.t<1){
+    const sp=split([cur.p0,...cur.p],S.t);
+    o+=`<polyline points="${sp.L1.map(P).join(' ')}" fill="none" stroke="var(--mut)" stroke-width="1.5"/>`;
+    sp.L1.forEach(p=>o+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3.5" fill="var(--mut)"/>`);
+    o+=`<line x1="${X(sp.L2[0][0])}" y1="${Y(sp.L2[0][1])}" x2="${X(sp.L2[1][0])}" y2="${Y(sp.L2[1][1])}" stroke="var(--g)" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+    sp.L2.forEach(p=>o+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4" fill="var(--g)" opacity=".6"/>`);
+  }
+  // 끝점들
+  for(let i=1;i<n;i++){const s=segs[i];if(s.k!=='C')continue;[s.p0,s.p[2]].forEach(p=>o+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.5" fill="var(--ink)"/>`);}
+  if(cur&&cur.k==='C'&&zoom){o+=`<text x="${X(cur.p0[0])-10}" y="${Y(cur.p0[1])+ (cur.p0[1]>30?-10:18)}" text-anchor="end">시작 ${lab(cur.p0)}</text><text x="${X(cur.p[2][0])+10}" y="${Y(cur.p[2][1])+(cur.p[2][1]>30?22:18)}">끝 ${lab(cur.p[2])}</text>`;}
+  // 펜
+  if(penp)o+=`<circle cx="${X(penp[0])}" cy="${Y(penp[1])}" r="9" fill="none" stroke="var(--ink)" stroke-width="2"/><circle cx="${X(penp[0])}" cy="${Y(penp[1])}" r="3" fill="var(--ink)"/>`;
+  svg.innerHTML=o;
+}
+const ro=new ResizeObserver(draw);ro.observe(fig);
+
+function info(){
+  const n=S.step,s=n?segs[n-1]:intro;
+  $('sno').textContent=n?`단계 ${n} / 10`:'단계 0 / 10';
+  $('sttl').textContent=s.ttl;
+  $('sdesc').innerHTML=`<p>${s.d}</p>`+(s.k==='C'?`<p>t를 움직이면 곡선 위의 점이 어떻게 나오는지 보여. 네 점(시작, C1, C2, 끝) 사이를 t 비율로 나눈 점(회색)을 잡고, 그 점들을 다시 t로 나누고(초록), 한 번 더 나누면 곡선 위의 점이 돼. t가 0→1로 가면서 찍힌 점들이 곡선이야.</p>`:'');
+  const pts=n?(s.k==='C'?[['시작',s.p0],['C1',s.p[0]],['C2',s.p[1]],['끝',s.p[2]]]:[['시작',s.p0],['끝',s.p[0]]]):[];
+  $('spts').innerHTML=pts.map(([a,p])=>`<dt>${a}</dt><dd>x ${p[0]===0?'0':p[0]===W?'size.width':'centerX '+(p[0]-CX<0?'− ':'+ ')+Math.abs(r(p[0]-CX))}, y ${p[1]===H?'size.height':r(p[1])}</dd>`).join('');
+  document.querySelectorAll('.ln').forEach(el=>{const i=el.dataset.i;el.classList.remove('cur','done','todo');if(i==='h')return;if(i==='i'){el.classList.add('done');return;}const j=+i;el.classList.add(j<n-1?'done':j===n-1?'cur':'todo');});
+  $('step').value=n;$('stepo').textContent=n+'/10';$('t').value=S.t;$('to').textContent=S.t.toFixed(2);
+  $('t').disabled=!(n&&segs[n-1].k!=='M');
+}
+function render(){info();draw();}
+
+let raf=0;
+function stop(){cancelAnimationFrame(raf);raf=0;$('playb').textContent='▶ 재생';}
+function play(){
+  if(raf){stop();return;}
+  if(S.step>=10&&S.t>=1){S.step=0;S.t=1;}
+  $('playb').textContent='❚❚ 멈춤';
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let last=performance.now();
+  const tick=now=>{const dt=(now-last)/1000;last=now;
+    if(S.t>=1){if(S.step>=10){stop();render();return;}S.step++;S.t=segs[S.step-1].k==='M'||reduce?1:0;}
+    else{const dur=segs[S.step-1].k==='C'?1.6:.7;S.t=Math.min(1,S.t+dt/dur);}
+    render();raf=requestAnimationFrame(tick);};
+  raf=requestAnimationFrame(tick);
+}
+$('playb').onclick=play;
+$('next').onclick=()=>{stop();if(S.step<10){S.step++;S.t=1;}render();};
+$('prev').onclick=()=>{stop();if(S.step>0){S.step--;S.t=1;}render();};
+$('step').oninput=e=>{stop();S.step=+e.target.value;S.t=1;render();};
+$('t').oninput=e=>{stop();S.t=+e.target.value;render();};
+['zoom','hand','cast','fab','quad'].forEach(id=>$(id).onchange=draw);
+
+// 좌표 표
+const rows=[['홈 시작',[141.125,8]],['① C1',[150.872,8]],['① C2',[159.129,15.1439]],['① 끝',[163.145,24.0252]],['② C1',[168.344,35.5251]],['② C2',[178.228,49]],['② 끝 (바닥)',[196,49]]];
+$('tbl').innerHTML=rows.map(([nm,[x,y]],i)=>`<tr class="${i%2?'':'alt'}"><td>${nm}</td><td class="n">${x}, ${y}</td><td class="n">${r(x-8)}, ${r(y-8)}</td><td class="n">centerX ${x-196<0?'−':'+'} ${r(Math.abs(x-196))}, ${r(y-8)}</td></tr>`).join('');
+
+// 2차 vs 3차 놀이터
+function pg(id,cps){
+  const el=$(id),A=[30,170],B=[290,170];
+  function arrow(p,dir,col){const L=Math.hypot(dir[0],dir[1])||1,u=[dir[0]/L,dir[1]/L],e=[p[0]+u[0]*44,p[1]+u[1]*44],a=Math.atan2(u[1],u[0]);const h=(s)=>[e[0]-9*Math.cos(a+s),e[1]-9*Math.sin(a+s)];return `<line x1="${p[0]}" y1="${p[1]}" x2="${e[0]}" y2="${e[1]}" stroke="${col}" stroke-width="2.5"/><polygon points="${e.join(',')} ${h(.45).join(',')} ${h(-.45).join(',')}" fill="${col}"/>`;}
+  function paint(){
+    let o='';const c=cps;
+    const pts=[A,...c,B];
+    o+=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="var(--o)" stroke-width="1.2" stroke-dasharray="4 4"/>`;
+    o+=c.length===1?`<path d="M${A} Q${c[0]} ${B}" fill="none" stroke="var(--g)" stroke-width="3.5"/>`:`<path d="M${A} C${c[0]} ${c[1]} ${B}" fill="none" stroke="var(--g)" stroke-width="3.5"/>`;
+    o+=arrow(A,[c[0][0]-A[0],c[0][1]-A[1]],'var(--ink)');
+    const lc=c[c.length-1];o+=arrow(B,[B[0]-lc[0],B[1]-lc[1]],'var(--ink)');
+    [A,B].forEach(p=>o+=`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="var(--ink)"/>`);
+    c.forEach((p,i)=>o+=`<circle class="h" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="11" fill="var(--o)" opacity=".9"/><text x="${p[0]}" y="${p[1]-17}" text-anchor="middle" fill="var(--o)" style="font-weight:600">${c.length===1?'Q':'C'+(i+1)}</text>`);
+    el.innerHTML=o;
+  }
+  let drag=-1;
+  const pos=e=>{const m=el.getScreenCTM().inverse(),pt=new DOMPoint(e.clientX,e.clientY).matrixTransform(m);return[Math.max(8,Math.min(312,pt.x)),Math.max(20,Math.min(202,pt.y))];};
+  el.addEventListener('pointerdown',e=>{const t=e.target.closest('.h');if(!t)return;drag=+t.dataset.i;el.setPointerCapture(e.pointerId);});
+  el.addEventListener('pointermove',e=>{if(drag<0)return;cps[drag]=pos(e).map(Math.round);paint();});
+  el.addEventListener('pointerup',()=>drag=-1);
+  paint();
+}
+pg('pq',[[160,40]]);
+pg('pc',[[110,170],[210,60]]);
+
+render();
+}
+</script>
