@@ -9,7 +9,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.suwonsmartapp.recipeapp.presentation.main.MainScreen
+import com.suwonsmartapp.recipeapp.presentation.main.MainRoot
 import com.suwonsmartapp.recipeapp.presentation.sign_in.SignInScreen
 import com.suwonsmartapp.recipeapp.presentation.sign_up.SignUpScreen
 import com.suwonsmartapp.recipeapp.presentation.splash.SplashScreen
@@ -47,7 +47,7 @@ fun NavigationRoot(
                     onSignInClick = { topLevelBackStack.replace(Route.SignIn) },
                 )
             }
-            entry<Route.Main> { MainScreen() }
+            entry<Route.Main> { MainRoot() }
         },
     )
 }
