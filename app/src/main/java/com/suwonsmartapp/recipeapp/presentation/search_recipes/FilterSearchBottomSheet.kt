@@ -1,5 +1,6 @@
 package com.suwonsmartapp.recipeapp.presentation.search_recipes
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -94,7 +95,7 @@ private fun FilterSearchContent(
         FilterSection(title = stringResource(id = R.string.filter_search_time)) {
             FilterTime.entries.forEach { time ->
                 FilterButton(
-                    text = stringResource(id = time.label),
+                    text = stringResource(id = time.toLabelRes()),
                     isSelected = state.time == time,
                     onClick = { onStateChange(state.copy(time = time)) },
                 )
@@ -117,7 +118,7 @@ private fun FilterSearchContent(
         FilterSection(title = stringResource(id = R.string.filter_search_category)) {
             FilterCategory.entries.forEach { category ->
                 FilterButton(
-                    text = stringResource(id = category.label),
+                    text = stringResource(id = category.toLabelRes()),
                     isSelected = state.category == category,
                     onClick = { onStateChange(state.copy(category = category)) },
                     icon = if (category == FilterCategory.DINNER) painterResource(R.drawable.star) else null,
@@ -159,6 +160,28 @@ private fun FilterSection(
 }
 
 private val RATES = 5 downTo 1
+
+@StringRes
+fun FilterTime.toLabelRes(): Int = when (this) {
+    FilterTime.ALL -> R.string.filter_search_all
+    FilterTime.NEWEST -> R.string.filter_time_newest
+    FilterTime.OLDEST -> R.string.filter_time_oldest
+    FilterTime.POPULARITY -> R.string.filter_time_popularity
+}
+
+@StringRes
+fun FilterCategory.toLabelRes(): Int = when (this) {
+    FilterCategory.ALL -> R.string.filter_search_all
+    FilterCategory.CEREAL -> R.string.filter_category_cereal
+    FilterCategory.VEGETABLES -> R.string.filter_category_vegetables
+    FilterCategory.DINNER -> R.string.filter_category_dinner
+    FilterCategory.CHINESE -> R.string.filter_category_chinese
+    FilterCategory.LOCAL_DISH -> R.string.filter_category_local_dish
+    FilterCategory.FRUIT -> R.string.filter_category_fruit
+    FilterCategory.BREAKFAST -> R.string.filter_category_breakfast
+    FilterCategory.SPANISH -> R.string.filter_category_spanish
+    FilterCategory.LUNCH -> R.string.filter_category_lunch
+}
 
 @Preview(showBackground = true)
 @Composable

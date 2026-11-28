@@ -40,4 +40,7 @@ object AppColors {
 
     // Shadow
     val shadow = Color(0xFF696969)
+
+    // Transparent
+    val transparent = Color(0x00000000)
 }
