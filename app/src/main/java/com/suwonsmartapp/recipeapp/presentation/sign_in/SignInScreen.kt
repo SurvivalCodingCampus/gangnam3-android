@@ -2,6 +2,7 @@ package com.suwonsmartapp.recipeapp.presentation.sign_in
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,10 +43,14 @@ fun SignInScreenPreview() {
 }
 
 @Composable
-fun SignInScreen(modifier: Modifier = Modifier) {
+fun SignInScreen(
+    modifier: Modifier = Modifier,
+    onSignUpClick: () -> Unit = {},
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .safeDrawingPadding()
             .padding(
                 top = 50.dp,
                 end = 30.dp,
@@ -229,6 +235,7 @@ fun SignInScreen(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.width(width = 4.dp))
             Text(
+                modifier = Modifier.clickable(onClick = onSignUpClick),
                 text = stringResource(id = R.string.sign_in_or_up),
                 style = AppTextStyles.smallerTextSemiBold,
                 color = AppColors.secondary100,
