@@ -82,4 +82,9 @@
     <string name="splash_content_description">Simple way to find Tasty Recipe</string>
     <string name="splash_start_cooking">Start Cooking</string>
     <string name="splash_arrow_forward">Arrow forward</string>
+
+    <string name="main_tab_home">Home</string>
+    <string name="main_tab_saved_recipes">Saved recipes</string>
+    <string name="main_tab_notification">Notification</string>
+    <string name="main_tab_profile">Profile</string>
 </resources>

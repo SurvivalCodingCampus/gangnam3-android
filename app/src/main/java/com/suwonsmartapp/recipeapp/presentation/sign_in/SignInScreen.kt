@@ -45,6 +45,7 @@ fun SignInScreenPreview() {
 @Composable
 fun SignInScreen(
     modifier: Modifier = Modifier,
+    onSignInClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {},
 ) {
     Column(
@@ -133,6 +134,7 @@ fun SignInScreen(
                     color = AppColors.primary100,
                     shape = RoundedCornerShape(size = 10.dp),
                 )
+                .clickable(onClick = onSignInClick)
                 .padding(vertical = 18.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
