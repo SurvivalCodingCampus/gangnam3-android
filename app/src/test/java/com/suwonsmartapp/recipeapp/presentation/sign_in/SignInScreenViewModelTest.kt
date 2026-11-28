@@ -12,6 +12,7 @@ import com.suwonsmartapp.recipeapp.core.network.StatusCode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -100,18 +101,38 @@ class SignInScreenViewModelTest {
         assertThat(viewModel.state.value.errorMessage).isNull()
     }
 
-    @Test
-    fun `서버 에러면 공용 에러 문구가 나온다`() = runTest {
-        // 항상 500을 주는 데이터소스
-        val serverErrorDataSource = object : AuthDataSource {
-            override suspend fun signIn(request: SignInRequestDto): Response<SignInResponseDto> =
-                Response(statusCode = StatusCode.InternalServerError)
-        }
-        val viewModel = viewModel(serverErrorDataSource)
+    // 항상 statusCode만 돌려주는 데이터소스
+    private fun statusDataSource(statusCode: StatusCode) = object : AuthDataSource {
+        override suspend fun signIn(request: SignInRequestDto): Response<SignInResponseDto> =
+            Response(statusCode = statusCode)
+    }
 
+    // 해당 응답 코드로 로그인했을 때 나오는 에러 문구
+    private fun TestScope.errorMessageOf(statusCode: StatusCode): String? {
+        val viewModel = viewModel(statusDataSource(statusCode))
         viewModel.signIn(onSuccess = {})
         advanceUntilIdle()
+        return viewModel.state.value.errorMessage
+    }
 
-        assertThat(viewModel.state.value.errorMessage).isEqualTo("서버 문제")
+    @Test
+    fun `401이면 계정이 틀렸다는 문구가 나온다`() = runTest {
+        assertThat(errorMessageOf(StatusCode.Unauthorized)).isEqualTo("Email or password is incorrect")
+    }
+
+    @Test
+    fun `401이 아닌 4xx면 클라 에러 문구가 나온다`() = runTest {
+        assertThat(errorMessageOf(StatusCode.BadRequest)).isEqualTo("클라 에러")
+        assertThat(errorMessageOf(StatusCode.NotFound)).isEqualTo("클라 에러")
+    }
+
+    @Test
+    fun `서버 에러면 서버 문제 문구가 나온다`() = runTest {
+        assertThat(errorMessageOf(StatusCode.InternalServerError)).isEqualTo("서버 문제")
+    }
+
+    @Test
+    fun `성공인데 body가 없으면 널 데이터 에러 문구가 나온다`() = runTest {
+        assertThat(errorMessageOf(StatusCode.Ok)).isEqualTo("널 데이터 에러")
     }
 }
